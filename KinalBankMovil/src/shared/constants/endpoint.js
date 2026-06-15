@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.102.103:3005/api/v1';
+const BASE_URL = 'http://192.168.0.33:3005/api/v1';
 
 export const AUTH_ENDPOINTS = {
   LOGIN:           `${BASE_URL}/auth/login`,

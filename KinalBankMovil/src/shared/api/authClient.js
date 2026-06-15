@@ -2,7 +2,7 @@ import axios from "axios";
 import { AUTH_ENDPOINTS } from "../constants/endpoint";
 
 const authClient = axios.create({
-  baseURL: "http://10.0.2.2:3005/api/v1",
+  baseURL: "http://192.168.0.33:3005/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
