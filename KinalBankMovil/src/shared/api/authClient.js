@@ -1,8 +1,8 @@
 import axios from "axios";
+import { Platform } from "react-native";
 import { AUTH_ENDPOINTS } from "../constants/endpoint";
 
 const authClient = axios.create({
-  baseURL: "http://192.168.0.33:3005/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
