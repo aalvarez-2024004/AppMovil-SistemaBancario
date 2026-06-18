@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 
 const BANK_BASE_URL = Platform.OS === 'web'
   ? 'http://localhost:3006/kinalBank/v1'
-  : 'http://192.168.0.10:3006/kinalBank/v1';
+  : 'http://192.168.102.104:3006/kinalBank/v1';
 
 const bankClient = axios.create({
   baseURL: BANK_BASE_URL,

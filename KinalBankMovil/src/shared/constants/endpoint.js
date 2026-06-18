@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 
 const BASE_URL = Platform.OS === "web"
   ? "http://localhost:3005/api/v1"
-  : "http://192.168.0.10:3005/api/v1";
+  : "http://192.168.102.104:3005/api/v1";
 
 export const AUTH_ENDPOINTS = {
   LOGIN:          `${BASE_URL}/auth/login`,
