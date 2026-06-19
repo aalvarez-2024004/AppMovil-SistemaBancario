@@ -141,11 +141,7 @@ const HomeScreen = () => {
                     key={a.label}
                     style={s.quickActionBtn}
                     onPress={() => {
-                      if (a.screen === 'MisCuentas') {
-                        navigation.getParent()?.navigate('MisCuentas');
-                      } else {
-                        navigation.navigate(a.screen);
-                      }
+                      navigation.navigate(a.screen);
                     }}
                   >
                     <View style={[s.quickActionIcon, { backgroundColor: a.bg }]}>
@@ -206,7 +202,7 @@ const HomeScreen = () => {
           {/* MIS CUENTAS */}
           <View style={s.sectionRow}>
             <Text style={s.sectionTitle}>Mis cuentas</Text>
-            <TouchableOpacity onPress={() => navigation.getParent()?.navigate('MisCuentas')}>
+            <TouchableOpacity onPress={() => navigation.navigate('MisCuentas')}>
               <Text style={s.seeAll}>Ver todas →</Text>
             </TouchableOpacity>
           </View>

@@ -65,15 +65,6 @@ const MyAccountsScreen = () => {
   };
   const closeModal = () => setModalVisible(false);
 
-  // ── Navegación ──
-  const goBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    } else {
-      navigation.navigate('Home');
-    }
-  };
-
   // ── Derivados ──
   const totalBalance  = accounts.reduce(
     (acc, a) => acc + Number(a.balance || a.saldo || 0), 0
@@ -97,14 +88,6 @@ const MyAccountsScreen = () => {
           />
         }
       >
-        {/* ── Top nav: permite salir de esta vista ── */}
-        <View style={styles.topNav}>
-          <TouchableOpacity style={styles.topNavBtn} onPress={goBack}>
-            <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={styles.topNavTitle}>Inicio</Text>
-        </View>
-
         {/* ── Hero ── */}
         <View style={styles.hero}>
           <Text style={styles.heroLabel}>KinalBank</Text>

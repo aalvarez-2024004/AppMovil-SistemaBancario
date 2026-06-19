@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
 
   hero: {
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: Platform.OS === "ios" ? 64 : 48,
     paddingBottom: 56,
     backgroundColor: COLORS.navy,
   },
