@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../../shared/store/authStore";
-import { getMyAccountsRequest } from "../../../shared/api/AccountsClient.js";
+import { getMyAccountsRequest } from "../../../shared/api/accountsClient.js";
 import {COLORS, styles} from "../../../shared/constants/MyAccounts"
 import {
   formatCurrency,
