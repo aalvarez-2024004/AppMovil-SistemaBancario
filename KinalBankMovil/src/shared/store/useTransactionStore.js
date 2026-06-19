@@ -7,6 +7,7 @@ export const useTransactionStore = create((set, get) => ({
   error: null,
   currentPage: 1,
   totalPages: 1,
+  totalRecords: 0,
   hasMore: true,
 
   fetchTransactions: async (token, page = 1, limit = 10) => {
@@ -15,14 +16,19 @@ export const useTransactionStore = create((set, get) => ({
 
       const res = await getMyTransactionsRequest(token, page, limit);
 
-      const { transactions, totalPages } = res.data;
+      // La respuesta viene como: { success, data, pagination }
+      const { data: transactions, pagination } = res.data;
 
       set((state) => ({
-        transactions: page === 1 ? transactions : [...state.transactions, ...transactions],
-        currentPage: page,
-        totalPages,
-        hasMore: page < totalPages,
-        isLoading: false,
+        transactions:
+          page === 1
+            ? transactions
+            : [...state.transactions, ...transactions],
+        currentPage:  pagination.currentPage,
+        totalPages:   pagination.totalPages,
+        totalRecords: pagination.totalRecords,
+        hasMore:      pagination.currentPage < pagination.totalPages,
+        isLoading:    false,
       }));
 
       return { success: true };
@@ -47,9 +53,10 @@ export const useTransactionStore = create((set, get) => ({
   resetTransactions: () =>
     set({
       transactions: [],
-      currentPage: 1,
-      totalPages: 1,
-      hasMore: true,
-      error: null,
+      currentPage:  1,
+      totalPages:   1,
+      totalRecords: 0,
+      hasMore:      true,
+      error:        null,
     }),
 }));
