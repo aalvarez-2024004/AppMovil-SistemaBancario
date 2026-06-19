@@ -16,4 +16,9 @@ export const AUTH_ENDPOINTS = {
   RESET_PASSWORD: `${BASE_URL}/auth/password-reset/confirm`,
 };
 
+export const CLIENT_ENDPOINTS = {
+  MY_ACCOUNTS:     `${BASE_URL}/client/accounts`,
+  MY_TRANSACTIONS: `${BASE_URL}/client/transactions`,
+};
+
 export default BASE_URL;
