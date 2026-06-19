@@ -1,4 +1,8 @@
-import {sm} from '../constants/register'
+import React from 'react';
+import { View, Text, Modal, StyleSheet } from 'react-native';
+import { SPACING } from '../../shared/constants/theme';
+import { KB, scale, isTablet, sm } from '../../shared/constants/register';
+import { KBButton } from '../../shared/components/RegisterSteps';
 
 export const SuccessModal = ({ visible, onConfirm }) => (
   <Modal
