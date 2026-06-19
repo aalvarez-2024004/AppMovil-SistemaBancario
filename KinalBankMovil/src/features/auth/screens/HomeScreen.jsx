@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/authStore';
-import { getMyAccounts, getMyTransactions } from '../../../shared/api/bankClient';
+import { getMyAccounts, getMyTransactions } from '../../../shared/api/accountsClient';
 import { s, KB, chipStyles } from '../../../shared/constants/home';
 
 const getGreeting = () => {

@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
 
-import { useAuthStore } from "../../shared/store/authStore";
-import { COLORS } from "../../shared/constants/theme";
+import { useAuthStore } from "../shared/store/authStore";
+import { COLORS } from "../shared/constants/theme";
 
 const AppNavigator = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
