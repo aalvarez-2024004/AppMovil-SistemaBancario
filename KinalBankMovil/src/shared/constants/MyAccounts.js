@@ -3,28 +3,23 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const COLORS = {
-  // Fondos
   bg:           "#0D1117",
   bgCard:       "#161B22",
   bgCardAlt:    "#1C2333",
 
-  // Acento principal — azul eléctrico
   accent:       "#2F80ED",
   accentLight:  "#56A3F5",
   accentGlow:   "rgba(47,128,237,0.18)",
 
-  // Estados
   active:       "#27AE60",
   activeLight:  "rgba(39,174,96,0.15)",
   inactive:     "#EB5757",
   inactiveLight:"rgba(235,87,87,0.15)",
 
-  // Texto
   textPrimary:  "#E6EDF3",
   textSecondary:"#8B949E",
   textMuted:    "#484F58",
 
-  // Separadores
   border:       "#21262D",
   borderLight:  "#30363D",
 };
@@ -39,9 +34,8 @@ export const FONT = {
   hero: 38,
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 
-  // ── Contenedor principal
   container: {
     flex: 1,
     backgroundColor: COLORS.bg,
@@ -50,7 +44,6 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  // ── Header hero
   hero: {
     paddingHorizontal: 20,
     paddingTop: 56,
@@ -83,7 +76,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  // ── Caja de balance total
   balanceBox: {
     backgroundColor: COLORS.accentGlow,
     borderWidth: 1,
@@ -112,7 +104,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // ── Fila de stats (total / activas / inactivas)
   statsRow: {
     flexDirection: "row",
     gap: 10,
@@ -159,7 +150,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // ── Sección de lista
   section: {
     paddingHorizontal: 20,
     marginTop: 32,
@@ -202,7 +192,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 
-  // ── Tarjeta de cuenta (card horizontal)
   accountCard: {
     backgroundColor: COLORS.bgCard,
     borderRadius: 18,
@@ -266,7 +255,6 @@ const styles = StyleSheet.create({
     color: COLORS.inactive,
   },
 
-  // Número de cuenta enmascarado
   accountNumberRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -284,7 +272,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 
-  // Balance en la tarjeta
   accountCardDivider: {
     height: 1,
     backgroundColor: COLORS.border,
@@ -324,7 +311,6 @@ const styles = StyleSheet.create({
     color: COLORS.accent,
   },
 
-  // ── Estados vacíos / loading
   emptyState: {
     alignItems: "center",
     paddingVertical: 48,
@@ -350,7 +336,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // ── Modal de detalle
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.7)",
@@ -424,7 +409,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 
-  // ── Loading skeleton
   skeleton: {
     backgroundColor: COLORS.bgCardAlt,
     borderRadius: 8,
@@ -439,5 +423,3 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
 });
-
-export default styles;

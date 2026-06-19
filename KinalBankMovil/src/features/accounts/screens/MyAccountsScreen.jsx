@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import {COLORS, styles} from "../../../shared/constants/MyAccounts"
 
 const MisCuentasScreen = () => {
   const { token } = useSelector((state) => state.auth);

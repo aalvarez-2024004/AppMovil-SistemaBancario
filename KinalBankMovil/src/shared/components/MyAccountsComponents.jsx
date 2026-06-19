@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import styles, { COLORS } from "./MisCuentasStyles";
+import { COLORS, styles} from "../constants/MyAccounts";
 
 export const formatCurrency = (amount) =>
   `Q ${Number(amount || 0).toLocaleString("es-GT", {
