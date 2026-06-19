@@ -223,7 +223,13 @@ const HomeScreen = () => {
               <TouchableOpacity
                 key={a.label}
                 style={s.actionBtn}
-                onPress={() => navigation.navigate(a.screen)}
+                onPress={() => {
+                  if (a.screen === 'MisCuentas') {
+                    navigation.getParent()?.navigate('MisCuentas');
+                  } else {
+                    navigation.navigate(a.screen);
+                  }
+                }}
               >
                 <View style={s.actionIcon}>
                   <Text style={s.actionIconText}>{a.icon}</Text>

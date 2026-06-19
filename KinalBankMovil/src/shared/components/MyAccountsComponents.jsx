@@ -27,50 +27,41 @@ export const StatCard = ({ icon, iconBg, value, valueStyle, label, sublabel }) =
 );
 
 export const AccountCard = ({ account, onPress }) => {
-  const isActive = account.status === "active" || account.estado === "activa";
+  const isActive = account.status === "ACTIVA"; // ← corregido
 
   return (
-    <TouchableOpacity
-      style={styles.accountCard}
-      onPress={() => onPress(account)}
-      activeOpacity={0.75}
-    >
-      {/* Top: nombre + estado */}
+    <TouchableOpacity style={styles.accountCard} onPress={() => onPress(account)} activeOpacity={0.75}>
       <View style={styles.accountCardTop}>
         <View>
           <Text style={styles.accountTypeLabel}>
-            {account.type || account.tipo || "Cuenta Monetaria"}
+            {account.accountType || "MONETARIA"} 
           </Text>
           <Text style={styles.accountName}>
-            {account.name || account.nombre || "Mi Cuenta"}
+            •••• {String(account.accountNumber || "").slice(-4)} 
           </Text>
         </View>
-
         <View style={[styles.accountBadge, isActive ? styles.accountBadgeActive : styles.accountBadgeInactive]}>
           <View style={[styles.accountBadgeDot, isActive ? styles.accountBadgeDotActive : styles.accountBadgeDotInactive]} />
           <Text style={[styles.accountBadgeText, isActive ? styles.accountBadgeTextActive : styles.accountBadgeTextInactive]}>
-            {isActive ? "ACTIVA" : "INACTIVA"}
+            {isActive ? "ACTIVA" : "BLOQUEADA"}
           </Text>
         </View>
       </View>
 
-      {/* Número enmascarado */}
       <View style={styles.accountNumberRow}>
         <Text style={styles.accountNumberDots}>••••  ••••  ••••</Text>
         <Text style={styles.accountNumberLast}>
-          {maskNumber(account.accountNumber || account.numero)}
+          {String(account.accountNumber || "----").slice(-4)}
         </Text>
       </View>
 
-      {/* Divisor */}
       <View style={styles.accountCardDivider} />
 
-      {/* Balance + botón */}
       <View style={styles.accountCardBottom}>
         <View>
           <Text style={styles.accountBalanceLabel}>Saldo disponible</Text>
           <Text style={styles.accountBalance}>
-            {formatCurrency(account.balance || account.saldo)}
+            {formatCurrency(account.balance)}
           </Text>
         </View>
         <View style={styles.accountActionBtn}>
@@ -93,7 +84,7 @@ export const SkeletonCards = () => (
 export const AccountDetailModal = ({ visible, account, onClose }) => {
   if (!account) return null;
 
-  const isActive = account.status === "active" || account.estado === "activa";
+  const isActive = account.status === "ACTIVA";
 
   return (
     <Modal

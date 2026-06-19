@@ -12,6 +12,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../../shared/store/authStore";
 import { getMyAccountsRequest } from "../../../shared/api/accountsClient";
 import {COLORS, styles} from "../../../shared/constants/MyAccounts"
+import {
+  formatCurrency,
+  StatCard,
+  AccountCard,
+  SkeletonCards,
+  AccountDetailModal,
+} from "../../../shared/components/MyAccountsComponents";
 
 const MyAccountsScreen = () => {
   const { token } = useAuthStore();
@@ -60,14 +67,9 @@ const MyAccountsScreen = () => {
   const totalBalance  = accounts.reduce(
     (acc, a) => acc + Number(a.balance || a.saldo || 0), 0
   );
-  const activeAccounts   = accounts.filter(
-    (a) => a.status === "active" || a.estado === "activa"
-  );
-  const inactiveAccounts = accounts.filter(
-    (a) => a.status !== "active" && a.estado !== "activa"
-  );
+  const activeAccounts = accounts.filter(a => a.status === "ACTIVA");
+  const inactiveAccounts = accounts.filter(a => a.status === "BLOQUEADA");
 
-  // ── Render ──
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bgCard} />
