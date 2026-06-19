@@ -9,11 +9,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useAuthStore } from "../../../shared/store/authStore";
+import { getMyAccountsRequest } from "../../../shared/api/accountsClient";
 import {COLORS, styles} from "../../../shared/constants/MyAccounts"
 
 const MyAccountsScreen = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { token } = useAuthStore();
 
   const [accounts, setAccounts]         = useState([]);
   const [loading, setLoading]           = useState(true);
@@ -22,7 +23,6 @@ const MyAccountsScreen = () => {
   const [selectedAccount, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // ── Fetch ──
   const fetchAccounts = useCallback(async () => {
     try {
       setError(null);

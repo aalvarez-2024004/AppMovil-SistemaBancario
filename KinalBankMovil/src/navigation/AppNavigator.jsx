@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
+import MainStack from "./MainStack";
 
 import { useAuthStore } from "../shared/store/authStore";
 import { COLORS } from "../shared/constants/theme";
@@ -27,7 +28,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      {isAuthenticated ? <MainStack  /> : <AuthStack />}
     </NavigationContainer>
   );
 };

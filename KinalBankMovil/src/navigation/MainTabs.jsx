@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text } from "react-native";
 import HomeScreen from '../features/auth/screens/HomeScreen';
-import MyAccountsScreen from '../features/accounts/screens/MyAccountsScreen'
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +13,6 @@ const ProfileScreen = () => (
 const MainTabs = () => (
   <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen name="Home"       component={HomeScreen} />
-    <Tab.Screen name="MisCuentas" component={MyAccountsScreen} /> 
     <Tab.Screen name="Profile"    component={ProfileScreen} />
   </Tab.Navigator>
 );

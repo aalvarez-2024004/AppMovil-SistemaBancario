@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/authStore';
-import { getMyAccounts, getMyTransactions } from '../../../shared/api/accountsClient';
+import { getMyAccountsRequest, getMyTransactionsRequest } from '../../../shared/api/accountsClient';
 import { s, KB, chipStyles } from '../../../shared/constants/home';
 
 const getGreeting = () => {
@@ -32,8 +32,8 @@ const HomeScreen = () => {
   const fetchData = useCallback(async () => {
     try {
       const [accRes, txRes] = await Promise.all([
-        getMyAccounts(token),
-        getMyTransactions(token, 1, 5),
+        getMyAccountsRequest(token),      
+      getMyTransactionsRequest(token, 1, 5),
       ]);
 
       setAccounts(Array.isArray(accRes.data?.data) ? accRes.data.data : []);
@@ -77,7 +77,7 @@ const HomeScreen = () => {
 
   const quickActions = [
     { icon: '↑', label: 'Transferir', screen: 'Transfer' },
-    { icon: '📋', label: 'Movimientos', screen: 'Transactions' },
+    { icon: '📋', label: 'Movimientos', screen: 'MisCuentas' },
     { icon: '★', label: 'Favoritos', screen: 'Favorites' },
     { icon: '🛍', label: 'Productos', screen: 'Products' },
   ];
