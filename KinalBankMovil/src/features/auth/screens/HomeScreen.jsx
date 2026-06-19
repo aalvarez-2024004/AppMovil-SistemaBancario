@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/authStore';
-import { getMyAccountsRequest, getMyTransactionsRequest } from '../../../shared/api/accountsClient';
+import { getMyAccountsRequest, getMyTransactionsRequest } from '../../../shared/api/AccountsClient.js';
 import { s, KB, chipStyles } from '../../../shared/constants/home';
 
 const getGreeting = () => {
@@ -27,13 +27,12 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [balanceHidden, setBalanceHidden] = useState(false);
-  const [activeAccount, setActiveAccount] = useState(0);
 
   const fetchData = useCallback(async () => {
     try {
       const [accRes, txRes] = await Promise.all([
-        getMyAccountsRequest(token),      
-      getMyTransactionsRequest(token, 1, 5),
+        getMyAccountsRequest(token),
+        getMyTransactionsRequest(token, 1, 5),
       ]);
 
       setAccounts(Array.isArray(accRes.data?.data) ? accRes.data.data : []);
@@ -55,10 +54,6 @@ const HomeScreen = () => {
     fetchData();
   };
 
-  const currentAccount = accounts?.[activeAccount];
-
-  const balance = currentAccount?.balance ?? 0;
-
   const totalGTQ = accounts
     .filter(a => a.currency === 'GTQ' || !a.currency)
     .reduce((sum, a) => sum + (a.balance ?? 0), 0);
@@ -71,15 +66,14 @@ const HomeScreen = () => {
     a => a.status === 'ACTIVA' || a.isActive === true
   ).length;
 
-  const isActiveAccount =
-    currentAccount?.status?.toString()?.trim()?.toUpperCase() === 'ACTIVA' ||
-    currentAccount?.isActive === true;
+  const isAccountActive = (acc) =>
+    acc?.status?.toString()?.trim()?.toUpperCase() === 'ACTIVA' || acc?.isActive === true;
 
   const quickActions = [
-    { icon: '↑', label: 'Transferir', screen: 'Transfer' },
-    { icon: '📋', label: 'Movimientos', screen: 'MisCuentas' },
-    { icon: '★', label: 'Favoritos', screen: 'Favorites' },
-    { icon: '🛍', label: 'Productos', screen: 'Products' },
+    { icon: '↗️', label: 'Transferir', screen: 'Transfer', bg: KB.blueLight, color: KB.accent },
+    { icon: '📋', label: 'Movimientos', screen: 'MisCuentas', bg: KB.goldLight, color: KB.gold },
+    { icon: '⭐', label: 'Favoritos', screen: 'Favorites', bg: KB.greenLight, color: KB.success },
+    { icon: '🏦', label: 'Productos', screen: 'Products', bg: KB.blueLight, color: KB.accent },
   ];
 
   if (loading) {
@@ -102,7 +96,7 @@ const HomeScreen = () => {
         }
       >
 
-        {/* HEADER (NO TOCADO) */}
+        {/* HEADER */}
         <View style={s.header}>
           <View style={s.circle1} pointerEvents="none" />
           <View style={s.circle2} pointerEvents="none" />
@@ -125,87 +119,98 @@ const HomeScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <View style={s.statsStrip}>
-            <View style={s.statItem}>
-              <Text style={s.statVal}>{activeCount}</Text>
-              <Text style={s.statLbl}>Cuentas activas</Text>
-            </View>
-
-            <View style={s.statDivider} />
-
-            <View style={s.statItem}>
-              <Text style={[s.statVal, { color: '#7DD3FC' }]}>
-                {fmt(totalGTQ)}
-              </Text>
-              <Text style={s.statLbl}>Total en GTQ</Text>
-            </View>
-
-            <View style={s.statDivider} />
-
-            <View style={s.statItem}>
-              <Text style={[s.statVal, { color: '#86EFAC' }]}>
-                {fmt(totalUSD, 'USD')}
-              </Text>
-              <Text style={s.statLbl}>Total en USD</Text>
-            </View>
-          </View>
         </View>
 
         <View style={s.body}>
 
-          {/* TARJETA (COMPLETA + FIX SOLO LÓGICA) */}
-          {accounts.length > 0 ? (
-            <>
-              <View style={s.card}>
-                <View style={s.cardGrad} />
-                <View style={s.cardTop}>
-                  <Text style={s.cardBank}>KINAL BANK</Text>
-                  <View style={s.cardChip} />
-                </View>
+          {/* BALANCE TOTAL + ACCIONES RÁPIDAS (tarjeta blanca flotante) */}
+          <View style={s.balanceCard}>
+            <Text style={s.balanceLbl}>BALANCE TOTAL · CUENTAS ACTIVAS</Text>
 
-                <View style={s.cardMid}>
-                  <Text style={s.cardBalanceLbl}>SALDO DISPONIBLE</Text>
+            <View style={s.balanceRow}>
+              <TouchableOpacity onPress={() => setBalanceHidden(!balanceHidden)}>
+                <Text style={s.balanceValue}>
+                  {balanceHidden ? 'Q ••••••' : fmt(totalGTQ)}
+                </Text>
+              </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => setBalanceHidden(!balanceHidden)}>
-                    <Text style={s.cardBalance}>
-                      {balanceHidden ? '••••••••' : fmt(balance)}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={s.cardBot}>
-                  <View>
-                    <Text style={s.cardMeta}>Número de cuenta</Text>
-                    <Text style={s.cardNum}>
-                      •••••• {currentAccount?.accountNumber?.slice(-4) ?? '----'}
-                    </Text>
-                  </View>
-
-                  <View
-                    style={[
-                      s.statusBadge,
-                      isActiveAccount ? s.badgeActive : s.badgeInactive,
-                    ]}
+              <View style={s.balanceActions}>
+                {quickActions.map((a) => (
+                  <TouchableOpacity
+                    key={a.label}
+                    style={s.quickActionBtn}
+                    onPress={() => {
+                      if (a.screen === 'MisCuentas') {
+                        navigation.getParent()?.navigate('MisCuentas');
+                      } else {
+                        navigation.navigate(a.screen);
+                      }
+                    }}
                   >
-                    <Text style={s.badgeText}>
-                      {isActiveAccount ? 'ACTIVA' : 'BLOQUEADA'}
-                    </Text>
-                  </View>
-                </View>
+                    <View style={[s.quickActionIcon, { backgroundColor: a.bg }]}>
+                      <Text style={s.quickActionIconText}>{a.icon}</Text>
+                    </View>
+                    <Text style={s.quickActionLabel}>{a.label}</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
+            </View>
 
-              {accounts.length > 1 && (
-                <View style={s.dotRow}>
-                  {accounts.map((_, i) => (
-                    <TouchableOpacity key={i} onPress={() => setActiveAccount(i)}>
-                      <View style={[s.dot, i === activeAccount && s.dotActive]} />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-            </>
-          ) : (
+            <View style={s.balanceProgressBar} />
+          </View>
+
+          {/* GRID DE STATS 2x2 */}
+          <View style={s.statsGrid}>
+            <View style={s.statCard}>
+              <View style={[s.statIconWrap, { backgroundColor: KB.blueLight }]}>
+                <Text style={[s.statIconText, { color: KB.accent }]}>💳</Text>
+              </View>
+              <View>
+                <Text style={s.statCardLbl}>CUENTAS ACTIVAS</Text>
+                <Text style={s.statCardVal}>{activeCount}</Text>
+              </View>
+            </View>
+
+            <View style={s.statCard}>
+              <View style={[s.statIconWrap, { backgroundColor: KB.greenLight }]}>
+                <Text style={[s.statIconText, { color: KB.success }]}>GT</Text>
+              </View>
+              <View>
+                <Text style={s.statCardLbl}>TOTAL EN GTQ</Text>
+                <Text style={s.statCardVal}>{fmt(totalGTQ)}</Text>
+              </View>
+            </View>
+
+            <View style={s.statCard}>
+              <View style={[s.statIconWrap, { backgroundColor: KB.goldLight }]}>
+                <Text style={[s.statIconText, { color: KB.gold }]}>US</Text>
+              </View>
+              <View>
+                <Text style={s.statCardLbl}>TOTAL EN USD</Text>
+                <Text style={s.statCardVal}>{fmt(totalUSD, 'USD')}</Text>
+              </View>
+            </View>
+
+            <View style={s.statCard}>
+              <View style={[s.statIconWrap, { backgroundColor: KB.blueLight }]}>
+                <Text style={[s.statIconText, { color: KB.accent }]}>📋</Text>
+              </View>
+              <View>
+                <Text style={s.statCardLbl}>MOVIMIENTOS</Text>
+                <Text style={s.statCardVal}>{transactions.length}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* MIS CUENTAS */}
+          <View style={s.sectionRow}>
+            <Text style={s.sectionTitle}>Mis cuentas</Text>
+            <TouchableOpacity onPress={() => navigation.getParent()?.navigate('MisCuentas')}>
+              <Text style={s.seeAll}>Ver todas →</Text>
+            </TouchableOpacity>
+          </View>
+
+          {accounts.length === 0 ? (
             <View style={s.emptyCard}>
               <Text style={s.emptyIcon}>🏦</Text>
               <Text style={s.emptyTitle}>Sin cuentas activas</Text>
@@ -213,36 +218,35 @@ const HomeScreen = () => {
                 Un administrador debe asignarte una cuenta para continuar.
               </Text>
             </View>
+          ) : (
+            <View style={s.accountsBox}>
+              {accounts.map((acc, i) => (
+                <View
+                  key={acc.id ?? i}
+                  style={[s.accountRow, i > 0 && s.accountRowDivider]}
+                >
+                  <View style={s.accountInfo}>
+                    <View style={s.accountIconWrap}>
+                      <Text>🏦</Text>
+                    </View>
+                    <View>
+                      <Text style={s.accountNum}>
+                        •••••• {acc?.accountNumber?.slice(-4) ?? '----'}
+                      </Text>
+                      <Text style={s.accountStatus}>
+                        {isAccountActive(acc) ? 'Activa' : 'Bloqueada'} · {acc.currency ?? 'GTQ'}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={s.accountBalance}>{fmt(acc.balance, acc.currency ?? 'GTQ')}</Text>
+                </View>
+              ))}
+            </View>
           )}
 
-          {/* ACCIONES (SIN TOCAR) */}
-          <Text style={s.sectionTitle}>Acciones rápidas</Text>
-
-          <View style={s.actionsRow}>
-            {quickActions.map((a) => (
-              <TouchableOpacity
-                key={a.label}
-                style={s.actionBtn}
-                onPress={() => {
-                  if (a.screen === 'MisCuentas') {
-                    navigation.getParent()?.navigate('MisCuentas');
-                  } else {
-                    navigation.navigate(a.screen);
-                  }
-                }}
-              >
-                <View style={s.actionIcon}>
-                  <Text style={s.actionIconText}>{a.icon}</Text>
-                </View>
-                <Text style={s.actionLabel}>{a.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* MOVIMIENTOS (SIN TOCAR) */}
+          {/* MOVIMIENTOS RECIENTES */}
           <View style={s.sectionRow}>
             <Text style={s.sectionTitle}>Movimientos recientes</Text>
-
             <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
               <Text style={s.seeAll}>Ver todos →</Text>
             </TouchableOpacity>
@@ -250,7 +254,7 @@ const HomeScreen = () => {
 
           {transactions.length === 0 ? (
             <View style={s.emptyTx}>
-              <Text style={s.emptyIcon}>📭</Text>
+              <Text style={s.emptyIcon}>🏦</Text>
               <Text style={s.emptyText}>Sin movimientos recientes</Text>
             </View>
           ) : (

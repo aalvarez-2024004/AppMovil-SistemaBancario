@@ -10,6 +10,9 @@ export const KB = {
   white:     '#FFFFFF',
   success:   '#10B981',
   danger:    '#EF4444',
+  blueLight: '#EAF1FC',
+  greenLight:'#E9FBF1',
+  goldLight: '#FBF4E2',
 };
 
 export const chipStyles = StyleSheet.create({
@@ -32,7 +35,7 @@ export const s = StyleSheet.create({
   header: {
     backgroundColor: KB.navy,
     paddingTop: Platform.OS === 'ios' ? 56 : 40,
-    paddingBottom: 48,
+    paddingBottom: 64,
     paddingHorizontal: SPACING.lg,
     overflow: 'hidden',
   },
@@ -46,11 +49,11 @@ export const s = StyleSheet.create({
   },
   headerTop: {
     flexDirection: 'row', justifyContent: 'space-between',
-    alignItems: 'flex-start', marginBottom: SPACING.lg,
+    alignItems: 'flex-start',
   },
-  greeting: { fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 2 },
-  userName: { fontSize: 22, fontWeight: '800', color: KB.white, marginBottom: 2 },
-  tagline:  { fontSize: 12, color: 'rgba(255,255,255,0.45)' },
+  greeting: { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 4 },
+  userName: { fontSize: 30, fontWeight: '800', color: KB.white, marginBottom: 6 },
+  tagline:  { fontSize: 13, color: 'rgba(255,255,255,0.45)' },
   avatar: {
     width: 46, height: 46, borderRadius: 23,
     backgroundColor: 'rgba(255,255,255,0.15)',
@@ -59,26 +62,103 @@ export const s = StyleSheet.create({
   },
   avatarText: { color: KB.white, fontSize: 18, fontWeight: '700' },
 
-  /* Stats strip */
-  statsStrip: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderRadius: BORDER_RADIUS.lg, padding: SPACING.md,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
-  },
-  statItem:    { flex: 1, alignItems: 'center' },
-  statVal:     { fontSize: 14, fontWeight: '800', color: KB.white, marginBottom: 2 },
-  statLbl:     { fontSize: 10, color: 'rgba(255,255,255,0.5)', textAlign: 'center' },
-  statDivider: { width: 1, height: 28, backgroundColor: 'rgba(255,255,255,0.1)' },
-
   /* Body */
   body: {
-    marginTop: -32,
+    marginTop: -52,
     paddingHorizontal: SPACING.md,
     paddingBottom: SPACING.xxl,
   },
 
-  /* Card de cuenta */
+  /* Balance + acciones rápidas, tarjeta blanca flotante */
+  balanceCard: {
+    backgroundColor: KB.white,
+    borderRadius: 22,
+    padding: SPACING.lg,
+    ...SHADOWS.md,
+    marginBottom: SPACING.md,
+  },
+  balanceLbl: {
+    fontSize: 11, fontWeight: '700', color: COLORS.gray400,
+    letterSpacing: 1, marginBottom: 6,
+  },
+  balanceRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  },
+  balanceValue: { fontSize: 30, fontWeight: '800', color: COLORS.gray900 },
+  balanceActions: { flexDirection: 'row', gap: 10 },
+  quickActionBtn: { alignItems: 'center', width: 64 },
+  quickActionIcon: {
+    width: 48, height: 48, borderRadius: 14,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 4,
+  },
+  quickActionIconText: { fontSize: 18 },
+  quickActionLabel: { fontSize: 10, color: COLORS.gray600, fontWeight: '600', textAlign: 'center' },
+  balanceProgressBar: {
+    height: 4, borderRadius: 2, marginTop: SPACING.md,
+    backgroundColor: '#5B6CF9',
+    // simple gradient illusion using overlapping colors is not supported natively,
+    // a flat accent bar is used instead for RN compatibility
+  },
+
+  /* Grid de stats 2x2 */
+  statsGrid: {
+    flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',
+    marginBottom: SPACING.lg, gap: SPACING.sm,
+  },
+  statCard: {
+    width: '48.5%',
+    backgroundColor: KB.white,
+    borderRadius: 18,
+    padding: SPACING.md,
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    ...SHADOWS.sm,
+    marginBottom: SPACING.sm,
+  },
+  statIconWrap: {
+    width: 38, height: 38, borderRadius: 12,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  statIconText: { fontSize: 16, fontWeight: '800' },
+  statCardLbl: { fontSize: 10, color: COLORS.gray400, fontWeight: '700', letterSpacing: 0.3 },
+  statCardVal: { fontSize: 16, fontWeight: '800', color: COLORS.gray900, marginTop: 2 },
+
+  /* Secciones */
+  sectionRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  sectionTitle: {
+    fontSize: 12, fontWeight: '800', color: COLORS.gray500,
+    letterSpacing: 1, textTransform: 'uppercase',
+  },
+  seeAll: { fontSize: 13, color: KB.accent, fontWeight: '600' },
+
+  /* Mis cuentas - card horizontal con saldo */
+  accountsBox: {
+    backgroundColor: KB.white,
+    borderRadius: 18,
+    padding: SPACING.lg,
+    ...SHADOWS.sm,
+    marginBottom: SPACING.lg,
+  },
+  accountRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingVertical: SPACING.sm,
+  },
+  accountRowDivider: {
+    borderTopWidth: 1, borderTopColor: COLORS.gray100,
+  },
+  accountInfo: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  accountIconWrap: {
+    width: 40, height: 40, borderRadius: 12,
+    backgroundColor: KB.blueLight,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  accountNum: { fontSize: 13, fontWeight: '700', color: COLORS.gray800 },
+  accountStatus: { fontSize: 11, color: COLORS.gray400, marginTop: 2 },
+  accountBalance: { fontSize: 14, fontWeight: '800', color: COLORS.gray900 },
+
+  /* Tarjeta de cuenta destacada (estilo original, opcional al deslizar) */
   card: {
     borderRadius: 20, overflow: 'hidden',
     backgroundColor: KB.navyLight,
@@ -112,40 +192,25 @@ export const s = StyleSheet.create({
   dot:       { width: 6, height: 6, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.15)' },
   dotActive: { width: 18, backgroundColor: '#3B7DD8' },
 
-  /* Empty state */
+  /* Empty states */
   emptyCard: {
-    backgroundColor: KB.white, borderRadius: 20, padding: SPACING.xl,
-    alignItems: 'center', marginBottom: SPACING.md, ...SHADOWS.sm,
+    backgroundColor: KB.white, borderRadius: 18, padding: SPACING.xl,
+    alignItems: 'center', ...SHADOWS.sm,
   },
-  emptyIcon:  { fontSize: 36, marginBottom: SPACING.sm },
-  emptyTitle: { fontSize: 16, fontWeight: '700', color: COLORS.gray800, marginBottom: 4 },
+  emptyIcon:  { fontSize: 34, marginBottom: SPACING.sm },
+  emptyTitle: { fontSize: 15, fontWeight: '700', color: COLORS.gray800, marginBottom: 4 },
   emptyText:  { fontSize: 13, color: COLORS.gray500, textAlign: 'center', lineHeight: 20 },
 
-  /* Acciones rápidas */
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: COLORS.gray800, marginTop: SPACING.lg, marginBottom: SPACING.sm },
-  actionsRow:   { flexDirection: 'row', justifyContent: 'space-between', marginBottom: SPACING.sm },
-  actionBtn:    { alignItems: 'center', flex: 1 },
-  actionIcon: {
-    width: 52, height: 52, borderRadius: 16,
-    backgroundColor: KB.white, alignItems: 'center', justifyContent: 'center',
-    marginBottom: 6, ...SHADOWS.sm,
-    borderWidth: 1, borderColor: COLORS.gray100,
-  },
-  actionIconText: { fontSize: 20 },
-  actionLabel:    { fontSize: 11, color: COLORS.gray600, fontWeight: '600', textAlign: 'center' },
-
-  /* Movimientos */
-  sectionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: SPACING.sm },
-  seeAll:     { fontSize: 13, color: '#3B7DD8', fontWeight: '600' },
-
   emptyTx: {
-    backgroundColor: KB.white, borderRadius: 16, padding: SPACING.lg,
-    alignItems: 'center', marginTop: SPACING.sm, ...SHADOWS.sm,
+    backgroundColor: KB.white, borderRadius: 18, padding: SPACING.xl,
+    alignItems: 'center', ...SHADOWS.sm,
   },
+
+  /* Movimientos recientes */
   txRow: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: KB.white, borderRadius: 14,
-    padding: SPACING.md, marginTop: SPACING.sm, ...SHADOWS.sm,
+    padding: SPACING.md, marginBottom: SPACING.sm, ...SHADOWS.sm,
     gap: SPACING.sm,
   },
   txIconWrap: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
@@ -157,7 +222,7 @@ export const s = StyleSheet.create({
 
   /* Logout */
   logoutBtn: {
-    marginTop: SPACING.xl, borderRadius: BORDER_RADIUS.lg,
+    marginTop: SPACING.lg, borderRadius: BORDER_RADIUS.lg,
     borderWidth: 1.5, borderColor: 'rgba(239,68,68,0.3)',
     padding: SPACING.md, alignItems: 'center',
     backgroundColor: 'rgba(239,68,68,0.06)',

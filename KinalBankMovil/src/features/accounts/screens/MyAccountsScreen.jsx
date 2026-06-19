@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../../shared/store/authStore";
-import { getMyAccountsRequest } from "../../../shared/api/accountsClient";
+import { getMyAccountsRequest } from "../../../shared/api/AccountsClient.js";
 import {COLORS, styles} from "../../../shared/constants/MyAccounts"
 import {
   formatCurrency,
