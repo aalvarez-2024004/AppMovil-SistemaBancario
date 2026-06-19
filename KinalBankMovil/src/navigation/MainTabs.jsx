@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HomeScreen from '../features/auth/screens/HomeScreen';
 import MyAccountsScreen from '../features/accounts/screens/MyAccountsScreen';
+import MyTransactionsScreen from "../features/accounts/screens/MyTransactionsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +55,16 @@ const MainTabs = () => {
         component={MyAccountsScreen}
         options={{
           title: 'Cuentas',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'card' : 'card-outline'} size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="MisMovimientos"
+        component={MyTransactionsScreen}
+        options={{
+          title: 'Movimientos',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name={focused ? 'card' : 'card-outline'} size={size} color={color} />
           ),

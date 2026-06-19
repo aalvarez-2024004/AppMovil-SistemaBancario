@@ -11,9 +11,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useAuthStore }        from "../../../shared/store/authStore";
-import { useTransactionStore } from "../../../shared/store/transactionStore";
+import { useTransactionStore } from "../../../shared/store/useTransactionStore";
 
 import {
+  groupByDate,  
   TransactionHeader,
   TransactionSearchBar,
   TransactionTabs,
@@ -22,8 +23,9 @@ import {
   TransactionEmptyState,
 } from "../../../shared/components/MyTransactionsComponents";
 import { styles, COLORS, TABS, TX_TYPE_MAP } from "../../../shared/constants/MyTransactions";
+import { getMyTransactionsRequest } from "../../../shared/api/bankClient";
 
-const MyAccountsScreen = () => {
+const MyTransactionsScreen = () => {
   const insets = useSafeAreaInsets();
   const token  = useAuthStore((s) => s.token);
 
@@ -152,3 +154,5 @@ const MyAccountsScreen = () => {
     </View>
   );
 }
+
+export default MyTransactionsScreen;
