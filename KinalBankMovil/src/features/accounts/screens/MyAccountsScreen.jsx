@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../../shared/store/authStore";
 import { getMyAccountsRequest } from "../../../shared/api/AccountsClient.js";
 import {COLORS, styles} from "../../../shared/constants/MyAccounts"
@@ -21,6 +22,7 @@ import {
 } from "../../../shared/components/MyAccountsComponents";
 
 const MyAccountsScreen = () => {
+  const navigation = useNavigation();
   const { token } = useAuthStore();
 
   const [accounts, setAccounts]         = useState([]);
@@ -63,6 +65,15 @@ const MyAccountsScreen = () => {
   };
   const closeModal = () => setModalVisible(false);
 
+  // ── Navegación ──
+  const goBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('Home');
+    }
+  };
+
   // ── Derivados ──
   const totalBalance  = accounts.reduce(
     (acc, a) => acc + Number(a.balance || a.saldo || 0), 0
@@ -72,7 +83,7 @@ const MyAccountsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgCard} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -86,6 +97,14 @@ const MyAccountsScreen = () => {
           />
         }
       >
+        {/* ── Top nav: permite salir de esta vista ── */}
+        <View style={styles.topNav}>
+          <TouchableOpacity style={styles.topNavBtn} onPress={goBack}>
+            <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={styles.topNavTitle}>Inicio</Text>
+        </View>
+
         {/* ── Hero ── */}
         <View style={styles.hero}>
           <Text style={styles.heroLabel}>KinalBank</Text>
@@ -100,7 +119,7 @@ const MyAccountsScreen = () => {
 
           {/* Balance total */}
           <View style={styles.balanceBox}>
-            <Text style={styles.balanceLabel}>+ Balance total</Text>
+            <Text style={styles.balanceLabel}>Balance total</Text>
             <Text style={styles.balanceAmount}>
               {formatCurrency(totalBalance)}
             </Text>

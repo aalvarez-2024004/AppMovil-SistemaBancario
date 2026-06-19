@@ -11,6 +11,7 @@ export const KB = {
   success:   '#10B981',
   danger:    '#EF4444',
   blueLight: '#EAF1FC',
+  redLight:  '#FDE8E8',
   greenLight:'#E9FBF1',
   goldLight: '#FBF4E2',
 };

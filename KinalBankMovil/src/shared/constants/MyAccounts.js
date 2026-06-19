@@ -3,25 +3,27 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const COLORS = {
-  bg:           "#0D1117",
-  bgCard:       "#161B22",
-  bgCardAlt:    "#1C2333",
+  bg:           "#F8F9FB",
+  bgCard:       "#FFFFFF",
+  bgCardAlt:    "#EAF1FC",
 
-  accent:       "#2F80ED",
-  accentLight:  "#56A3F5",
-  accentGlow:   "rgba(47,128,237,0.18)",
+  navy:         "#0F1F3D",
 
-  active:       "#27AE60",
-  activeLight:  "rgba(39,174,96,0.15)",
-  inactive:     "#EB5757",
-  inactiveLight:"rgba(235,87,87,0.15)",
+  accent:       "#3B7DD8",
+  accentLight:  "#7DAEF0",
+  accentGlow:   "rgba(59,125,216,0.08)",
 
-  textPrimary:  "#E6EDF3",
-  textSecondary:"#8B949E",
-  textMuted:    "#484F58",
+  active:       "#10B981",
+  activeLight:  "rgba(16,185,129,0.12)",
+  inactive:     "#EF4444",
+  inactiveLight:"rgba(239,68,68,0.12)",
 
-  border:       "#21262D",
-  borderLight:  "#30363D",
+  textPrimary:  "#1A2333",
+  textSecondary:"#6B7280",
+  textMuted:    "#9CA3AF",
+
+  border:       "#EEF1F5",
+  borderLight:  "#E2E8F0",
 };
 
 export const FONT = {
@@ -31,7 +33,7 @@ export const FONT = {
   lg:   18,
   xl:   22,
   xxl:  28,
-  hero: 38,
+  hero: 30,
 };
 
 export const styles = StyleSheet.create({
@@ -44,51 +46,76 @@ export const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  hero: {
+  /* ── Top nav (para que el usuario pueda salir de esta vista) ── */
+  topNav: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 56,
-    paddingBottom: 32,
-    backgroundColor: COLORS.bgCard,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingBottom: 8,
+    backgroundColor: COLORS.navy,
+    gap: 12,
+  },
+  topNavBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  topNavTitle: {
+    fontSize: FONT.md,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+
+  hero: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 56,
+    backgroundColor: COLORS.navy,
   },
   heroLabel: {
     fontSize: FONT.xs,
     fontWeight: "700",
     letterSpacing: 2.5,
-    color: COLORS.accent,
+    color: COLORS.accentLight,
     marginBottom: 6,
     textTransform: "uppercase",
   },
   heroTitle: {
     fontSize: FONT.hero,
     fontWeight: "800",
-    color: COLORS.textPrimary,
-    lineHeight: 44,
+    color: "#FFFFFF",
+    lineHeight: 36,
   },
   heroTitleAccent: {
     color: COLORS.accentLight,
   },
   heroSubtitle: {
     fontSize: FONT.sm,
-    color: COLORS.textSecondary,
+    color: "rgba(255,255,255,0.55)",
     marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 20,
   },
 
   balanceBox: {
-    backgroundColor: COLORS.accentGlow,
-    borderWidth: 1,
-    borderColor: COLORS.accent,
-    borderRadius: 16,
+    backgroundColor: COLORS.bgCard,
+    borderRadius: 18,
     paddingVertical: 16,
     paddingHorizontal: 20,
+    shadowColor: "#0F1F3D",
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
   },
   balanceLabel: {
     fontSize: FONT.xs,
     fontWeight: "700",
     letterSpacing: 1.5,
-    color: COLORS.accent,
+    color: COLORS.textMuted,
     textTransform: "uppercase",
     marginBottom: 4,
   },
@@ -108,15 +135,18 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     paddingHorizontal: 20,
-    marginTop: 24,
+    marginTop: -36,
   },
   statCard: {
     flex: 1,
     backgroundColor: COLORS.bgCard,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 16,
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    shadowColor: "#0F1F3D",
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
     alignItems: "center",
     gap: 6,
   },
@@ -143,6 +173,7 @@ export const styles = StyleSheet.create({
     fontSize: FONT.xs,
     color: COLORS.textSecondary,
     textAlign: "center",
+    fontWeight: "600",
   },
   statSubLabel: {
     fontSize: FONT.xs,
@@ -152,7 +183,7 @@ export const styles = StyleSheet.create({
 
   section: {
     paddingHorizontal: 20,
-    marginTop: 32,
+    marginTop: 28,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -173,8 +204,8 @@ export const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: FONT.sm,
-    fontWeight: "700",
-    letterSpacing: 1.5,
+    fontWeight: "800",
+    letterSpacing: 1.2,
     color: COLORS.textSecondary,
     textTransform: "uppercase",
   },
@@ -183,22 +214,23 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
   },
   sectionBadgeText: {
     fontSize: FONT.xs,
     fontWeight: "700",
-    color: COLORS.textSecondary,
+    color: COLORS.accent,
   },
 
   accountCard: {
     backgroundColor: COLORS.bgCard,
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: COLORS.border,
     padding: 20,
     marginBottom: 14,
+    shadowColor: "#0F1F3D",
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
   },
   accountCardTop: {
     flexDirection: "row",
@@ -210,7 +242,7 @@ export const styles = StyleSheet.create({
     fontSize: FONT.xs,
     fontWeight: "700",
     letterSpacing: 1.5,
-    color: COLORS.textSecondary,
+    color: COLORS.textMuted,
     textTransform: "uppercase",
     marginBottom: 4,
   },
@@ -295,9 +327,7 @@ export const styles = StyleSheet.create({
     color: COLORS.textPrimary,
   },
   accountActionBtn: {
-    backgroundColor: COLORS.accentGlow,
-    borderWidth: 1,
-    borderColor: COLORS.accent,
+    backgroundColor: COLORS.bgCardAlt,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -315,6 +345,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 48,
     gap: 12,
+    backgroundColor: COLORS.bgCard,
+    borderRadius: 18,
   },
   emptyIcon: {
     width: 64,
@@ -338,7 +370,7 @@ export const styles = StyleSheet.create({
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: "rgba(15,31,61,0.45)",
     justifyContent: "flex-end",
   },
   modalSheet: {
@@ -348,8 +380,6 @@ export const styles = StyleSheet.create({
     paddingTop: 12,
     paddingHorizontal: 24,
     paddingBottom: 40,
-    borderTopWidth: 1,
-    borderColor: COLORS.border,
   },
   modalHandle: {
     width: 40,
@@ -400,13 +430,11 @@ export const styles = StyleSheet.create({
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
   },
   modalCloseBtnText: {
     fontSize: FONT.md,
     fontWeight: "700",
-    color: COLORS.textSecondary,
+    color: COLORS.accent,
   },
 
   skeleton: {
@@ -419,7 +447,5 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: COLORS.bgCard,
     marginBottom: 14,
-    borderWidth: 1,
-    borderColor: COLORS.border,
   },
 });

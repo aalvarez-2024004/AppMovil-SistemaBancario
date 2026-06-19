@@ -71,7 +71,8 @@ const HomeScreen = () => {
 
   const quickActions = [
     { icon: '↗️', label: 'Transferir', screen: 'Transfer', bg: KB.blueLight, color: KB.accent },
-    { icon: '📋', label: 'Movimientos', screen: 'MisCuentas', bg: KB.goldLight, color: KB.gold },
+    { icon: '💳', label: 'Cuentas', screen: 'MisCuentas', bg: KB.redLight, color: KB.accent },
+    { icon: '📋', label: 'Movimientos', screen: 'Movements', bg: KB.goldLight, color: KB.gold },
     { icon: '⭐', label: 'Favoritos', screen: 'Favorites', bg: KB.greenLight, color: KB.success },
     { icon: '🏦', label: 'Productos', screen: 'Products', bg: KB.blueLight, color: KB.accent },
   ];
