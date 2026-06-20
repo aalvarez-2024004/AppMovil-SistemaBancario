@@ -12,7 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../../shared/store/authStore';
+import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SuccessModal } from '../../../shared/components/SuccesModal';
 import { s, KB, STEPS, isTablet } from '../../../shared/constants/register'
 import { StepBar, Step1, Step2, Step3 } from '../../../shared/components/RegisterSteps';

@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../../shared/store/authStore';
+import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SPACING, BORDER_RADIUS } from '../../../shared/constants/theme';
 
 /* ── Paleta Kinal Bank ──────────────────────────────────────────────────────── */

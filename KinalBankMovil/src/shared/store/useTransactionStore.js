@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { getMyTransactionsRequest } from "../api/bankClient";
+import { getMyAccountsRequest } from "../api/bankClient";
 
 export const useTransactionStore = create((set, get) => ({
   transactions: [],
+  accounts: [],
   isLoading: false,
   error: null,
   currentPage: 1,
@@ -16,7 +18,6 @@ export const useTransactionStore = create((set, get) => ({
 
       const res = await getMyTransactionsRequest(token, page, limit);
 
-      // La respuesta viene como: { success, data, pagination }
       const { data: transactions, pagination } = res.data;
 
       set((state) => ({
@@ -38,6 +39,24 @@ export const useTransactionStore = create((set, get) => ({
 
       set({ error: message, isLoading: false });
 
+      return { success: false, error: message };
+    }
+  },
+
+  fetchMyAccounts: async (token) => {
+    try {
+      const res = await getMyAccountsRequest(token);
+      console.log("RAW res.data en fetchMyAccounts:", JSON.stringify(res.data, null, 2));
+      const data = Array.isArray(res.data)
+        ? res.data
+        : res.data?.accounts ?? res.data?.data ?? [];
+      console.log("Accounts extraídas:", JSON.stringify(data, null, 2));
+      set({ accounts: data });
+      return { success: true };
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Error al obtener cuentas";
+      set({ error: message });
       return { success: false, error: message };
     }
   },

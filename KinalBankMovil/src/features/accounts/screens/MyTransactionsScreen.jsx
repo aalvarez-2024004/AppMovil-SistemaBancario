@@ -4,17 +4,20 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
   StatusBar,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useAuthStore }        from "../../../shared/store/authStore";
+import { useAuthStore }        from "../../../shared/store/useAuthStore";
 import { useTransactionStore } from "../../../shared/store/useTransactionStore";
 
 import {
-  groupByDate,  
+  groupByDate,
+  isCreditTx,
   TransactionHeader,
   TransactionSearchBar,
   TransactionTabs,
@@ -23,30 +26,42 @@ import {
   TransactionEmptyState,
 } from "../../../shared/components/MyTransactionsComponents";
 import { styles, COLORS, TABS, TX_TYPE_MAP } from "../../../shared/constants/MyTransactions";
-import { getMyTransactionsRequest } from "../../../shared/api/bankClient";
 
 const MyTransactionsScreen = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const token  = useAuthStore((s) => s.token);
 
   const {
     transactions,
+    accounts,
     isLoading,
     error,
     hasMore,
     totalRecords,
     fetchTransactions,
+    fetchMyAccounts,
     loadMore,
     resetTransactions,
   } = useTransactionStore();
 
-  const [activeTab,  setActiveTab]  = useState("all");
+  // Necesitamos las cuentas del usuario para saber si una TRANSFERENCIA
+  // fue enviada (fromAccount es nuestra) o recibida (fromAccount es de otro).
+  const myAccountIds = useMemo(
+    () => (accounts || []).map((a) => String(a._id)),
+    [accounts]
+  );
+
+  const [activeTab,  setActiveTab]  = useState("TODOS");
   const [search,     setSearch]     = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
-    if (token) fetchTransactions(token, 1);
+    if (token) {
+      fetchTransactions(token, 1);
+      fetchMyAccounts(token);
+    }
     return () => resetTransactions();
   }, [token]);
 
@@ -58,12 +73,13 @@ const MyTransactionsScreen = () => {
 
   const filtered = useMemo(() => {
     let list = transactions;
-    if (activeTab !== "all") list = list.filter((t) => t.type === activeTab);
+    if (activeTab !== "TODOS") list = list.filter((t) => t.type === activeTab);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
         (t) =>
           t.type?.toLowerCase().includes(q) ||
+          t.description?.toLowerCase().includes(q) ||
           t.fromAccount?.accountNumber?.toString().includes(q) ||
           t.toAccount?.accountNumber?.toString().includes(q)
       );
@@ -75,34 +91,64 @@ const MyTransactionsScreen = () => {
     const rows = [];
     groupByDate(filtered).forEach(({ title, data }) => {
       rows.push({ type: "header", title, key: `h-${title}` });
-      data.forEach((tx) => rows.push({ type: "item", ...tx, key: tx._id || tx.id }));
+      data.forEach((tx) => rows.push({ rowType: "item", ...tx, key: tx._id || tx.id }));
     });
     return rows;
   }, [filtered]);
 
+  // Saldo real de la cuenta (suma de balance de todas las cuentas del usuario).
+  // Si manejas varias monedas, esto asume todas GTQ; si necesitas separarlas
+  // por currency, agrupa aquí en vez de sumar todo junto.
+  const currentBalance = useMemo(
+    () => (accounts || []).reduce((sum, a) => sum + Number(a.balance ?? 0), 0),
+    [accounts]
+  );
+
+  // Entradas: depósitos, créditos y transferencias recibidas (amountReceived)
+  // Salidas: compras y transferencias enviadas (amountSent)
   const totals = useMemo(() => {
-    const entradas = transactions
-      .filter((t) => t.type === "deposit" || t.type === "received")
-      .reduce((s, t) => s + (t.amount || 0), 0);
-    const salidas = transactions
-      .filter((t) => t.type === "withdraw" || t.type === "transfer")
-      .reduce((s, t) => s + (t.amount || 0), 0);
+    let entradas = 0;
+    let salidas = 0;
+
+    transactions.forEach((tx) => {
+      const fromId = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
+      const isOwnTransferOut = tx.type === "TRANSFERENCIA" && myAccountIds.includes(fromId);
+
+      if (tx.type === "DEPOSITO" || tx.type === "CREDITO") {
+        entradas += Number(tx.amountReceived ?? 0);
+      } else if (tx.type === "TRANSFERENCIA") {
+        if (isOwnTransferOut) {
+          salidas += Number(tx.amountSent ?? 0);
+        } else {
+          entradas += Number(tx.amountReceived ?? 0);
+        }
+      } else if (tx.type === "COMPRA") {
+        salidas += Number(tx.amountSent ?? 0);
+      }
+    });
+
     return { entradas, salidas };
-  }, [transactions]);
+  }, [transactions, myAccountIds]);
 
   const renderItem = ({ item }) => {
     if (item.type === "header") return <TransactionSectionHeader title={item.title} />;
-    return <TransactionItem item={item} />;
+    return <TransactionItem item={item} myAccountIds={myAccountIds} />;
   };
 
   const renderFooter = () => {
     if (!hasMore) return null;
-    if (isLoading && transactions.length > 0)
+    if (isLoading && transactions.length > 0) {
       return <ActivityIndicator style={{ margin: 16 }} color={COLORS.accent} />;
+    }
     return (
-      <Text style={styles.loadMoreText} onPress={() => loadMore(token)}>
-        Cargar más movimientos ↓
-      </Text>
+      <TouchableOpacity
+        style={styles.loadMore}
+        onPress={() => loadMore(token)}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.loadMoreText}>Cargar más movimientos</Text>
+        <Ionicons name="chevron-down" size={14} color={COLORS.accentDark} />
+      </TouchableOpacity>
     );
   };
 
@@ -112,15 +158,20 @@ const MyTransactionsScreen = () => {
 
       <TransactionHeader
         totals={totals}
+        currentBalance={currentBalance}
         totalRecords={totalRecords}
-        showSearch={showSearch}
-        onToggleSearch={() => setShowSearch((v) => !v)}
+        onBack={() => navigation.goBack()}
       />
 
       <View style={styles.content}>
         {showSearch && <TransactionSearchBar value={search} onChange={setSearch} />}
 
-        <TransactionTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <TransactionTabs
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          showSearch={showSearch}
+          onToggleSearch={() => setShowSearch((v) => !v)}
+        />
 
         {error && (
           <View style={styles.errorBox}>

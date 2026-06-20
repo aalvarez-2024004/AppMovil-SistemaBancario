@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../../shared/store/authStore';
+import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SPACING, BORDER_RADIUS } from '../../../shared/constants/theme';
 
 const { width } = Dimensions.get('window');

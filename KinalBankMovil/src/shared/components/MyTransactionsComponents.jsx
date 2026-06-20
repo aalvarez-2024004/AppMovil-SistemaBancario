@@ -1,19 +1,29 @@
 import {
   View,
   Text,
-  FlatList,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS, TABS, TX_TYPE_MAP  } from "../constants/MyTransactions";
+import { styles, COLORS, TABS, TX_TYPE_MAP } from "../constants/MyTransactions";
 
+const getFromId = (tx) => String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
 
-export const formatAmount = (amount, type) => {
+export const isCreditTx = (tx, myAccountIds = []) => {
+  const fromId = getFromId(tx);
+  return (
+    tx.type === "DEPOSITO" ||
+    tx.type === "CREDITO" ||
+    (tx.type === "TRANSFERENCIA" && !myAccountIds.includes(fromId))
+  );
+};
+
+export const formatAmount = (tx, myAccountIds = []) => {
+  const credit = isCreditTx(tx, myAccountIds);
+  const amount = Number(credit ? tx.amountReceived : tx.amountSent) || 0;
   const formatted = `Q ${Math.abs(amount).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`;
-  const isCredit  = type === "deposit" || type === "received";
-  return { text: isCredit ? `+${formatted}` : `-${formatted}`, isCredit };
+  return { text: credit ? `+${formatted}` : `-${formatted}`, isCredit: credit, amount };
 };
 
 export const formatDate = (dateStr) => {
@@ -41,19 +51,28 @@ export const groupByDate = (transactions) => {
   return Object.entries(groups).map(([title, data]) => ({ title, data }));
 };
 
-export const TransactionItem = ({ item }) => {
-  const type      = item.type || "transfer";
-  const meta      = TX_TYPE_MAP[type] || TX_TYPE_MAP.transfer;
-  const amount    = formatAmount(item.amount || 0, type);
+export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
+  const credit    = isCreditTx(item, myAccountIds);
+  // Si es una transferencia recibida, mostramos el mismo ícono/etiqueta de depósito
+  const mappedKey = item.type === "TRANSFERENCIA" && credit ? "DEPOSITO" : item.type;
+  const meta      = TX_TYPE_MAP[mappedKey] || TX_TYPE_MAP.TRANSFERENCIA || TX_TYPE_MAP.transfer;
+  const amount    = formatAmount(item, myAccountIds);
   const isPending = item.status === "pending";
 
   return (
-    <View style={styles.txItem}>
+    <TouchableOpacity
+      style={styles.txItem}
+      activeOpacity={0.7}
+      onPress={() => onPress?.(item)}
+    >
       <View style={[styles.txIcon, { backgroundColor: meta.bg }]}>
-        <Ionicons name={meta.iconName} size={20} color={meta.color} />
+        <Ionicons name={meta.iconName} size={21} color={meta.color} />
       </View>
+
       <View style={styles.txInfo}>
-        <Text style={styles.txType} numberOfLines={1}>{meta.label}</Text>
+        <Text style={styles.txType} numberOfLines={1}>
+          {item.description || meta.label}
+        </Text>
         <Text style={styles.txAccount} numberOfLines={1}>
           {item.fromAccount?.accountNumber
             ? `De: •••• ${String(item.fromAccount.accountNumber).slice(-4)}`
@@ -62,18 +81,25 @@ export const TransactionItem = ({ item }) => {
             : "Sin cuenta"}
         </Text>
         <View style={[styles.badge, isPending ? styles.badgePending : styles.badgeDone]}>
+          <View
+            style={[
+              styles.badgeDot,
+              { backgroundColor: isPending ? COLORS.warning : COLORS.success },
+            ]}
+          />
           <Text style={[styles.badgeText, isPending ? styles.badgeTextPending : styles.badgeTextDone]}>
             {isPending ? "Pendiente" : "Completado"}
           </Text>
         </View>
       </View>
+
       <View style={styles.txRight}>
         <Text style={[styles.txAmount, amount.isCredit ? styles.amountCredit : styles.amountDebit]}>
           {amount.text}
         </Text>
         <Text style={styles.txDate}>{formatDate(item.createdAt)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -83,30 +109,45 @@ export const TransactionSectionHeader = ({ title }) => (
 
 export const TransactionEmptyState = () => (
   <View style={styles.emptyContainer}>
-    <Ionicons name="receipt-outline" size={48} color={COLORS.textMuted} />
-    <Text style={styles.emptyTitle}>Sin movimientos</Text>
-    <Text style={styles.emptyText}>Tus transacciones aparecerán aquí</Text>
+    <View style={styles.emptyIconWrap}>
+      <Ionicons name="receipt-outline" size={38} color={COLORS.textMuted} />
+    </View>
+    <Text style={styles.emptyTitle}>Aún no tienes movimientos</Text>
+    <Text style={styles.emptyText}>
+      Cuando hagas un depósito, retiro o transferencia, aparecerá aquí.
+    </Text>
   </View>
 );
 
-export const TransactionHeader = ({ totals, totalRecords, showSearch, onToggleSearch }) => (
+export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack }) => (
   <View style={styles.header}>
+    <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.7}>
+      <Ionicons name="arrow-back" size={18} color="#fff" />
+    </TouchableOpacity>
+
     <View style={styles.headerTop}>
-      <Text style={styles.headerTitle}>Mis movimientos</Text>
-      <TouchableOpacity style={styles.iconBtn} onPress={onToggleSearch} activeOpacity={0.7}>
-        <Ionicons name={showSearch ? "close" : "search"} size={18} color="#fff" />
-      </TouchableOpacity>
-    </View>
-    <View style={styles.balanceRow}>
-      <Text style={styles.balanceLabel}>TOTAL REGISTRADO</Text>
-      <Text style={styles.balanceAmount}>
-        Q {(totals.entradas - totals.salidas).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+      <Text style={styles.brandEyebrow}>Kinalbank</Text>
+      <Text style={styles.headerTitle}>
+        Mis{"\n"}
+        <Text style={styles.headerTitleAccent}>movimientos</Text>
       </Text>
-      <Text style={styles.balanceSub}>{totalRecords} transacciones en total</Text>
     </View>
+
+    <View style={styles.balanceRow}>
+      <Text style={styles.balanceLabel}>SALDO ACTUAL</Text>
+      <Text style={styles.balanceAmount}>
+        Q {Number(currentBalance ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+      </Text>
+      <Text style={styles.balanceSub}>
+        {totalRecords} {totalRecords === 1 ? "transacción" : "transacciones"} en total
+      </Text>
+    </View>
+
     <View style={styles.pillsRow}>
       <View style={styles.pill}>
-        <View style={styles.pillDotGreen} />
+        <View style={[styles.pillIconWrap, styles.pillIconWrapIn]}>
+          <Ionicons name="arrow-down-outline" size={16} color="#4ADE80" />
+        </View>
         <View>
           <Text style={styles.pillLabel}>ENTRADAS</Text>
           <Text style={styles.pillAmount}>
@@ -114,8 +155,11 @@ export const TransactionHeader = ({ totals, totalRecords, showSearch, onToggleSe
           </Text>
         </View>
       </View>
+
       <View style={styles.pill}>
-        <View style={styles.pillDotRed} />
+        <View style={[styles.pillIconWrap, styles.pillIconWrapOut]}>
+          <Ionicons name="arrow-up-outline" size={16} color="#F87171" />
+        </View>
         <View>
           <Text style={styles.pillLabel}>SALIDAS</Text>
           <Text style={styles.pillAmount}>
@@ -129,7 +173,7 @@ export const TransactionHeader = ({ totals, totalRecords, showSearch, onToggleSe
 
 export const TransactionSearchBar = ({ value, onChange }) => (
   <View style={styles.searchBar}>
-    <Ionicons name="search-outline" size={15} color={COLORS.textMuted} />
+    <Ionicons name="search-outline" size={16} color={COLORS.textMuted} />
     <TextInput
       style={styles.searchInput}
       placeholder="Buscar movimiento..."
@@ -140,29 +184,52 @@ export const TransactionSearchBar = ({ value, onChange }) => (
     />
     {value.length > 0 && (
       <TouchableOpacity onPress={() => onChange("")}>
-        <Ionicons name="close-circle" size={16} color={COLORS.textMuted} />
+        <Ionicons name="close-circle" size={17} color={COLORS.textMuted} />
       </TouchableOpacity>
     )}
   </View>
 );
 
-export const TransactionTabs = ({ activeTab, onTabChange }) => (
-  <FlatList
-    data={TABS}
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    keyExtractor={(t) => t.key}
-    contentContainerStyle={styles.tabsContainer}
-    renderItem={({ item }) => (
-      <TouchableOpacity
-        style={[styles.tab, activeTab === item.key && styles.tabActive]}
-        onPress={() => onTabChange(item.key)}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.tabText, activeTab === item.key && styles.tabTextActive]}>
-          {item.label}
-        </Text>
-      </TouchableOpacity>
-    )}
-  />
+export const TransactionTabs = ({ activeTab, onTabChange, showSearch, onToggleSearch }) => (
+  <View style={styles.tabsRow}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.tabsContainer}
+      style={{ flex: 1 }}
+    >
+      {TABS.map((item) => {
+        const isActive = activeTab === item.key;
+        return (
+          <TouchableOpacity
+            key={item.key}
+            style={[styles.tab, isActive && styles.tabActive]}
+            onPress={() => onTabChange(item.key)}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={item.icon}
+              size={14}
+              color={isActive ? "#fff" : COLORS.textMuted}
+            />
+            <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+
+    <TouchableOpacity
+      style={styles.searchToggleBtn}
+      onPress={onToggleSearch}
+      activeOpacity={0.7}
+    >
+      <Ionicons
+        name={showSearch ? "close" : "search-outline"}
+        size={17}
+        color={showSearch ? COLORS.danger : COLORS.textSecondary}
+      />
+    </TouchableOpacity>
+  </View>
 );

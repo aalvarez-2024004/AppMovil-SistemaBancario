@@ -4,7 +4,7 @@ import {
   RefreshControl, StatusBar, ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../../shared/store/authStore';
+import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { getMyAccountsRequest, getMyTransactionsRequest } from '../../../shared/api/bankClient';
 import { s, KB, chipStyles } from '../../../shared/constants/home';
 

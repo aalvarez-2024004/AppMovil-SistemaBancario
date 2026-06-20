@@ -6,7 +6,7 @@ import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
 import MainStack from "./MainStack";
 
-import { useAuthStore } from "../shared/store/authStore";
+import { useAuthStore } from "../shared/store/useAuthStore";
 import { COLORS } from "../shared/constants/theme";
 
 const AppNavigator = () => {
