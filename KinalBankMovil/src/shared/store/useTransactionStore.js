@@ -1,6 +1,9 @@
 import { create } from "zustand";
-import { getMyTransactionsRequest } from "../api/bankClient";
-import { getMyAccountsRequest } from "../api/bankClient";
+import {
+  getMyTransactionsRequest,
+  getMyAccountsRequest,
+  createTransactionRequest,
+} from "../api/bankClient";
 
 export const useTransactionStore = create((set, get) => ({
   transactions: [],
@@ -11,6 +14,9 @@ export const useTransactionStore = create((set, get) => ({
   totalPages: 1,
   totalRecords: 0,
   hasMore: true,
+
+  isSubmitting: false,
+  submitError: null,
 
   fetchTransactions: async (token, page = 1, limit = 10) => {
     try {
@@ -25,11 +31,11 @@ export const useTransactionStore = create((set, get) => ({
           page === 1
             ? transactions
             : [...state.transactions, ...transactions],
-        currentPage:  pagination.currentPage,
-        totalPages:   pagination.totalPages,
+        currentPage: pagination.currentPage,
+        totalPages: pagination.totalPages,
         totalRecords: pagination.totalRecords,
-        hasMore:      pagination.currentPage < pagination.totalPages,
-        isLoading:    false,
+        hasMore: pagination.currentPage < pagination.totalPages,
+        isLoading: false,
       }));
 
       return { success: true };
@@ -69,13 +75,41 @@ export const useTransactionStore = create((set, get) => ({
     await get().fetchTransactions(token, currentPage + 1);
   },
 
+  createTransaction: async (token, payload) => {
+    try {
+      set({ isSubmitting: true, submitError: null });
+
+      const res = await createTransactionRequest(token, payload);
+      const transaction = res.data?.transaction;
+
+      set((state) => ({
+        transactions: transaction
+          ? [transaction, ...state.transactions]
+          : state.transactions,
+        totalRecords: state.totalRecords + (transaction ? 1 : 0),
+        isSubmitting: false,
+      }));
+
+      return { success: true, transaction, message: res.data?.message };
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Error al realizar la transacción";
+
+      set({ submitError: message, isSubmitting: false });
+
+      return { success: false, error: message };
+    }
+  },
+
+  resetSubmitError: () => set({ submitError: null }),
+
   resetTransactions: () =>
     set({
       transactions: [],
-      currentPage:  1,
-      totalPages:   1,
+      currentPage: 1,
+      totalPages: 1,
       totalRecords: 0,
-      hasMore:      true,
-      error:        null,
+      hasMore: true,
+      error: null,
     }),
 }));
