@@ -1,6 +1,13 @@
+'use strict';
+
 import Transaction from './transaction.model.js';
 import Account from '../accounts/account.model.js';
 import { convertirMoneda } from "../services/divisas-service.js";
+import { accumulatePoints } from '../points/point.controller.js';
+
+const POINTS_PER_QUETZAL = 1 / 100; 
+
+const calcularPuntos = (monto) => Math.floor(monto * POINTS_PER_QUETZAL);
 
 export const createTransaction = async (req, res) => {
     try {
@@ -93,13 +100,13 @@ export const createTransaction = async (req, res) => {
                     amountNumber
                 );
 
-                console.log("🔁 CONVERSIÓN:", conversion);
+                console.log(" CONVERSIÓN:", conversion);
 
                 finalAmount = conversion?.montoConvertido ?? amountNumber;
                 exchangeRate = conversion?.tasa ?? 1;
 
             } catch (error) {
-                console.error("❌ ERROR DIVISAS:", error.message);
+                console.error("ERROR DIVISAS:", error.message);
                 finalAmount = amountNumber;
                 exchangeRate = 1;
             }
@@ -129,14 +136,34 @@ export const createTransaction = async (req, res) => {
 
         await transaction.save();
 
+        const puntosGanados = calcularPuntos(amountNumber);
+        if (puntosGanados > 0) {
+            const tipoDescripcion = type === 'TRANSFERENCIA'
+                ? `Transferencia de Q${amountNumber.toFixed(2)}`
+                : type === 'DEPOSITO'
+                    ? `Depósito de Q${amountNumber.toFixed(2)}`
+                    : `Operación de Q${amountNumber.toFixed(2)}`;
+
+            await accumulatePoints({
+                ownerId: req.user.id,
+                points: puntosGanados,
+                description: `Puntos por ${tipoDescripcion}`,
+                referenceId: transaction._id.toString(),
+                type: 'ACUMULACION'
+            });
+
+            console.log(`Puntos acumulados: ${puntosGanados} para usuario ${req.user.id}`);
+        }
+
         return res.status(201).json({
             success: true,
             message: "Transacción realizada con éxito",
-            transaction
+            transaction,
+            pointsEarned: puntosGanados
         });
 
     } catch (error) {
-        console.error("💥 CREATE TRANSACTION ERROR:", error);
+        console.error(" CREATE TRANSACTION ERROR:", error);
         return res.status(500).json({
             success: false,
             message: "Error interno al realizar la transacción",
@@ -218,7 +245,6 @@ export const updateTransaction = async (req, res) => {
     }
 };
 
-// Cuentas con más movimientos (admin)
 export const getAccountsByActivity = async (req, res) => {
     try {
         const { order = 'desc' } = req.query;
@@ -249,7 +275,6 @@ export const getAccountsByActivity = async (req, res) => {
     }
 };
 
-// Últimos 5 movimientos de una cuenta específica (admin)
 export const getAccountTransactions = async (req, res) => {
     try {
         const { accountId } = req.params;
@@ -336,7 +361,7 @@ export const getMyTransactions = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('💥 GET MY TRANSACTIONS ERROR:', error);
+        console.error(' GET MY TRANSACTIONS ERROR:', error);
         return res.status(500).json({
             success: false,
             message: 'Error al obtener transacciones',
@@ -344,4 +369,3 @@ export const getMyTransactions = async (req, res) => {
         });
     }
 };
-

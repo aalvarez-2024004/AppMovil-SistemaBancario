@@ -16,43 +16,6 @@ const PackageIcon = () => (
   </svg>
 );
 
-const TagIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-    <line x1="7" y1="7" x2="7.01" y2="7" />
-  </svg>
-);
-
-const FileTextIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-    <polyline points="14 2 14 8 20 8" />
-    <line x1="16" y1="13" x2="8" y2="13" />
-    <line x1="16" y1="17" x2="8" y2="17" />
-  </svg>
-);
-
-const LayersIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 2 7 12 12 22 7 12 2" />
-    <polyline points="2 17 12 22 22 17" />
-    <polyline points="2 12 12 17 22 12" />
-  </svg>
-);
-
-const DollarIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="1" x2="12" y2="23" />
-    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-  </svg>
-);
-
-const SparklesIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-  </svg>
-);
-
 const EditIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -73,480 +36,317 @@ const PlusIcon = () => (
   </svg>
 );
 
-const ShieldCheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    <polyline points="9 12 11 14 15 10" />
+const SparklesIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
   </svg>
 );
 
-const ClockIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16 14" />
-  </svg>
+const FIELD_STYLE = (focused) => ({
+  borderColor: focused ? '#818cf8' : '#e2e8f0',
+  backgroundColor: focused ? '#f5f3ff' : '#f8fafc',
+  boxShadow: focused ? '0 4px 20px rgba(99,102,241,0.15), inset 0 0 0 1px rgba(99,102,241,0.1)' : 'none'
+});
+
+const Label = ({ children }) => (
+  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+    {children}
+  </label>
+);
+
+const Input = ({ name, type = "text", value, onChange, onFocus, onBlur, placeholder, focused, min, max }) => (
+  <input
+    name={name}
+    type={type}
+    value={value}
+    onChange={onChange}
+    onFocus={() => onFocus(name)}
+    onBlur={() => onBlur(null)}
+    placeholder={placeholder}
+    min={min}
+    max={max}
+    className="w-full border-2 p-3 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-400 transition-all duration-300 focus:outline-none"
+    style={FIELD_STYLE(focused === name)}
+  />
 );
 
 export const CreateProductModal = ({ product, onClose }) => {
   const { createProduct, updateProduct } = useProductsStore();
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [error, setError] = useState(null);
 
-  const [form, setForm] = useState({
+  const INITIAL_FORM = {
     name: "",
     description: "",
     type: "PRODUCTO",
-    price: 0
-  });
+    price: 0,
+    category: "OTROS",
+    pointsRequired: 0,
+    discountPercentage: 0,
+    pointsPerPurchase: 5,
+    redeemable: true,
+  };
+
+  const [form, setForm] = useState(INITIAL_FORM);
 
   const isEditing = !!product?._id;
 
   useEffect(() => {
-    if (product) setForm(product);
+    if (product) {
+      setForm({
+        ...INITIAL_FORM,
+        ...product,
+        // asegurar tipos numéricos
+        price: product.price ?? 0,
+        pointsRequired: product.pointsRequired ?? 0,
+        discountPercentage: product.discountPercentage ?? 0,
+        pointsPerPurchase: product.pointsPerPurchase ?? 5,
+        redeemable: product.redeemable ?? true,
+      });
+    }
   }, [product]);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value, type: inputType, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: inputType === "checkbox" ? checked : value,
+    }));
+  };
 
   const handleSubmit = async () => {
-    if (!form.name || !form.description) return;
-
-    setIsLoading(true);
-    const payload = { ...form, price: Number(form.price) };
-
-    if (product?._id) {
-      await updateProduct(product._id, payload);
-    } else {
-      await createProduct(payload);
+    setError(null);
+    if (!form.name || !form.description) {
+      setError("Nombre y descripción son obligatorios.");
+      return;
     }
 
+    setIsLoading(true);
+    const payload = {
+      ...form,
+      price: Number(form.price),
+      pointsRequired: Number(form.pointsRequired),
+      discountPercentage: Number(form.discountPercentage),
+      pointsPerPurchase: Number(form.pointsPerPurchase),
+    };
+
+    const result = isEditing
+      ? await updateProduct(product._id, payload)
+      : await createProduct(payload);
+
     setIsLoading(false);
-    onClose();
+    if (result?.success) {
+      onClose();
+    } else {
+      setError(result?.message ?? "Ocurrió un error, intentá de nuevo.");
+    }
   };
+
+  const accentGradient = isEditing
+    ? 'linear-gradient(90deg, #f59e0b, #f97316, #ef4444, #f59e0b)'
+    : 'linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7, #6366f1)';
 
   return (
     <>
-      {/* CSS Animations */}
       <style>{`
-        @keyframes overlayFadeIn {
-          from { opacity: 0; backdrop-filter: blur(0px); }
-          to { opacity: 1; backdrop-filter: blur(12px); }
-        }
-        @keyframes modalSlideIn {
-          from { opacity: 0; transform: scale(0.92) translateY(30px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes gradientFlow {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes floatSlow {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          33% { transform: translate(10px, -10px) rotate(5deg); }
-          66% { transform: translate(-5px, 5px) rotate(-3deg); }
-        }
-        @keyframes floatMedium {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-15px, 10px) scale(1.1); }
-        }
-        @keyframes floatFast {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 20px var(--glow-color, rgba(99, 102, 241, 0.4)), 0 0 40px var(--glow-color, rgba(99, 102, 241, 0.2)); }
-          50% { box-shadow: 0 0 35px var(--glow-color, rgba(99, 102, 241, 0.6)), 0 0 70px var(--glow-color, rgba(99, 102, 241, 0.3)); }
-        }
-        @keyframes sparkle {
-          0%, 100% { opacity: 0.5; transform: scale(0.8) rotate(0deg); }
-          50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
-        }
-        @keyframes shimmerSlide {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        @keyframes ringExpand {
-          0%, 100% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(1.15); opacity: 0.2; }
-        }
-        @keyframes iconFloat {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-4px) scale(1.05); }
-        }
-        @keyframes borderGlow {
-          0%, 100% { border-color: rgba(99, 102, 241, 0.3); }
-          50% { border-color: rgba(99, 102, 241, 0.6); }
-        }
-        @keyframes textShine {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .modal-overlay { animation: overlayFadeIn 0.35s ease-out forwards; }
-        .modal-content { animation: modalSlideIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .gradient-bar { background-size: 200% 100%; animation: gradientFlow 3s ease infinite; }
-        .float-slow { animation: floatSlow 8s ease-in-out infinite; }
-        .float-medium { animation: floatMedium 6s ease-in-out infinite; }
-        .float-fast { animation: floatFast 4s ease-in-out infinite; }
-        .pulse-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
-        .sparkle { animation: sparkle 2s ease-in-out infinite; }
-        .ring-expand { animation: ringExpand 2s ease-in-out infinite; }
-        .field-group:hover .field-icon { animation: iconFloat 0.6s ease-in-out; }
-        .shimmer-effect::after {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          animation: shimmerSlide 2s infinite;
-        }
-        .close-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .close-btn:hover { transform: rotate(90deg) scale(1.1); }
-        .text-shine {
-          background: linear-gradient(90deg, currentColor 40%, rgba(255,255,255,0.8) 50%, currentColor 60%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          animation: textShine 3s linear infinite;
-        }
+        @keyframes overlayFadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes modalSlideIn { from{opacity:0;transform:scale(0.92) translateY(30px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes gradientFlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        @keyframes pulseGlow { 0%,100%{box-shadow:0 0 20px rgba(99,102,241,0.4)} 50%{box-shadow:0 0 35px rgba(99,102,241,0.6)} }
+        @keyframes sparkle { 0%,100%{opacity:0.5;transform:scale(0.8) rotate(0deg)} 50%{opacity:1;transform:scale(1.3) rotate(180deg)} }
+        .modal-overlay{animation:overlayFadeIn 0.3s ease-out forwards}
+        .modal-content{animation:modalSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        .gradient-bar{background-size:200% 100%;animation:gradientFlow 3s ease infinite}
+        .pulse-glow{animation:pulseGlow 2.5s ease-in-out infinite}
+        .sparkle-icon{animation:sparkle 2s ease-in-out infinite}
+        .close-btn{transition:all 0.3s ease}
+        .close-btn:hover{transform:rotate(90deg) scale(1.1)}
       `}</style>
 
       <div className="modal-overlay fixed inset-0 flex items-center justify-center z-50 p-4 bg-gradient-to-br from-slate-900/70 via-black/60 to-indigo-950/50">
         <div className="absolute inset-0" onClick={onClose} />
 
         <div
-          className="modal-content relative w-full max-w-lg rounded-[32px] bg-white overflow-hidden"
-          style={{ boxShadow: '0 25px 100px -12px rgba(0, 0, 0, 0.5), 0 0 60px rgba(99, 102, 241, 0.15)' }}
+          className="modal-content relative w-full max-w-xl rounded-[32px] bg-white overflow-hidden"
+          style={{ boxShadow: '0 25px 100px -12px rgba(0,0,0,0.5), 0 0 60px rgba(99,102,241,0.15)', maxHeight: '90vh', overflowY: 'auto' }}
         >
-          <div
-            className="gradient-bar h-1.5"
-            style={{
-              background: isEditing
-                ? 'linear-gradient(90deg, #f59e0b, #f97316, #ef4444, #ec4899, #f59e0b)'
-                : 'linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7, #ec4899, #6366f1)'
-            }}
-          />
+          <div className="gradient-bar h-1.5" style={{ background: accentGradient }} />
 
-          <div className="relative bg-[#070d1f] px-7 py-7 overflow-hidden">
-            <div
-              className="float-slow absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-60"
-              style={{
-                background: isEditing
-                  ? 'radial-gradient(circle, rgba(251, 146, 60, 0.3) 0%, transparent 70%)'
-                  : 'radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, transparent 70%)',
-                filter: 'blur(40px)'
-              }}
-            />
-            <div
-              className="float-medium absolute -bottom-16 -left-16 w-48 h-48 rounded-full opacity-50"
-              style={{
-                background: isEditing
-                  ? 'radial-gradient(circle, rgba(249, 115, 22, 0.25) 0%, transparent 70%)'
-                  : 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
-                filter: 'blur(35px)'
-              }}
-            />
-            <div
-              className="float-fast absolute top-1/3 left-1/2 w-32 h-32 rounded-full opacity-40"
-              style={{
-                background: 'radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%)',
-                filter: 'blur(25px)'
-              }}
-            />
-
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                backgroundSize: '18px 18px'
-              }}
-            />
-
-            <div
-              className="absolute inset-0 opacity-[0.02]"
-              style={{
-                backgroundImage: 'repeating-linear-gradient(45deg, white 0, white 1px, transparent 1px, transparent 20px)'
-              }}
-            />
+          {/* Header */}
+          <div className="relative bg-[#070d1f] px-7 py-6 overflow-hidden">
+            <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-50"
+              style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.35) 0%, transparent 70%)', filter: 'blur(40px)' }} />
 
             <div className="relative flex items-start justify-between">
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-4">
                 <div className="relative">
-                  <div
-                    className="ring-expand absolute -inset-2 rounded-2xl border-2 opacity-50"
-                    style={{ borderColor: isEditing ? 'rgba(251, 146, 60, 0.4)' : 'rgba(99, 102, 241, 0.4)' }}
-                  />
-                  <div
-                    className="pulse-glow relative w-16 h-16 rounded-2xl flex items-center justify-center"
-                    style={{
-                      background: isEditing
-                        ? 'linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ea580c 100%)'
-                        : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
-                      '--glow-color': isEditing ? 'rgba(251, 146, 60, 0.5)' : 'rgba(99, 102, 241, 0.5)'
-                    }}
-                  >
-                    <span className="text-white drop-shadow-lg">
-                      {isEditing ? <EditIcon /> : <PackageIcon />}
-                    </span>
+                  <div className="pulse-glow w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{ background: isEditing ? 'linear-gradient(135deg,#f59e0b,#f97316)' : 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
+                    <span className="text-white">{isEditing ? <EditIcon /> : <PackageIcon />}</span>
                   </div>
-                  <div
-                    className="sparkle absolute -top-1 -right-1 text-yellow-400 drop-shadow-lg"
-                    style={{ filter: 'drop-shadow(0 0 4px rgba(250, 204, 21, 0.8))' }}
-                  >
-                    <SparklesIcon />
-                  </div>
-                  {/* Segundo sparkle */}
-                  <div
-                    className="sparkle absolute -bottom-0.5 -left-1 text-cyan-400 drop-shadow-lg"
-                    style={{ filter: 'drop-shadow(0 0 4px rgba(34, 211, 238, 0.8))', animationDelay: '0.5s' }}
-                  >
+                  <div className="sparkle-icon absolute -top-1 -right-1 text-yellow-400">
                     <SparklesIcon />
                   </div>
                 </div>
-
                 <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span
-                      className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1.5 rounded-full"
-                      style={{
-                        background: isEditing
-                          ? 'linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(249, 115, 22, 0.15) 100%)'
-                          : 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.15) 100%)',
-                        color: isEditing ? '#fdba74' : '#a5b4fc',
-                        border: `1px solid ${isEditing ? 'rgba(251, 146, 60, 0.3)' : 'rgba(99, 102, 241, 0.3)'}`
-                      }}
-                    >
-                      {isEditing ? <ClockIcon /> : <ShieldCheckIcon />}
-                      {isEditing ? "Modificando" : "Nuevo registro"}
-                    </span>
-                  </div>
                   <h2 className="text-2xl font-black text-white tracking-tight">
                     {isEditing ? "Editar producto" : "Crear producto"}
                   </h2>
-                  <p className="text-white/40 text-sm mt-1 font-medium">
-                    {isEditing ? "Actualiza la informacion del producto" : "Completa todos los campos requeridos"}
+                  <p className="text-white/40 text-sm mt-0.5 font-medium">
+                    {isEditing ? "Actualiza la información del producto" : "Completa todos los campos"}
                   </p>
                 </div>
               </div>
 
-              <button
-                onClick={onClose}
-                className="close-btn relative flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 hover:bg-white/15 text-white/50 hover:text-white border border-white/10 hover:border-white/20"
-              >
+              <button onClick={onClose} className="close-btn w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 text-white/50 hover:text-white border border-white/10 flex items-center justify-center">
                 <XIcon />
               </button>
             </div>
           </div>
 
-          <div className="relative h-8 bg-gradient-to-b from-slate-100 to-white flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/50 to-transparent" />
-            <div className="relative flex items-center gap-1.5">
-              <div className="w-8 h-px bg-gradient-to-r from-transparent to-slate-300" />
-              <div className={`w-2 h-2 rounded-full ${isEditing ? 'bg-amber-400' : 'bg-indigo-400'}`} />
-              <div className={`w-1.5 h-1.5 rounded-full ${isEditing ? 'bg-orange-300' : 'bg-violet-300'}`} />
-              <div className={`w-2 h-2 rounded-full ${isEditing ? 'bg-amber-400' : 'bg-indigo-400'}`} />
-              <div className="w-8 h-px bg-gradient-to-l from-transparent to-slate-300" />
-            </div>
-          </div>
+          {/* Formulario */}
+          <div className="px-7 pt-5 pb-3 space-y-4">
 
-          <div className="px-7 pb-6 pt-2 space-y-5 relative">
-            <div
-              className="absolute inset-0 opacity-[0.015] pointer-events-none"
-              style={{
-                backgroundImage: `radial-gradient(circle, ${isEditing ? '#f59e0b' : '#6366f1'} 1px, transparent 1px)`,
-                backgroundSize: '20px 20px'
-              }}
-            />
+            {/* Error */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3">
+                {error}
+              </div>
+            )}
 
-            <div className="field-group relative">
-              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-                <span
-                  className="field-icon flex items-center justify-center w-7 h-7 rounded-lg shadow-sm transition-all duration-300"
-                  style={{
-                    background: focusedField === 'name'
-                      ? 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)'
-                      : 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
-                    color: focusedField === 'name' ? 'white' : '#6366f1',
-                    boxShadow: focusedField === 'name' ? '0 4px 12px rgba(99, 102, 241, 0.4)' : 'none'
-                  }}
-                >
-                  <TagIcon />
-                </span>
-                Nombre del producto
-                <span className="text-red-400 text-base">*</span>
-              </label>
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                onFocus={() => setFocusedField('name')}
-                onBlur={() => setFocusedField(null)}
-                placeholder="Ej: Cuenta Premium Business"
-                className="w-full border-2 p-4 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-400 transition-all duration-300 focus:outline-none"
-                style={{
-                  borderColor: focusedField === 'name' ? '#818cf8' : '#e2e8f0',
-                  backgroundColor: focusedField === 'name' ? '#f5f3ff' : '#f8fafc',
-                  boxShadow: focusedField === 'name' ? '0 4px 20px rgba(99, 102, 241, 0.15), inset 0 0 0 1px rgba(99, 102, 241, 0.1)' : 'none'
-                }}
-              />
+            {/* Nombre */}
+            <div>
+              <Label>Nombre del producto <span className="text-red-400">*</span></Label>
+              <Input name="name" value={form.name} onChange={handleChange}
+                onFocus={setFocusedField} onBlur={setFocusedField}
+                placeholder="Ej: Seguro de Viaje Premium" focused={focusedField} />
             </div>
 
-            <div className="field-group relative">
-              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-                <span
-                  className="field-icon flex items-center justify-center w-7 h-7 rounded-lg shadow-sm transition-all duration-300"
-                  style={{
-                    background: focusedField === 'description'
-                      ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
-                      : 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)',
-                    color: focusedField === 'description' ? 'white' : '#8b5cf6',
-                    boxShadow: focusedField === 'description' ? '0 4px 12px rgba(139, 92, 246, 0.4)' : 'none'
-                  }}
-                >
-                  <FileTextIcon />
-                </span>
-                Descripcion
-                <span className="text-red-400 text-base">*</span>
-              </label>
+            {/* Descripción */}
+            <div>
+              <Label>Descripción <span className="text-red-400">*</span></Label>
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 onFocus={() => setFocusedField('description')}
                 onBlur={() => setFocusedField(null)}
-                placeholder="Describe las caracteristicas principales del producto..."
+                placeholder="Describe las características principales..."
                 rows={3}
-                className="w-full border-2 p-4 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-400 transition-all duration-300 focus:outline-none resize-none"
-                style={{
-                  borderColor: focusedField === 'description' ? '#a78bfa' : '#e2e8f0',
-                  backgroundColor: focusedField === 'description' ? '#faf5ff' : '#f8fafc',
-                  boxShadow: focusedField === 'description' ? '0 4px 20px rgba(139, 92, 246, 0.15), inset 0 0 0 1px rgba(139, 92, 246, 0.1)' : 'none'
-                }}
+                className="w-full border-2 p-3 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-400 transition-all duration-300 focus:outline-none resize-none"
+                style={FIELD_STYLE(focusedField === 'description')}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="field-group relative">
-                <label className="flex items-center gap-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-                  <span
-                    className="field-icon flex items-center justify-center w-7 h-7 rounded-lg shadow-sm transition-all duration-300"
-                    style={{
-                      background: focusedField === 'type'
-                        ? 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)'
-                        : 'linear-gradient(135deg, #e0f2fe 0%, #cffafe 100%)',
-                      color: focusedField === 'type' ? 'white' : '#0ea5e9',
-                      boxShadow: focusedField === 'type' ? '0 4px 12px rgba(14, 165, 233, 0.4)' : 'none'
-                    }}
-                  >
-                    <LayersIcon />
-                  </span>
-                  Tipo
-                </label>
-                <div className="relative">
-                  <select
-                    name="type"
-                    value={form.type}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('type')}
-                    onBlur={() => setFocusedField(null)}
-                    className="w-full border-2 p-4 pr-10 rounded-2xl text-sm font-medium text-slate-700 transition-all duration-300 focus:outline-none appearance-none cursor-pointer"
-                    style={{
-                      borderColor: focusedField === 'type' ? '#22d3ee' : '#e2e8f0',
-                      backgroundColor: focusedField === 'type' ? '#ecfeff' : '#f8fafc',
-                      boxShadow: focusedField === 'type' ? '0 4px 20px rgba(6, 182, 212, 0.15), inset 0 0 0 1px rgba(6, 182, 212, 0.1)' : 'none'
-                    }}
-                  >
-                    <option value="PRODUCTO">Producto</option>
-                    <option value="SERVICIO">Servicio</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Tipo</Label>
+                <select name="type" value={form.type} onChange={handleChange}
+                  className="w-full border-2 p-3 rounded-2xl text-sm font-medium text-slate-700 transition-all duration-300 focus:outline-none appearance-none cursor-pointer"
+                  style={FIELD_STYLE(false)}>
+                  <option value="PRODUCTO">Producto</option>
+                  <option value="SERVICIO">Servicio</option>
+                </select>
+              </div>
+              <div>
+                <Label>Categoría</Label>
+                <select name="category" value={form.category} onChange={handleChange}
+                  className="w-full border-2 p-3 rounded-2xl text-sm font-medium text-slate-700 transition-all duration-300 focus:outline-none appearance-none cursor-pointer"
+                  style={FIELD_STYLE(false)}>
+                  <option value="OTROS">Otros</option>
+                  <option value="SEGUROS">Seguros</option>
+                  <option value="PRESTAMOS">Préstamos</option>
+                  <option value="TARJETAS">Tarjetas</option>
+                  <option value="BENEFICIOS">Beneficios</option>
+                  <option value="SERVICIOS_DIGITALES">Servicios Digitales</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Precio */}
+            <div>
+              <Label>Precio (Q)</Label>
+              <Input name="price" type="number" value={form.price} onChange={handleChange}
+                onFocus={setFocusedField} onBlur={setFocusedField}
+                placeholder="0.00" min="0" focused={focusedField} />
+            </div>
+
+            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-3">
+              <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 flex items-center gap-2">
+                <span>⭐</span> Sistema de puntos
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {/* Puntos para canjear gratis */}
+                <div>
+                  <Label>Puntos para canje gratis</Label>
+                  <Input name="pointsRequired" type="number" value={form.pointsRequired}
+                    onChange={handleChange} onFocus={setFocusedField} onBlur={setFocusedField}
+                    placeholder="0 = no canjeable" min="0" focused={focusedField} />
+                  <p className="text-[10px] text-slate-400 mt-1">Puntos que necesita el cliente para obtenerlo gratis. 0 = no aplica.</p>
+                </div>
+
+                {/* Puntos que gana al comprar */}
+                <div>
+                  <Label>Puntos por compra con dinero</Label>
+                  <Input name="pointsPerPurchase" type="number" value={form.pointsPerPurchase}
+                    onChange={handleChange} onFocus={setFocusedField} onBlur={setFocusedField}
+                    placeholder="5" min="0" focused={focusedField} />
+                  <p className="text-[10px] text-slate-400 mt-1">Puntos que gana el cliente al comprarlo con dinero.</p>
                 </div>
               </div>
 
-              <div className="field-group relative">
-                <label className="flex items-center gap-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-                  <span
-                    className="field-icon flex items-center justify-center w-7 h-7 rounded-lg shadow-sm transition-all duration-300"
-                    style={{
-                      background: focusedField === 'price'
-                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                        : 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
-                      color: focusedField === 'price' ? 'white' : '#10b981',
-                      boxShadow: focusedField === 'price' ? '0 4px 12px rgba(16, 185, 129, 0.4)' : 'none'
-                    }}
-                  >
-                    <DollarIcon />
-                  </span>
-                  Precio
-                </label>
-                <div className="relative">
-                  <span
-                    className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-sm transition-colors duration-300"
-                    style={{ color: focusedField === 'price' ? '#059669' : '#94a3b8' }}
-                  >
-                  </span>
-                  <input
-                    name="price"
-                    type="number"
-                    value={form.price}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('price')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="0.00"
-                    className="w-full border-2 p-4 pl-9 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-400 transition-all duration-300 focus:outline-none"
-                    style={{
-                      borderColor: focusedField === 'price' ? '#34d399' : '#e2e8f0',
-                      backgroundColor: focusedField === 'price' ? '#ecfdf5' : '#f8fafc',
-                      boxShadow: focusedField === 'price' ? '0 4px 20px rgba(16, 185, 129, 0.15), inset 0 0 0 1px rgba(16, 185, 129, 0.1)' : 'none'
-                    }}
-                  />
+              <div>
+                <Label>Descuento (%) al usar puntos parciales</Label>
+                <Input name="discountPercentage" type="number" value={form.discountPercentage}
+                  onChange={handleChange} onFocus={setFocusedField} onBlur={setFocusedField}
+                  placeholder="0" min="0" max="100" focused={focusedField} />
+                <p className="text-[10px] text-slate-400 mt-1">% de descuento cuando el cliente tiene puntos pero no suficientes para canje total. 0 = no aplica.</p>
+              </div>
+
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setForm((p) => ({ ...p, redeemable: !p.redeemable }))}
+                  className={`relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none ${form.redeemable ? 'bg-indigo-500' : 'bg-slate-300'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-300 ${form.redeemable ? 'translate-x-5' : 'translate-x-0'}`} />
+                </button>
+                <div>
+                  <p className="text-sm font-semibold text-slate-700">
+                    {form.redeemable ? "Producto canjeable con puntos" : "No canjeable con puntos"}
+                  </p>
+                  <p className="text-[10px] text-slate-400">Si está activo, los clientes pueden obtenerlo usando sus puntos.</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="relative px-7 py-5 border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white overflow-hidden">
-            <div
-              className="absolute inset-0 opacity-[0.02] pointer-events-none"
-              style={{
-                backgroundImage: 'radial-gradient(circle, #6366f1 1px, transparent 1px)',
-                backgroundSize: '14px 14px'
-              }}
-            />
-
-            <div className="relative flex items-center justify-between">
+          <div className="px-7 py-5 border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
-                <div
-                  className="w-2.5 h-2.5 rounded-full animate-pulse"
-                  style={{
-                    backgroundColor: isEditing ? '#f59e0b' : '#22c55e',
-                    boxShadow: `0 0 8px ${isEditing ? 'rgba(245, 158, 11, 0.6)' : 'rgba(34, 197, 94, 0.6)'}`
-                  }}
-                />
-                {isEditing ? 'Modo edicion activo' : 'Listo para crear'}
+                <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${isEditing ? 'bg-amber-400' : 'bg-emerald-400'}`}
+                  style={{ boxShadow: `0 0 8px ${isEditing ? 'rgba(245,158,11,0.6)' : 'rgba(34,197,94,0.6)'}` }} />
+                {isEditing ? 'Modo edición activo' : 'Listo para crear'}
               </div>
 
               <div className="flex gap-3">
-                <button
-                  onClick={onClose}
-                  className="px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 hover:border-slate-300 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-                >
+                <button onClick={onClose}
+                  className="px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 transition-all duration-300">
                   Cancelar
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading || !form.name || !form.description}
-                  className="shimmer-effect relative px-6 py-3 rounded-xl text-white text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden flex items-center gap-2"
+                  className="relative px-6 py-3 rounded-xl text-white text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   style={{
                     background: isEditing
-                      ? 'linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ea580c 100%)'
-                      : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+                      ? 'linear-gradient(135deg,#f59e0b,#f97316)'
+                      : 'linear-gradient(135deg,#6366f1,#8b5cf6)',
                     boxShadow: isEditing
-                      ? '0 4px 20px rgba(249, 115, 22, 0.4)'
-                      : '0 4px 20px rgba(99, 102, 241, 0.4)'
+                      ? '0 4px 20px rgba(249,115,22,0.4)'
+                      : '0 4px 20px rgba(99,102,241,0.4)'
                   }}
                 >
                   {isLoading ? (
@@ -567,7 +367,6 @@ export const CreateProductModal = ({ product, onClose }) => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </>

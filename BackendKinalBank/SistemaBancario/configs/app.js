@@ -14,6 +14,7 @@ import depositRoutes     from '../src/deposits/deposit.routes.js';
 import clientRoutes      from '../src/client/client.routes.js';
 import favoriteRoutes    from '../src/favorits/favorite.routes.js';
 import productRoutes     from '../src/products/product.routes.js';
+import productsRoutes     from '../src/products/product.routes.js';
 
 export const initApp = () => {
   const app = express();
@@ -29,6 +30,7 @@ export const initApp = () => {
   app.use(`${BASE_PATH}/client`,      clientRoutes);
   app.use(`${BASE_PATH}/favorites`,   favoriteRoutes);
   app.use(`${BASE_PATH}/products`,    productRoutes);
+  app.use(`${BASE_PATH}/products`,    productsRoutes);
 
   app.get(`${BASE_PATH}/health`, (req, res) => {
     res.status(200).json({

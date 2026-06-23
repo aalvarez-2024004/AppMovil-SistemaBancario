@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HomeScreen from '../features/auth/screens/HomeScreen';
 import MyAccountsScreen from '../features/accounts/screens/MyAccountsScreen';
 import MyTransactionsScreen from "../features/accounts/screens/MyTransactionsScreen";
+import ProductsScreen from "../features/products/screens/ProductsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +71,19 @@ const MainTabs = () => {
           ),
         }}
       />
+
+      {/* ➕ AGREGADO: Tab de Productos */}
+      <Tab.Screen
+        name="Productos"
+        component={ProductsScreen}
+        options={{
+          title: 'Productos',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'gift' : 'gift-outline'} size={size} color={color} />
+          ),
+        }}
+      />
+
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 
+
 const productSchema = new mongoose.Schema(
     {
         name: {
@@ -18,17 +19,49 @@ const productSchema = new mongoose.Schema(
             enum: ['PRODUCTO', 'SERVICIO'],
             required: true
         },
+
         price: {
             type: Number,
             required: true,
             min: 0
         },
+
+        pointsRequired: {
+            type: Number,
+            default: 0,
+            min: 0
+        },
+
+        discountPercentage: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 100
+        },
+
+        pointsPerPurchase: {
+            type: Number,
+            default: 5,
+            min: 0
+        },
+
+        redeemable: {
+            type: Boolean,
+            default: true
+        },
+
+        category: {
+            type: String,
+            enum: ['SEGUROS', 'PRESTAMOS', 'TARJETAS', 'BENEFICIOS', 'SERVICIOS_DIGITALES', 'OTROS'],
+            default: 'OTROS'
+        },
+
         status: {
             type: Boolean,
             default: true
         },
         createdBy: {
-            type: String, 
+            type: String,
             required: true
         }
     },

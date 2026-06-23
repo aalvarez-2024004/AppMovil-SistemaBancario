@@ -36,4 +36,11 @@ export const FAVORITE_ENDPOINTS = {
   DELETE: (id) => `${BANK_BASE_URL}/favorites/delete/${id}`,
 };
 
+export const PRODUCT_ENDPOINTS = {
+    LIST:         `${BANK_BASE_URL}/products/listar`,
+    MY_POINTS:    `${BANK_BASE_URL}/points/me`,
+    BUY:          (id) => `${BANK_BASE_URL}/products/buy/${id}`,
+    REDEEM:       (id) => `${BANK_BASE_URL}/products/redeem/${id}`,
+    BUY_DISCOUNT: (id) => `${BANK_BASE_URL}/products/buy-discount/${id}`,
+};
 export default BASE_URL;

@@ -2,18 +2,19 @@
 
 import { Router } from 'express';
 import {
-  createProduct,
-  getProducts,
-  updateProduct,
-  deleteProduct,
-  buyProduct
+    createProduct,
+    getProducts,
+    updateProduct,
+    deleteProduct,
+    buyProduct,
+    redeemProduct,
+    buyWithDiscount
 } from './product.controller.js';
 import { validateJWT } from '../middlewares/validate-jwt.js';
 import { validateAdmin } from '../middlewares/validate-admin.js';
-import {validateClient} from "../middlewares/validate-client.js"
+import { validateClient } from '../middlewares/validate-client.js';
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -36,32 +37,47 @@ const router = Router();
  *                 type: string
  *               type:
  *                 type: string
- *                 example: SERVICIO
+ *                 enum: [PRODUCTO, SERVICIO]
  *               price:
  *                 type: number
- *                 example: 25
- *               status:
+ *               pointsRequired:
+ *                 type: number
+ *                 description: "Puntos para obtenerlo GRATIS (0 = no canjeable)"
+ *               discountPercentage:
+ *                 type: number
+ *                 description: "% de descuento al usar puntos parciales"
+ *               pointsPerPurchase:
+ *                 type: number
+ *                 description: "Puntos que gana el cliente al comprar con dinero"
+ *               redeemable:
  *                 type: boolean
- *                 example: true
+ *               category:
+ *                 type: string
+ *                 enum: [SEGUROS, PRESTAMOS, TARJETAS, BENEFICIOS, SERVICIOS_DIGITALES, OTROS]
  *     responses:
  *       201:
  *         description: Producto creado
  */
 router.post('/create', validateJWT, validateAdmin, createProduct);
 
-
 /**
  * @swagger
  * /api/v1/products/listar:
  *   get:
- *     summary: Obtener productos activos
+ *     summary: Obtener productos activos (público, pero con JWT opcional para info de puntos del cliente)
  *     tags: [Products]
  *     responses:
  *       200:
- *         description: Lista de productos
+ *         description: Lista de productos con info de puntos del cliente
  */
-router.get('/listar', getProducts);
-
+// JWT opcional - si viene lo usa para enricher data, si no, igual funciona
+router.get('/listar', (req, res, next) => {
+    const authHeader = req.header('Authorization');
+    if (authHeader) {
+        return validateJWT(req, res, next);
+    }
+    next();
+}, getProducts);
 
 /**
  * @swagger
@@ -71,15 +87,8 @@ router.get('/listar', getProducts);
  *     tags: [Products]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  */
 router.put('/update/:id', validateJWT, validateAdmin, updateProduct);
-
 
 /**
  * @swagger
@@ -89,15 +98,60 @@ router.put('/update/:id', validateJWT, validateAdmin, updateProduct);
  *     tags: [Products]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  */
 router.delete('/delete/:id', validateJWT, validateAdmin, deleteProduct);
 
-router.post('/buy/:id', validateJWT,validateClient, buyProduct);
+/**
+ * @swagger
+ * /api/v1/products/buy/{id}:
+ *   post:
+ *     summary: Comprar producto con dinero y acumular puntos (CLIENTE)
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               accountId:
+ *                 type: string
+ *                 description: ID de la cuenta con la que paga
+ */
+router.post('/buy/:id', validateJWT, validateClient, buyProduct);
+
+/**
+ * @swagger
+ * /api/v1/products/redeem/{id}:
+ *   post:
+ *     summary: Canjear producto GRATIS con puntos (CLIENTE)
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Usa los puntos acumulados para obtener el producto sin costo monetario
+ */
+router.post('/redeem/:id', validateJWT, validateClient, redeemProduct);
+
+/**
+ * @swagger
+ * /api/v1/products/buy-discount/{id}:
+ *   post:
+ *     summary: Comprar con descuento usando puntos (CLIENTE)
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               accountId:
+ *                 type: string
+ */
+router.post('/buy-discount/:id', validateJWT, validateClient, buyWithDiscount);
 
 export default router;
