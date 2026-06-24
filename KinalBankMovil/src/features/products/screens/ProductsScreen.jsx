@@ -7,17 +7,16 @@ import {
     RefreshControl,
     StatusBar,
     ActivityIndicator,
+    TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
-import { useAuthStore }    from "../../../shared/store/useAuthStore";
+import { useAuthStore } from "../../../shared/store/useAuthStore";
 import { useProductStore } from "../../../shared/store/useProductStore";
 import { getMyAccountsRequest } from "../../../shared/api/bankClient";
-
 import { styles, COLORS } from "../../../shared/constants/Products";
+
 import {
-    PointsBanner,
     FilterTabs,
     ProductCard,
     ProductsEmptyState,
@@ -27,8 +26,7 @@ import {
 
 const ProductsScreen = () => {
     const navigation = useNavigation();
-    const token      = useAuthStore((s) => s.token);
-
+    const token = useAuthStore((state) => state.token);
     const {
         products,
         clientPoints,
@@ -45,26 +43,36 @@ const ProductsScreen = () => {
         clearLastSuccess,
     } = useProductStore();
 
-    const [refreshing,     setRefreshing]     = useState(false);
-    const [activeFilter,   setActiveFilter]   = useState("TODOS");
-    const [selectedProduct, setSelected]      = useState(null);
-    const [modalVisible,   setModalVisible]   = useState(false);
-    const [accounts,       setAccounts]       = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const [activeFilter, setActiveFilter] = useState("TODOS");
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [accounts, setAccounts] = useState([]);
+    const [search, setSearch] = useState("");
 
     const load = useCallback(async () => {
         if (!token) return;
         await fetchProducts(token);
-
         try {
-            const res  = await getMyAccountsRequest(token);
-            const data = Array.isArray(res.data)
-                ? res.data
-                : res.data?.accounts ?? res.data?.data ?? [];
+            const response = await getMyAccountsRequest(token);
+            const data = Array.isArray(response.data)
+                ? response.data
+                : response.data?.accounts ??
+                  response.data?.data ??
+                  [];
             setAccounts(data);
-        } catch (_) 
+        } catch (error) {
+            console.log(
+                "Error cargando cuentas:",
+                error
+            );
+        }
     }, [token]);
 
-    useEffect(() => { load(); }, [load]);
+    useEffect(() => {
+        load();
+    }, [load]);
+
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -74,122 +82,278 @@ const ProductsScreen = () => {
 
     const openModal = (product) => {
         resetSubmitError();
-        setSelected(product);
+        setSelectedProduct(product);
         setModalVisible(true);
     };
+
     const closeModal = () => {
         setModalVisible(false);
         resetSubmitError();
     };
 
-    const handleBuy = async (productId, accountId) => {
-        const res = await buyProduct(token, productId, accountId);
-        if (res.success) {
-            setModalVisible(false);
-            fetchProducts(token); 
-        }
-    };
+    const handleBuy = async (
+        productId,
+        accountId
+    ) => {
+        const result =
+            await buyProduct(
+                token,
+                productId,
+                accountId
+            );
 
-    const handleRedeem = async (productId) => {
-        const res = await redeemProduct(token, productId);
-        if (res.success) {
-            setModalVisible(false);
-            fetchProducts(token);
-        }
-    };
-
-    const handleBuyDiscount = async (productId, accountId) => {
-        const res = await buyWithDiscount(token, productId, accountId);
-        if (res.success) {
+        if(result.success){
             setModalVisible(false);
             fetchProducts(token);
         }
     };
 
-    const filtered = products.filter((p) => {
-        if (activeFilter === "TODOS")    return true;
-        if (activeFilter === "FREE")     return p.clientCanRedeem;
-        if (activeFilter === "PRODUCTO") return p.type === "PRODUCTO";
-        if (activeFilter === "SERVICIO") return p.type === "SERVICIO";
-        return true;
-    });
+    const handleRedeem = async (
+        productId
+    ) => {
+        const result =
+            await redeemProduct(
+                token,
+                productId
+            );
 
-    const freeCount = products.filter((p) => p.clientCanRedeem).length;
+        if(result.success){
+            setModalVisible(false);
+            fetchProducts(token);
+        }
+    };
+
+    const handleBuyDiscount = async (
+        productId,
+        accountId
+    ) => {
+        const result =
+            await buyWithDiscount(
+                token,
+                productId,
+                accountId
+            );
+
+        if(result.success){
+            setModalVisible(false);
+            fetchProducts(token);
+        }
+    };
+
+    const filteredProducts =
+        products.filter((product)=>{
+
+            const matchesSearch =
+                product.name
+                ?.toLowerCase()
+                .includes(
+                    search.toLowerCase()
+                );
+
+            if(!matchesSearch)
+                return false;
+
+            if(activeFilter==="TODOS")
+                return true;
+
+            if(activeFilter==="FREE")
+                return product.clientCanRedeem;
+
+            if(activeFilter==="PRODUCTO")
+                return product.type==="PRODUCTO";
+
+            if(activeFilter==="SERVICIO")
+                return product.type==="SERVICIO";
+            return true;
+        });
+
+    const productCount =
+        products.filter(
+            p=>p.type==="PRODUCTO"
+        ).length;
+
+    const serviceCount =
+        products.filter(
+            p=>p.type==="SERVICIO"
+        ).length;
+
+    const freeCount =
+        products.filter(
+            p=>p.clientCanRedeem
+        ).length;
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
 
-            <View style={styles.hero}>
-                <Text style={styles.heroLabel}>KinalBank</Text>
-                <Text style={styles.heroTitle}>
-                    Productos{"\\n"}
-                    <Text style={styles.heroTitleAccent}>& Servicios</Text>
-                </Text>
-                <Text style={styles.heroSubtitle}>
-                    {products.length} disponible{products.length !== 1 ? "s" : ""}
-                    {freeCount > 0 ? ` · ${freeCount} canjeables gratis` : ""}
+            <StatusBar
+                barStyle="light-content"
+                backgroundColor={COLORS.navy}
+            />
+
+            {/* HEADER MARKETPLACE */}
+            <View style={styles.marketplaceHeader}>
+
+                <Text style={styles.marketplaceLabel}>
+                    ✦ KINALBANK MARKETPLACE
                 </Text>
 
-                <PointsBanner points={clientPoints} />
+                <Text style={styles.marketplaceTitle}>
+                    Productos &
+                    {"\n"}
+                    <Text style={styles.marketplaceAccent}>
+                        Servicios
+                    </Text>
+                </Text>
+
+                <Text style={styles.marketplaceSubtitle}>
+                    Soluciones bancarias diseñadas
+                    para ayudarte a crecer y administrar tu dinero.
+                </Text>
+
+                {/* ESTADISTICAS */}
+                <View style={styles.heroStats}>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statLabel}>
+                            ✦ REGISTROS
+                        </Text>
+
+                        <Text style={styles.statNumber}>
+                            {products.length}
+                        </Text>
+
+                        <Text style={styles.statFooter}>
+                            Total disponibles
+                        </Text>
+
+                    </View>
+                    <View style={styles.statCard}>
+
+                        <Text style={styles.statLabel}>
+                            ● PRODUCTOS
+                        </Text>
+
+                        <Text style={styles.statNumber}>
+                            {productCount}
+                        </Text>
+
+                        <Text style={styles.statFooter}>
+                            Disponibles
+                        </Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statLabel}>
+                            ⚡ SERVICIOS
+                        </Text>
+
+                        <Text style={styles.statNumber}>
+                            {serviceCount}
+                        </Text>
+
+                        <Text style={styles.statFooter}>
+                            Disponibles
+                        </Text>
+                    </View>
+                </View>
             </View>
-
-            <FilterTabs activeFilter={activeFilter} onPress={setActiveFilter} />
-
             <ScrollView
                 style={styles.content}
-                contentContainerStyle={styles.scrollContentInner}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={onRefresh}
                         tintColor={COLORS.accent}
-                        colors={[COLORS.accent]}
                     />
                 }
             >
-                <SuccessStrip lastSuccess={lastSuccess} onDismiss={clearLastSuccess} />
+                <FilterTabs
+                    activeFilter={activeFilter}
+                    onPress={setActiveFilter}
+                />
 
+                <View style={styles.searchContainer}>
+                    <Ionicons
+                        name="search"
+                        size={20}
+                        color={COLORS.textMuted}
+                    />
+
+                    <TextInput
+                        value={search}
+                        onChangeText={setSearch}
+                        placeholder="Buscar productos o servicios..."
+                        placeholderTextColor={
+                            COLORS.textMuted
+                        }
+                        style={styles.searchInput}
+                    />
+                </View>
+                <SuccessStrip
+                    lastSuccess={lastSuccess}
+                    onDismiss={clearLastSuccess}
+                />
                 <Text style={styles.sectionLabel}>
-                    {activeFilter === "FREE"
+                    {activeFilter==="FREE"
                         ? "Canjeables con tus puntos"
-                        : activeFilter === "TODOS"
-                        ? "Todos los productos"
-                        : activeFilter === "PRODUCTO"
+                        : activeFilter==="PRODUCTO"
                         ? "Productos"
-                        : "Servicios"}
+                        : activeFilter==="SERVICIO"
+                        ? "Servicios"
+                        : "Todos los productos"
+                    }
                 </Text>
 
-                {isLoading && products.length === 0 ? (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color={COLORS.accent} />
-                        <Text style={styles.loadingText}>Cargando productos...</Text>
-                    </View>
-                ) : error ? (
-                    <View style={styles.emptyState}>
-                        <View style={styles.emptyIcon}>
-                            <Ionicons name="wifi-outline" size={28} color={COLORS.textMuted} />
+                {
+                    isLoading &&
+                    products.length===0 ? (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator
+                                size="large"
+                                color={COLORS.accent}
+                            />
+                            <Text style={styles.loadingText}>
+                                Cargando productos...
+                            </Text>
                         </View>
-                        <Text style={styles.emptyTitle}>Sin conexión</Text>
-                        <Text style={styles.emptySubtitle}>{error}</Text>
-                        <TouchableOpacity onPress={load} style={{ marginTop: 12 }}>
-                            <Text style={{ color: COLORS.accent, fontWeight: "700" }}>Reintentar</Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : filtered.length === 0 ? (
-                    <ProductsEmptyState />
-                ) : (
-                    filtered.map((product) => (
+                    )
+                    :
+                    error ? (
+                        <View style={styles.emptyState}>
+                            <Ionicons
+                                name="wifi-outline"
+                                size={35}
+                                color={COLORS.textMuted}
+                            />
+                            <Text style={styles.emptyTitle}>
+                                Sin conexión
+                            </Text>
+                            <Text style={styles.emptySubtitle}>
+                                {error}
+                            </Text>
+                            <TouchableOpacity
+                                onPress={load}
+                            >
+                                <Text style={styles.retryText}>
+                                    Reintentar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                    :
+                    filteredProducts.length===0 ? (
+                        <ProductsEmptyState />
+                    )
+                    :
+                    filteredProducts.map(product=>(
                         <ProductCard
                             key={product._id}
                             product={product}
                             onPress={openModal}
                         />
                     ))
-                )}
-            </ScrollView>
+                }
 
+            </ScrollView>
             <ProductPurchaseModal
                 visible={modalVisible}
                 product={selectedProduct}

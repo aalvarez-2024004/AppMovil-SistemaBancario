@@ -10,11 +10,12 @@ import {
   StatusBar,
   Alert,
   useWindowDimensions,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SuccessModal } from '../../../shared/components/SuccesModal';
-import { s, KB, STEPS, isTablet } from '../../../shared/constants/register'
+import { s, KB, STEPS, isTablet } from '../../../shared/constants/register';
 import { StepBar, Step1, Step2, Step3 } from '../../../shared/components/RegisterSteps';
 
 const RegisterScreen = () => {
@@ -79,13 +80,13 @@ const RegisterScreen = () => {
     navigation.navigate('Login');
   };
 
-  // Card un poco más angosta y centrada en tablets, para que no se estire de borde a borde
   const cardContainerStyle = isTablet
     ? { width: '100%', maxWidth: 560, alignSelf: 'center' }
     : null;
 
   return (
-    <View style={s.root}>
+    // ✅ overflow: 'hidden' evita el espacio en blanco al deslizar lateralmente
+    <View style={[s.root, { overflow: 'hidden' }]}>
       <StatusBar barStyle="light-content" backgroundColor={KB.navy} />
 
       {/* Círculos decorativos */}
@@ -100,10 +101,15 @@ const RegisterScreen = () => {
         <ScrollView
           contentContainerStyle={[
             s.scroll,
-            { minHeight: height - (Platform.OS === 'ios' ? 100 : 80) },
+            // ✅ minHeight anclado a la altura real de la ventana
+            { minHeight: height },
           ]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          // ✅ Sin scroll horizontal ni rebote lateral
+          horizontal={false}
+          bounces={false}
+          overScrollMode="never"
         >
           <View style={cardContainerStyle}>
             {/* Encabezado */}
@@ -124,7 +130,13 @@ const RegisterScreen = () => {
             </View>
 
             {/* Link al login */}
-            <TouchableOpacity onPress={() => navigation.navigate('Login')} style={s.loginRow}>
+            <TouchableOpacity
+              onPress={() => {
+                Keyboard.dismiss();
+                navigation.navigate('Login');
+              }}
+              style={s.loginRow}
+            >
               <Text style={s.loginText}>¿Ya tienes cuenta? </Text>
               <Text style={s.loginLink}>Inicia sesión</Text>
             </TouchableOpacity>

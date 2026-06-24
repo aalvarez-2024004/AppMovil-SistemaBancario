@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,13 +10,12 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  Dimensions,
+  useWindowDimensions,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SPACING, BORDER_RADIUS } from '../../../shared/constants/theme';
-
-const { width } = Dimensions.get('window');
 
 const KB = {
   navy:        '#0F1F3D',
@@ -54,12 +54,17 @@ const KBInput = ({ label, placeholder, value, onChangeText, secureTextEntry, key
           onBlur={() => setFocused(false)}
         />
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setShowPass(!showPass)} style={fi.eye}>
-            <Text style={fi.eyeText}>{showPass ? '🙈' : '👁'}</Text>
+          <TouchableOpacity
+            style={s.forgotRow}
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.navigate('ForgotPassword');
+            }}
+          >
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={fi.error}>{error}</Text>}
+      {error ? <Text style={fi.error}>{error}</Text> : null}
     </View>
   );
 };
@@ -110,7 +115,13 @@ const fi = StyleSheet.create({
 /* ── Pantalla ───────────────────────────────────────────────────────────────── */
 const LoginScreen = () => {
   const navigation = useNavigation();
+  useEffect(() => {
+    return () => {
+      Keyboard.dismiss();
+    };
+  }, []);
   const { login, isLoading } = useAuthStore();
+  const { width, height } = useWindowDimensions();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -135,6 +146,7 @@ const LoginScreen = () => {
   const isPending = loginError?.toLowerCase().includes('pendiente');
 
   return (
+    // ✅ root ocupa exactamente la pantalla, sin posibilidad de scroll horizontal
     <View style={s.root}>
       <StatusBar barStyle="light-content" backgroundColor={KB.navy} />
 
@@ -142,11 +154,18 @@ const LoginScreen = () => {
       <View style={s.circle1} pointerEvents="none" />
       <View style={s.circle2} pointerEvents="none" />
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView
+        style={s.flex1}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
         <ScrollView
-          contentContainerStyle={s.scroll}
+          contentContainerStyle={[s.scroll, { minHeight: height }]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          // ✅ Deshabilitar scroll horizontal que causaba el espacio en blanco
+          horizontal={false}
+          bounces={false}
+          overScrollMode="never"
         >
           {/* Marca */}
           <View style={s.brand}>
@@ -188,10 +207,10 @@ const LoginScreen = () => {
               <Text style={s.forgotText}>¿Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
 
-            {loginError && (
+            {loginError ? (
               <View style={[s.alertBox, isPending ? s.alertWarning : s.alertError]}>
                 <Text style={s.alertIcon}>{isPending ? '⏳' : '⚠️'}</Text>
-                <View style={{ flex: 1 }}>
+                <View style={s.flex1}>
                   <Text style={[s.alertTitle, { color: isPending ? KB.warning : KB.error }]}>
                     {isPending ? 'Cuenta pendiente de aprobación' : 'Credenciales incorrectas'}
                   </Text>
@@ -202,7 +221,7 @@ const LoginScreen = () => {
                   </Text>
                 </View>
               </View>
-            )}
+            ) : null}
 
             <TouchableOpacity
               style={[s.btnPrimary, isLoading && s.btnDisabled]}
@@ -255,10 +274,13 @@ const LoginScreen = () => {
 };
 
 const s = StyleSheet.create({
+  // ✅ flex:1 + overflow hidden para evitar scroll horizontal / espacio en blanco
   root: {
     flex: 1,
     backgroundColor: KB.navy,
+    overflow: 'hidden',
   },
+  flex1: { flex: 1 },
   scroll: {
     flexGrow: 1,
     paddingHorizontal: SPACING.lg,

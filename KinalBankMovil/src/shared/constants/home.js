@@ -82,15 +82,17 @@ export const s = StyleSheet.create({
     fontSize: 11, fontWeight: '700', color: COLORS.gray400,
     letterSpacing: 1, marginBottom: 6,
   },
-  balanceRow: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-  },
+  balanceRow: { flexDirection: 'column', alignItems: 'stretch', },
   balanceValue: { fontSize: 30, fontWeight: '800', color: COLORS.gray900 },
-  balanceActions: { flexDirection: 'row', gap: 10 },
-  quickActionBtn: { alignItems: 'center', width: 64 },
+  balanceActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: SPACING.md, width: '100%', },
+  quickActionBtn: { alignItems: 'center', flex: 1, maxWidth: 70, },
   quickActionIcon: {
-    width: 48, height: 48, borderRadius: 14,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 4,
+    width: 44,
+    height: 44,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
   },
   quickActionIconText: { fontSize: 18 },
   quickActionLabel: { fontSize: 10, color: COLORS.gray600, fontWeight: '600', textAlign: 'center' },
@@ -125,8 +127,11 @@ export const s = StyleSheet.create({
 
   /* Secciones */
   sectionRow: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    marginBottom: SPACING.sm,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SPACING.md,
+    marginBottom: SPACING.md,
   },
   sectionTitle: {
     fontSize: 12, fontWeight: '800', color: COLORS.gray500,
@@ -195,16 +200,24 @@ export const s = StyleSheet.create({
 
   /* Empty states */
   emptyCard: {
-    backgroundColor: KB.white, borderRadius: 18, padding: SPACING.xl,
-    alignItems: 'center', ...SHADOWS.sm,
+    backgroundColor: KB.white,
+    borderRadius: 18,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+    ...SHADOWS.sm,
   },
   emptyIcon:  { fontSize: 34, marginBottom: SPACING.sm },
   emptyTitle: { fontSize: 15, fontWeight: '700', color: COLORS.gray800, marginBottom: 4 },
   emptyText:  { fontSize: 13, color: COLORS.gray500, textAlign: 'center', lineHeight: 20 },
 
   emptyTx: {
-    backgroundColor: KB.white, borderRadius: 18, padding: SPACING.xl,
-    alignItems: 'center', ...SHADOWS.sm,
+    backgroundColor: KB.white,
+    borderRadius: 18,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+    ...SHADOWS.sm,
   },
 
   /* Movimientos recientes */

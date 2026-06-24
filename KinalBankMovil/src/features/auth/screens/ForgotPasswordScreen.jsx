@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +11,8 @@ import {
   TextInput,
   StatusBar,
   Alert,
+  useWindowDimensions,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
@@ -400,14 +403,29 @@ const StepNewPassword = ({ email, onDone }) => {
 ══════════════════════════════════════════════════════════════════════════════ */
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
-  const [step,  setStep]  = useState(1);
+  useEffect(() => {
+    return () => {
+      Keyboard.dismiss();
+    };
+  }, []);
+  const { height } = useWindowDimensions();
+
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
 
   const handleDone = () => {
     Alert.alert(
       '¡Contraseña actualizada! 🎉',
       'Ya puedes ingresar con tu nueva contraseña.',
-      [{ text: 'Ir al login', onPress: () => navigation.navigate('Login') }]
+      [
+        {
+          text: 'Ir al login',
+          onPress: () => {
+            Keyboard.dismiss();
+            navigation.navigate('Login');
+          },
+        },
+      ]
     );
   };
 
@@ -419,11 +437,14 @@ const ForgotPasswordScreen = () => {
       <View style={s.circle1} pointerEvents="none" />
       <View style={s.circle2} pointerEvents="none" />
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView style={s.flex1} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
         <ScrollView
-          contentContainerStyle={s.scroll}
+          contentContainerStyle={[s.scroll, { minHeight: height }]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          horizontal={false}
+          bounces={false}
+          overScrollMode="never"
         >
           {/* Encabezado */}
           <View style={s.header}>
@@ -463,8 +484,9 @@ const ForgotPasswordScreen = () => {
 
 /* ── Estilos globales ───────────────────────────────────────────────────────── */
 const s = StyleSheet.create({
-  root:  { flex: 1, backgroundColor: KB.navy },
-  scroll: { flexGrow: 1, paddingHorizontal: SPACING.lg, paddingTop: 52, paddingBottom: SPACING.xl },
+  root: { flex: 1, backgroundColor: KB.navy, overflow: 'hidden', },
+  scroll: { flexGrow: 1, paddingHorizontal: SPACING.lg, paddingTop: 52, paddingBottom: SPACING.xl, },
+  flex1:{ flex:1 },
 
   circle1: {
     position: 'absolute', width: 280, height: 280, borderRadius: 140,

@@ -1,346 +1,398 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     View,
     Text,
     TouchableOpacity,
     Modal,
     ScrollView,
-    ActivityIndicator,
+    TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS, CATEGORY_ICONS, CATEGORY_LABELS } from "../constants/Products";
+import { COLORS, styles } from "../constants/Products";
 
-export const formatCurrency = (amount) =>
-    `Q${Number(amount ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+/*
+=================================
+        FILTER TABS
+=================================
+*/
+export const FilterTabs = ({
+    activeFilter,
+    onPress
+}) => {
 
-// modo de compra disponible para el cliente
-export const getProductMode = (product) => {
-    if (product.clientCanRedeem)    return "FREE";      // canje total con puntos
-    if (product.clientHasDiscount)  return "DISCOUNT";  // descuento parcial
-    return "PAID";                                       // solo dinero
-};
-
-export const PointsBanner = ({ points }) => (
-    <View style={styles.pointsBanner}>
-        <View style={styles.pointsIconBox}>
-            <Ionicons name="star" size={22} color="#FCD34D" />
-        </View>
-        <View style={{ flex: 1 }}>
-            <Text style={styles.pointsBannerTitle}>Mis puntos KinalBank</Text>
-            <Text style={styles.pointsBannerValue}>{points} pts</Text>
-            <Text style={styles.pointsBannerSub}>
-                {points === 0
-                    ? "Compra productos para acumular"
-                    : "Úsalos para obtener beneficios gratis"}
-            </Text>
-        </View>
-    </View>
-);
-
-export const FilterTabs = ({ activeFilter, onPress }) => {
     const tabs = [
-        { key: "TODOS", label: "Todos" },
-        { key: "FREE",  label: "Gratis" },
-        { key: "PRODUCTO", label: "Productos" },
-        { key: "SERVICIO", label: "Servicios" },
+        {
+            id:"TODOS",
+            label:"Todos"
+        },
+        {
+            id:"FREE",
+            label:"Gratis"
+        },
+        {
+            id:"PRODUCTO",
+            label:"Productos"
+        },
+        {
+            id:"SERVICIO",
+            label:"Servicios"
+        },
     ];
 
     return (
-        <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.filterRow}
-        >
-            {tabs.map((tab) => (
-                <TouchableOpacity
-                    key={tab.key}
-                    style={[styles.filterTab, activeFilter === tab.key && styles.filterTabActive]}
-                    onPress={() => onPress(tab.key)}
-                    activeOpacity={0.8}
-                >
-                    <Text style={[styles.filterTabText, activeFilter === tab.key && styles.filterTabTextActive]}>
-                        {tab.label}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
+        <View style={styles.filterContainer}>
+            {
+                tabs.map(tab => (
+                    <TouchableOpacity
+                        key={tab.id}
+                        onPress={()=>onPress(tab.id)}
+                        style={[
+                            styles.filterTab,
+                            activeFilter===tab.id &&
+                            styles.filterTabActive
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.filterText,
+                                activeFilter===tab.id &&
+                                styles.filterTextActive
+                            ]}
+                        >
+                            {tab.label}
+                        </Text>
+                    </TouchableOpacity>
+                ))
+            }
+        </View>
     );
 };
 
-export const ProductCard = ({ product, onPress }) => {
-    const mode     = getProductMode(product);
-    const iconName = CATEGORY_ICONS[product.category] ?? "grid-outline";
-    const catLabel = CATEGORY_LABELS[product.category] ?? "Otros";
-
-    const modeConfig = {
-        FREE:     { color: COLORS.free,     bg: COLORS.freeLight,     label: "GRATIS",    icon: "gift-outline" },
-        DISCOUNT: { color: COLORS.discount, bg: COLORS.discountLight, label: "DESCUENTO", icon: "pricetag-outline" },
-        PAID:     { color: COLORS.paid,     bg: COLORS.paidLight,     label: "PAGO",      icon: "card-outline" },
-    }[mode];
+/*
+=================================
+        PRODUCT CARD
+=================================
+*/
+export const ProductCard = ({
+    product,
+    onPress
+}) => {
 
     return (
         <TouchableOpacity
-            style={styles.productCard}
-            onPress={() => onPress(product)}
             activeOpacity={0.85}
+            onPress={()=>onPress(product)}
+            style={styles.productCard}
         >
-            <View style={styles.productCardTop}>
-                <View style={[styles.categoryIconBox, { backgroundColor: modeConfig.bg }]}>
-                    <Ionicons name={iconName} size={22} color={modeConfig.color} />
+            <View
+                style={{
+                    flexDirection:"row",
+                    justifyContent:"space-between",
+                    alignItems:"center"
+                }}
+            >
+                <View
+                    style={{
+                        flex:1
+                    }}
+                >
+                    <Text style={styles.productTitle}>
+                        {product.name}
+                    </Text>
+
+                    <Text style={styles.productDescription}>
+                        {
+                            product.description ||
+                            "Producto disponible en KinalBank"
+                        }
+                    </Text>
                 </View>
 
-                <View style={styles.productMeta}>
-                    <Text style={styles.productName} numberOfLines={1}>{product.name}</Text>
-                    <Text style={styles.productDesc} numberOfLines={2}>{product.description}</Text>
-
-                    <View style={{ flexDirection: "row", gap: 6, marginTop: 6 }}>
-                        <View style={[styles.typeBadge, { backgroundColor: modeConfig.bg }]}>
-                            <Text style={[styles.typeBadgeText, { color: modeConfig.color }]}>
-                                {product.type}
-                            </Text>
-                        </View>
-                        <View style={[styles.typeBadge, { backgroundColor: COLORS.bgCardAlt }]}>
-                            <Text style={[styles.typeBadgeText, { color: COLORS.accent }]}>
-                                {catLabel}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
+                <Ionicons
+                    name={
+                        product.type==="SERVICIO"
+                        ? "briefcase-outline"
+                        : "cube-outline"
+                    }
+                    size={28}
+                    color={COLORS.primary}
+                />
             </View>
 
-            <View style={styles.productCardBottom}>
-                <View style={styles.priceBlock}>
-                    {mode === "FREE" ? (
-                        <>
-                            <Text style={styles.priceFree}>GRATIS</Text>
-                            <View style={styles.pointsTag}>
-                                <Ionicons name="star" size={12} color={COLORS.accent} />
-                                <Text style={styles.pointsTagText}>
-                                    {product.pointsRequired} puntos
-                                </Text>
-                            </View>
-                        </>
-                    ) : mode === "DISCOUNT" ? (
-                        <>
-                            <Text style={styles.price}>
-                                {formatCurrency(product.price * (1 - product.discountPercentage / 100))}
-                            </Text>
-                            <Text style={styles.priceOriginal}>{formatCurrency(product.price)}</Text>
-                        </>
-                    ) : (
-                        <Text style={styles.price}>{formatCurrency(product.price)}</Text>
-                    )}
-                </View>
+            <View
+                style={{
+                    flexDirection:"row",
+                    justifyContent:"space-between",
+                    alignItems:"center",
+                    marginTop:15
+                }}
+            >
 
-                <TouchableOpacity
-                    style={[styles.cardActionBtn, { backgroundColor: modeConfig.color }]}
-                    onPress={() => onPress(product)}
-                    activeOpacity={0.85}
+                <Text style={styles.productPrice}>
+                    {
+                        product.pointsCost
+                        ? `${product.pointsCost} pts`
+                        : "Disponible"
+                    }
+                </Text>
+
+                <View
+                    style={{
+                        backgroundColor:"#E8F1FF",
+                        paddingHorizontal:12,
+                        paddingVertical:6,
+                        borderRadius:20
+                    }}
                 >
-                    <Ionicons name={modeConfig.icon} size={14} color="#FFF" />
-                    <Text style={styles.cardActionText}>Ver más</Text>
-                </TouchableOpacity>
+                    <Text
+                        style={{
+                            color:COLORS.primary,
+                            fontWeight:"700",
+                            fontSize:12
+                        }}
+                    >
+                        Ver detalle
+                    </Text>
+                </View>
             </View>
         </TouchableOpacity>
     );
 };
 
-export const ProductsEmptyState = () => (
-    <View style={styles.emptyState}>
-        <View style={styles.emptyIcon}>
-            <Ionicons name="storefront-outline" size={28} color={COLORS.textMuted} />
-        </View>
-        <Text style={styles.emptyTitle}>Sin productos disponibles</Text>
-        <Text style={styles.emptySubtitle}>
-            No hay productos o servicios disponibles en este momento.
-        </Text>
-    </View>
-);
-
-export const SuccessStrip = ({ lastSuccess, onDismiss }) => {
-    if (!lastSuccess) return null;
+/*
+=================================
+        EMPTY STATE
+=================================
+*/
+export const ProductsEmptyState = ()=>{
 
     return (
-        <TouchableOpacity style={styles.successStrip} onPress={onDismiss} activeOpacity={0.8}>
-            <Ionicons name="checkmark-circle" size={20} color={COLORS.free} />
-            <Text style={styles.successStripText}>{lastSuccess.message}</Text>
-            <Ionicons name="close" size={16} color={COLORS.free} />
+        <View style={styles.emptyState}>
+            <Ionicons
+                name="cube-outline"
+                size={55}
+                color={COLORS.textMuted}
+            />
+
+            <Text style={styles.emptyTitle}>
+                No hay productos disponibles
+            </Text>
+
+            <Text style={styles.emptySubtitle}>
+                Intenta cambiar el filtro
+                o revisa nuevamente más tarde.
+            </Text>
+        </View>
+    );
+};
+
+/*
+=================================
+        SUCCESS STRIP
+=================================
+*/
+export const SuccessStrip = ({
+    lastSuccess,
+    onDismiss
+})=>{
+
+    if(!lastSuccess)
+        return null;
+
+    return (
+        <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={onDismiss}
+            style={styles.successStrip}
+        >
+            <Text style={styles.successText}>
+                ✓ {lastSuccess}
+            </Text>
         </TouchableOpacity>
     );
 };
 
+/*
+=================================
+        PURCHASE MODAL
+=================================
+*/
 export const ProductPurchaseModal = ({
     visible,
     product,
-    accounts = [],
-    clientPoints = 0,
+    accounts,
+    clientPoints,
     isSubmitting,
     error,
     onBuy,
     onRedeem,
     onBuyDiscount,
-    onClose,
-}) => {
-    const [selectedMode, setSelectedMode] = useState(null);
-    const [selectedAccount, setSelectedAccount] = useState(null);
+    onClose
+})=>{
 
-    if (!product) return null;
+    const [selectedAccount,setSelectedAccount] =
+        useState(null);
 
-    const canRedeem   = product.redeemable && product.pointsRequired > 0 && clientPoints >= product.pointsRequired;
-    const canDiscount = product.redeemable && product.discountPercentage > 0 && clientPoints > 0 && !canRedeem;
-    const modeOptions = [];
-
-    if (canRedeem) {
-        modeOptions.push({
-            key: "REDEEM",
-            icon: "gift",
-            iconBg: COLORS.freeLight,
-            iconColor: COLORS.free,
-            label: "Canjear gratis",
-            sub: `Usas ${product.pointsRequired} puntos · Te quedan ${clientPoints - product.pointsRequired} pts`,
-        });
-    }
-    if (canDiscount) {
-        const discounted = product.price * (1 - product.discountPercentage / 100);
-        modeOptions.push({
-            key: "DISCOUNT",
-            icon: "pricetag",
-            iconBg: COLORS.discountLight,
-            iconColor: COLORS.discount,
-            label: `${product.discountPercentage}% de descuento`,
-            sub: `Pagas ${formatCurrency(discounted)} con tus puntos`,
-        });
-    }
-    modeOptions.push({
-        key: "BUY",
-        icon: "card",
-        iconBg: COLORS.paidLight,
-        iconColor: COLORS.paid,
-        label: `Pagar ${formatCurrency(product.price)}`,
-        sub: `Ganas ${product.pointsPerPurchase} puntos por esta compra`,
-    });
-
-    const handleConfirm = () => {
-        if (selectedMode === "REDEEM") return onRedeem(product._id);
-        if (!selectedAccount) return;
-        if (selectedMode === "DISCOUNT") return onBuyDiscount(product._id, selectedAccount);
-        return onBuy(product._id, selectedAccount);
-    };
-
-    const confirmEnabled =
-        selectedMode &&
-        (selectedMode === "REDEEM" || selectedAccount);
-
-    const handleClose = () => {
-        setSelectedMode(null);
-        setSelectedAccount(null);
-        onClose();
-    };
+    if(!product)
+        return null;
 
     return (
-        <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
-            <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={handleClose}>
-                <TouchableOpacity activeOpacity={1} onPress={() => {}}>
-                    <View style={styles.modalSheet}>
-                        <View style={styles.modalHandle} />
+        <Modal
+            visible={visible}
+            transparent
+            animationType="slide"
+        >
+            <View style={styles.modalOverlay}>
 
-                        <Text style={styles.modalTitle}>{product.name}</Text>
-                        <Text style={styles.modalCategory}>
-                            {CATEGORY_LABELS[product.category] ?? "Otros"} · {product.type}
-                        </Text>
-                        <Text style={styles.modalDesc}>{product.description}</Text>
+                <View style={styles.modalContainer}>
 
-                        {error ? (
-                            <View style={[styles.successStrip, {
-                                backgroundColor: COLORS.dangerLight,
-                                borderColor: COLORS.danger,
-                                marginBottom: 12
-                            }]}>
-                                <Ionicons name="alert-circle" size={18} color={COLORS.danger} />
-                                <Text style={[styles.successStripText, { color: COLORS.danger }]}>{error}</Text>
-                            </View>
-                        ) : null}
+                    <TouchableOpacity
+                        onPress={onClose}
+                        style={{
+                            alignSelf:"flex-end"
+                        }}
+                    >
+                        <Ionicons
+                            name="close"
+                            size={25}
+                            color={COLORS.text}
+                        />
+                    </TouchableOpacity>
 
-                        {/* Opciones de compra */}
-                        <Text style={styles.purchaseOptionsTitle}>¿Cómo quieres obtenerlo?</Text>
-                        {modeOptions.map((opt) => (
-                            <TouchableOpacity
-                                key={opt.key}
-                                style={[
-                                    styles.purchaseOption,
-                                    { borderColor: COLORS.border },
-                                    selectedMode === opt.key && styles.purchaseOptionSelected,
-                                ]}
-                                onPress={() => setSelectedMode(opt.key)}
-                                activeOpacity={0.8}
-                            >
-                                <View style={[styles.purchaseOptionIcon, { backgroundColor: opt.iconBg }]}>
-                                    <Ionicons name={opt.icon} size={20} color={opt.iconColor} />
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <Text style={styles.purchaseOptionLabel}>{opt.label}</Text>
-                                    <Text style={styles.purchaseOptionSub}>{opt.sub}</Text>
-                                </View>
-                                {selectedMode === opt.key && (
-                                    <Ionicons name="checkmark-circle" size={20} color={COLORS.accent} />
-                                )}
-                            </TouchableOpacity>
-                        ))}
+                    <Text style={styles.modalTitle}>
+                        {product.name}
+                    </Text>
 
-                        {selectedMode && selectedMode !== "REDEEM" && accounts.length > 0 && (
-                            <>
-                                <Text style={styles.accountSelectorLabel}>Cuenta a debitar</Text>
-                                {accounts.filter(a => a.status === "ACTIVA").map((acc) => (
-                                    <TouchableOpacity
-                                        key={acc._id}
-                                        style={[
-                                            styles.accountOption,
-                                            selectedAccount === acc._id && styles.accountOptionSelected,
-                                        ]}
-                                        onPress={() => setSelectedAccount(acc._id)}
-                                        activeOpacity={0.8}
-                                    >
-                                        <View>
-                                            <Text style={styles.accountOptionNumber}>
-                                                •••• {acc.accountNumber?.slice(-4)}
-                                            </Text>
-                                            <Text style={styles.accountOptionBalance}>
-                                                {acc.accountType} · {formatCurrency(acc.balance)} {acc.currency}
-                                            </Text>
-                                        </View>
-                                        {selectedAccount === acc._id && (
-                                            <Ionicons name="checkmark-circle" size={20} color={COLORS.accent} />
-                                        )}
-                                    </TouchableOpacity>
-                                ))}
-                            </>
-                        )}
+                    <Text
+                        style={{
+                            marginTop:10,
+                            color:COLORS.textSecondary
+                        }}
+                    >
+                        {
+                            product.description
+                            ||
+                            "Realiza tu operación desde KinalBank"
+                        }
+                    </Text>
 
-                        <TouchableOpacity
-                            style={[
-                                styles.confirmBtn,
-                                { backgroundColor: confirmEnabled ? COLORS.accent : COLORS.border },
-                                (!confirmEnabled || isSubmitting) && styles.confirmBtnDisabled,
-                            ]}
-                            onPress={handleConfirm}
-                            disabled={!confirmEnabled || isSubmitting}
-                            activeOpacity={0.85}
+                    {
+                        product.pointsCost &&
+                        <Text
+                            style={{
+                                marginTop:15,
+                                fontWeight:"800",
+                                fontSize:20,
+                                color:COLORS.primary
+                            }}
                         >
-                            {isSubmitting ? (
-                                <ActivityIndicator size="small" color="#FFFFFF" />
-                            ) : (
-                                <Text style={styles.confirmBtnText}>
-                                    {selectedMode === "REDEEM"
-                                        ? "Confirmar canje"
-                                        : selectedMode === "DISCOUNT"
-                                        ? "Confirmar compra con descuento"
-                                        : "Confirmar compra"}
-                                </Text>
-                            )}
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </TouchableOpacity>
+                            {product.pointsCost} puntos
+                        </Text>
+                    }
+
+                    {
+                        accounts?.length > 0 &&
+                        <>
+                        <Text
+                            style={{
+                                marginTop:20,
+                                fontWeight:"700"
+                            }}
+                        >
+                            Selecciona una cuenta
+                        </Text>
+
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            style={{
+                                marginTop:10
+                            }}
+                        >
+                        {
+                            accounts.map(account=>(
+                                <TouchableOpacity
+                                    key={
+                                        account.id ||
+                                        account.accountId
+                                    }
+                                    onPress={()=>setSelectedAccount(account)}
+                                    style={{
+                                        padding:12,
+                                        borderRadius:15,
+                                        marginRight:10,
+                                        backgroundColor:
+                                        selectedAccount===account
+                                        ?
+                                        "#DCEBFF"
+                                        :
+                                        "#F1F5F9"
+
+                                    }}
+                                >
+                                    <Text>
+                                        {
+                                            account.accountNumber
+                                            ||
+                                            "Cuenta"
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                            ))
+                        }
+
+                        </ScrollView>
+                        </>
+                    }
+
+                    {
+                        error &&
+                        <Text
+                            style={{
+                                color:COLORS.danger,
+                                marginTop:15
+                            }}
+                        >
+                            {error}
+                        </Text>
+                    }
+
+                    <TouchableOpacity
+                        disabled={isSubmitting}
+                        onPress={()=>{
+                            if(product.clientCanRedeem)
+                                onRedeem(product.id);
+                            else
+                                onBuy(
+                                    product.id,
+                                    selectedAccount?.id
+                                );
+                        }}
+                        style={{
+                            marginTop:25,
+                            backgroundColor:COLORS.primary,
+                            padding:15,
+                            borderRadius:18,
+                            alignItems:"center"
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color:"#fff",
+                                fontWeight:"800"
+                            }}
+                        >
+                            {
+                                isSubmitting
+                                ?
+                                "Procesando..."
+                                :
+                                "Continuar"
+                            }
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </Modal>
     );
 };
