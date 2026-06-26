@@ -46,30 +46,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  /* ── Top nav (para que el usuario pueda salir de esta vista) ── */
-  topNav: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 56,
-    paddingBottom: 8,
-    backgroundColor: COLORS.navy,
-    gap: 12,
-  },
-  topNavBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: "rgba(255,255,255,0.12)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  topNavTitle: {
-    fontSize: FONT.md,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-
   hero: {
     paddingHorizontal: 20,
     paddingTop: Platform.OS === "ios" ? 64 : 48,
@@ -221,6 +197,7 @@ export const styles = StyleSheet.create({
     color: COLORS.accent,
   },
 
+  /* ── Account Card ── */
   accountCard: {
     backgroundColor: COLORS.bgCard,
     borderRadius: 18,
@@ -231,6 +208,12 @@ export const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
+  },
+  // ✅ NUEVO: card inactiva con borde sutil
+  accountCardInactive: {
+    borderWidth: 1,
+    borderColor: COLORS.inactiveLight,
+    opacity: 0.85,
   },
   accountCardTop: {
     flexDirection: "row",
@@ -259,33 +242,21 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 20,
   },
-  accountBadgeActive: {
-    backgroundColor: COLORS.activeLight,
-  },
-  accountBadgeInactive: {
-    backgroundColor: COLORS.inactiveLight,
-  },
+  accountBadgeActive:   { backgroundColor: COLORS.activeLight },
+  accountBadgeInactive: { backgroundColor: COLORS.inactiveLight },
   accountBadgeDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
   },
-  accountBadgeDotActive: {
-    backgroundColor: COLORS.active,
-  },
-  accountBadgeDotInactive: {
-    backgroundColor: COLORS.inactive,
-  },
+  accountBadgeDotActive:   { backgroundColor: COLORS.active },
+  accountBadgeDotInactive: { backgroundColor: COLORS.inactive },
   accountBadgeText: {
     fontSize: FONT.xs,
     fontWeight: "700",
   },
-  accountBadgeTextActive: {
-    color: COLORS.active,
-  },
-  accountBadgeTextInactive: {
-    color: COLORS.inactive,
-  },
+  accountBadgeTextActive:   { color: COLORS.active },
+  accountBadgeTextInactive: { color: COLORS.inactive },
 
   accountNumberRow: {
     flexDirection: "row",
@@ -341,6 +312,7 @@ export const styles = StyleSheet.create({
     color: COLORS.accent,
   },
 
+  /* ── Empty state ── */
   emptyState: {
     alignItems: "center",
     paddingVertical: 48,
@@ -368,9 +340,37 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  /* ── Skeleton ── */
+  skeletonCard: {
+    height: 180,
+    borderRadius: 18,
+    backgroundColor: COLORS.bgCard,
+    marginBottom: 14,
+    shadowColor: "#0F1F3D",
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 1,
+  },
+  skeletonInner: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "space-between",
+  },
+  skeletonLine: {
+    backgroundColor: COLORS.borderLight,
+    borderRadius: 6,
+  },
+  skeletonDivider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginVertical: 14,
+  },
+
+  /* ── Modal ── */
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(15,31,61,0.45)",
+    backgroundColor: "rgba(15,31,61,0.5)",
     justifyContent: "flex-end",
   },
   modalSheet: {
@@ -387,26 +387,74 @@ export const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: COLORS.borderLight,
     alignSelf: "center",
-    marginBottom: 24,
+    marginBottom: 20,
+  },
+  // ✅ NUEVO: header del modal con icono + título alineados
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
+  },
+  modalHeaderIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalTitle: {
-    fontSize: FONT.xl,
+    fontSize: FONT.lg,
     fontWeight: "800",
     color: COLORS.textPrimary,
-    marginBottom: 4,
   },
   modalSubtitle: {
     fontSize: FONT.sm,
     color: COLORS.textSecondary,
-    marginBottom: 28,
+    marginTop: 2,
+  },
+  // ✅ NUEVO: caja de balance dentro del modal
+  modalBalanceBox: {
+    backgroundColor: COLORS.bgCardAlt,
+    borderRadius: 16,
+    padding: 18,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  modalBalanceLabel: {
+    fontSize: FONT.xs,
+    fontWeight: "700",
+    letterSpacing: 1.2,
+    color: COLORS.textMuted,
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  modalBalanceBig: {
+    fontSize: FONT.hero,
+    fontWeight: "800",
+    color: COLORS.textPrimary,
+    letterSpacing: -0.5,
+  },
+  modalRows: {
+    backgroundColor: COLORS.bgCard,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    overflow: "hidden",
+    marginBottom: 20,
   },
   modalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 14,
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
+  },
+  modalRowLeft: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   modalRowLabel: {
     fontSize: FONT.sm,
@@ -417,16 +465,8 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.textPrimary,
   },
-  modalBalanceBig: {
-    fontSize: FONT.hero,
-    fontWeight: "800",
-    color: COLORS.textPrimary,
-    textAlign: "center",
-    marginVertical: 24,
-  },
   modalCloseBtn: {
-    marginTop: 24,
-    backgroundColor: COLORS.bgCardAlt,
+    backgroundColor: COLORS.navy,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: "center",
@@ -434,18 +474,6 @@ export const styles = StyleSheet.create({
   modalCloseBtnText: {
     fontSize: FONT.md,
     fontWeight: "700",
-    color: COLORS.accent,
-  },
-
-  skeleton: {
-    backgroundColor: COLORS.bgCardAlt,
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  skeletonCard: {
-    height: 160,
-    borderRadius: 18,
-    backgroundColor: COLORS.bgCard,
-    marginBottom: 14,
+    color: "#FFFFFF",
   },
 });

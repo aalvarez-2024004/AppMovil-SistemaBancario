@@ -26,7 +26,6 @@ import {
 } from "../../../shared/components/MyTransactionsComponents";
 import { styles, COLORS } from "../../../shared/constants/MyTransactions";
 
-// ✅ Mapeo de keys del tab (inglés) → tipos reales del backend (español mayúscula)
 const TAB_TO_TYPE = {
   deposit:  "DEPOSITO",
   withdraw: "RETIRO",
@@ -56,7 +55,6 @@ const MyTransactionsScreen = () => {
     [accounts]
   );
 
-  // ✅ Estado inicial "all" para que coincida con el key del TABS
   const [activeTab,  setActiveTab]  = useState("all");
   const [search,     setSearch]     = useState("");
   const [refreshing, setRefreshing] = useState(false);
@@ -79,7 +77,6 @@ const MyTransactionsScreen = () => {
   const filtered = useMemo(() => {
     let list = transactions;
 
-    // ✅ Filtro corregido: mapea el key del tab al tipo del backend
     if (activeTab !== "all") {
       const backendType = TAB_TO_TYPE[activeTab];
       if (backendType) list = list.filter((t) => t.type === backendType);
