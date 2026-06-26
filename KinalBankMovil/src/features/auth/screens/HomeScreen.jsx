@@ -106,7 +106,7 @@ const HomeScreen = () => {
             <View>
               <Text style={s.greeting}>{getGreeting()}</Text>
               <Text style={s.userName}>
-                Hola, {user?.name?.split(' ')[0] || user?.username || 'Usuario'} 👋
+                Hola, {user?.Name?.split(' ')[0] || user?.Username || 'Usuario'} 👋
               </Text>
               <Text style={s.tagline}>Aquí está tu resumen financiero</Text>
             </View>
@@ -267,7 +267,7 @@ const HomeScreen = () => {
                 </View>
 
                 <Text style={s.txAmount}>
-                  {fmt(tx.amount)}
+                  {fmt(tx.amountSent ?? tx.amountReceived ?? 0)}
                 </Text>
               </View>
             ))
