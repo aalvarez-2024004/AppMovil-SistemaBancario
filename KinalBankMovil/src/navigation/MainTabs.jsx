@@ -6,14 +6,9 @@ import HomeScreen from '../features/auth/screens/HomeScreen';
 import MyAccountsScreen from '../features/accounts/screens/MyAccountsScreen';
 import MyTransactionsScreen from "../features/accounts/screens/MyTransactionsScreen";
 import ProductsScreen from "../features/products/screens/ProductsScreen";
+import ProfileScreen from '../features/auth/screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
-
-const ProfileScreen = () => (
-  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text>Profile</Text>
-  </View>
-);
 
 const KB = {
   navy:   '#0F1F3D',
