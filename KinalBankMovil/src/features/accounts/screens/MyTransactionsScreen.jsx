@@ -17,7 +17,6 @@ import { useTransactionStore } from "../../../shared/store/useTransactionStore";
 
 import {
   groupByDate,
-  isCreditTx,
   TransactionHeader,
   TransactionSearchBar,
   TransactionTabs,
@@ -25,12 +24,19 @@ import {
   TransactionSectionHeader,
   TransactionEmptyState,
 } from "../../../shared/components/MyTransactionsComponents";
-import { styles, COLORS, TABS, TX_TYPE_MAP } from "../../../shared/constants/MyTransactions";
+import { styles, COLORS } from "../../../shared/constants/MyTransactions";
+
+// ✅ Mapeo de keys del tab (inglés) → tipos reales del backend (español mayúscula)
+const TAB_TO_TYPE = {
+  deposit:  "DEPOSITO",
+  withdraw: "RETIRO",
+  transfer: "TRANSFERENCIA",
+};
 
 const MyTransactionsScreen = () => {
-  const insets = useSafeAreaInsets();
+  const insets     = useSafeAreaInsets();
   const navigation = useNavigation();
-  const token  = useAuthStore((s) => s.token);
+  const token      = useAuthStore((s) => s.token);
 
   const {
     transactions,
@@ -45,14 +51,13 @@ const MyTransactionsScreen = () => {
     resetTransactions,
   } = useTransactionStore();
 
-  // Necesitamos las cuentas del usuario para saber si una TRANSFERENCIA
-  // fue enviada (fromAccount es nuestra) o recibida (fromAccount es de otro).
   const myAccountIds = useMemo(
     () => (accounts || []).map((a) => String(a._id)),
     [accounts]
   );
 
-  const [activeTab,  setActiveTab]  = useState("TODOS");
+  // ✅ Estado inicial "all" para que coincida con el key del TABS
+  const [activeTab,  setActiveTab]  = useState("all");
   const [search,     setSearch]     = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -73,7 +78,13 @@ const MyTransactionsScreen = () => {
 
   const filtered = useMemo(() => {
     let list = transactions;
-    if (activeTab !== "TODOS") list = list.filter((t) => t.type === activeTab);
+
+    // ✅ Filtro corregido: mapea el key del tab al tipo del backend
+    if (activeTab !== "all") {
+      const backendType = TAB_TO_TYPE[activeTab];
+      if (backendType) list = list.filter((t) => t.type === backendType);
+    }
+
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -84,6 +95,7 @@ const MyTransactionsScreen = () => {
           t.toAccount?.accountNumber?.toString().includes(q)
       );
     }
+
     return list;
   }, [transactions, activeTab, search]);
 
@@ -91,38 +103,35 @@ const MyTransactionsScreen = () => {
     const rows = [];
     groupByDate(filtered).forEach(({ title, data }) => {
       rows.push({ type: "header", title, key: `h-${title}` });
-      data.forEach((tx) => rows.push({ rowType: "item", ...tx, key: tx._id || tx.id }));
+      data.forEach((tx) =>
+        rows.push({ rowType: "item", ...tx, key: tx._id || tx.id })
+      );
     });
     return rows;
   }, [filtered]);
 
-  // Saldo real de la cuenta (suma de balance de todas las cuentas del usuario).
-  // Si manejas varias monedas, esto asume todas GTQ; si necesitas separarlas
-  // por currency, agrupa aquí en vez de sumar todo junto.
   const currentBalance = useMemo(
     () => (accounts || []).reduce((sum, a) => sum + Number(a.balance ?? 0), 0),
     [accounts]
   );
 
-  // Entradas: depósitos, créditos y transferencias recibidas (amountReceived)
-  // Salidas: compras y transferencias enviadas (amountSent)
   const totals = useMemo(() => {
     let entradas = 0;
-    let salidas = 0;
+    let salidas  = 0;
 
     transactions.forEach((tx) => {
-      const fromId = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
+      const fromId           = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
       const isOwnTransferOut = tx.type === "TRANSFERENCIA" && myAccountIds.includes(fromId);
 
       if (tx.type === "DEPOSITO" || tx.type === "CREDITO") {
         entradas += Number(tx.amountReceived ?? 0);
       } else if (tx.type === "TRANSFERENCIA") {
         if (isOwnTransferOut) {
-          salidas += Number(tx.amountSent ?? 0);
+          salidas  += Number(tx.amountSent     ?? 0);
         } else {
           entradas += Number(tx.amountReceived ?? 0);
         }
-      } else if (tx.type === "COMPRA") {
+      } else if (tx.type === "COMPRA" || tx.type === "RETIRO") {
         salidas += Number(tx.amountSent ?? 0);
       }
     });
@@ -131,15 +140,15 @@ const MyTransactionsScreen = () => {
   }, [transactions, myAccountIds]);
 
   const renderItem = ({ item }) => {
-    if (item.type === "header") return <TransactionSectionHeader title={item.title} />;
+    if (item.type === "header")
+      return <TransactionSectionHeader title={item.title} />;
     return <TransactionItem item={item} myAccountIds={myAccountIds} />;
   };
 
   const renderFooter = () => {
     if (!hasMore) return null;
-    if (isLoading && transactions.length > 0) {
+    if (isLoading && transactions.length > 0)
       return <ActivityIndicator style={{ margin: 16 }} color={COLORS.accent} />;
-    }
     return (
       <TouchableOpacity
         style={styles.loadMore}
@@ -164,7 +173,9 @@ const MyTransactionsScreen = () => {
       />
 
       <View style={styles.content}>
-        {showSearch && <TransactionSearchBar value={search} onChange={setSearch} />}
+        {showSearch && (
+          <TransactionSearchBar value={search} onChange={setSearch} />
+        )}
 
         <TransactionTabs
           activeTab={activeTab}
@@ -192,10 +203,17 @@ const MyTransactionsScreen = () => {
             renderItem={renderItem}
             ListEmptyComponent={<TransactionEmptyState />}
             ListFooterComponent={renderFooter}
-            contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 16 }]}
+            contentContainerStyle={[
+              styles.listContent,
+              { paddingBottom: insets.bottom + 16 },
+            ]}
             showsVerticalScrollIndicator={false}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.accent} />
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={COLORS.accent}
+              />
             }
             onEndReached={() => hasMore && !isLoading && loadMore(token)}
             onEndReachedThreshold={0.3}
@@ -204,6 +222,6 @@ const MyTransactionsScreen = () => {
       </View>
     </View>
   );
-}
+};
 
 export default MyTransactionsScreen;
