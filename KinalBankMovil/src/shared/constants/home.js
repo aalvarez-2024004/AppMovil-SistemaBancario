@@ -32,7 +32,7 @@ export const s = StyleSheet.create({
   },
   loadingText: { color: 'rgba(255,255,255,0.6)', fontSize: 14 },
 
-  /* Header */
+  /* ── Header ── */
   header: {
     backgroundColor: KB.navy,
     paddingTop: Platform.OS === 'ios' ? 56 : 40,
@@ -49,12 +49,11 @@ export const s = StyleSheet.create({
     backgroundColor: 'rgba(201,168,76,0.07)', bottom: -60, left: -40,
   },
   headerTop: {
-    flexDirection: 'row', justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',
   },
-  greeting: { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 4 },
-  userName: { fontSize: 30, fontWeight: '800', color: KB.white, marginBottom: 6 },
-  tagline:  { fontSize: 13, color: 'rgba(255,255,255,0.45)' },
+  greeting:  { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 4 },
+  userName:  { fontSize: 30, fontWeight: '800', color: KB.white, marginBottom: 6 },
+  tagline:   { fontSize: 13, color: 'rgba(255,255,255,0.45)' },
   avatar: {
     width: 46, height: 46, borderRadius: 23,
     backgroundColor: 'rgba(255,255,255,0.15)',
@@ -63,14 +62,14 @@ export const s = StyleSheet.create({
   },
   avatarText: { color: KB.white, fontSize: 18, fontWeight: '700' },
 
-  /* Body */
+  /* ── Body ── */
   body: {
     marginTop: -52,
     paddingHorizontal: SPACING.md,
     paddingBottom: SPACING.xxl,
   },
 
-  /* Balance + acciones rápidas, tarjeta blanca flotante */
+  /* ── Balance card ── */
   balanceCard: {
     backgroundColor: KB.white,
     borderRadius: 22,
@@ -82,28 +81,26 @@ export const s = StyleSheet.create({
     fontSize: 11, fontWeight: '700', color: COLORS.gray400,
     letterSpacing: 1, marginBottom: 6,
   },
-  balanceRow: { flexDirection: 'column', alignItems: 'stretch', },
-  balanceValue: { fontSize: 30, fontWeight: '800', color: COLORS.gray900 },
-  balanceActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: SPACING.md, width: '100%', },
-  quickActionBtn: { alignItems: 'center', flex: 1, maxWidth: 70, },
-  quickActionIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 13,
+  // Fila con valor + ícono ojo
+  balanceValueRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
-  quickActionIconText: { fontSize: 18 },
+  balanceValue: { fontSize: 30, fontWeight: '800', color: COLORS.gray900 },
+  balanceActions: {
+    flexDirection: 'row', justifyContent: 'space-between',
+    alignItems: 'center', marginTop: SPACING.md, width: '100%',
+  },
+  quickActionBtn:      { alignItems: 'center', flex: 1, maxWidth: 70 },
+  quickActionIcon: {
+    width: 44, height: 44, borderRadius: 13,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 6,
+  },
   quickActionLabel: { fontSize: 10, color: COLORS.gray600, fontWeight: '600', textAlign: 'center' },
-  balanceProgressBar: {
-    height: 4, borderRadius: 2, marginTop: SPACING.md,
-    backgroundColor: '#5B6CF9',
-    // simple gradient illusion using overlapping colors is not supported natively,
-    // a flat accent bar is used instead for RN compatibility
-  },
+  balanceProgressBar: { height: 4, borderRadius: 2, marginTop: SPACING.md },
 
-  /* Grid de stats 2x2 */
+  /* ── Stats 2x2 ── */
   statsGrid: {
     flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',
     marginBottom: SPACING.lg, gap: SPACING.sm,
@@ -121,17 +118,13 @@ export const s = StyleSheet.create({
     width: 38, height: 38, borderRadius: 12,
     alignItems: 'center', justifyContent: 'center',
   },
-  statIconText: { fontSize: 16, fontWeight: '800' },
   statCardLbl: { fontSize: 10, color: COLORS.gray400, fontWeight: '700', letterSpacing: 0.3 },
   statCardVal: { fontSize: 16, fontWeight: '800', color: COLORS.gray900, marginTop: 2 },
 
-  /* Secciones */
+  /* ── Secciones ── */
   sectionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: SPACING.md,
-    marginBottom: SPACING.md,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginTop: SPACING.md, marginBottom: SPACING.md,
   },
   sectionTitle: {
     fontSize: 12, fontWeight: '800', color: COLORS.gray500,
@@ -139,7 +132,7 @@ export const s = StyleSheet.create({
   },
   seeAll: { fontSize: 13, color: KB.accent, fontWeight: '600' },
 
-  /* Mis cuentas - card horizontal con saldo */
+  /* ── Mis cuentas ── */
   accountsBox: {
     backgroundColor: KB.white,
     borderRadius: 18,
@@ -151,35 +144,69 @@ export const s = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingVertical: SPACING.sm,
   },
-  accountRowDivider: {
-    borderTopWidth: 1, borderTopColor: COLORS.gray100,
-  },
-  accountInfo: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  accountRowDivider: { borderTopWidth: 1, borderTopColor: COLORS.gray100 },
+  accountInfo:    { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
   accountIconWrap: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: KB.blueLight,
     alignItems: 'center', justifyContent: 'center',
   },
-  accountNum: { fontSize: 13, fontWeight: '700', color: COLORS.gray800 },
-  accountStatus: { fontSize: 11, color: COLORS.gray400, marginTop: 2 },
+  accountNum:     { fontSize: 13, fontWeight: '700', color: COLORS.gray800 },
+  accountStatus:  { fontSize: 11, marginTop: 2 },
   accountBalance: { fontSize: 14, fontWeight: '800', color: COLORS.gray900 },
 
-  /* Tarjeta de cuenta destacada (estilo original, opcional al deslizar) */
+  /* ── Empty states ── */
+  emptyCard: {
+    backgroundColor: KB.white, borderRadius: 18,
+    padding: SPACING.xl, alignItems: 'center',
+    marginBottom: SPACING.lg, ...SHADOWS.sm,
+  },
+  emptyIcon:  { fontSize: 34, marginBottom: SPACING.sm },
+  emptyTitle: { fontSize: 15, fontWeight: '700', color: COLORS.gray800, marginBottom: 4 },
+  emptyText:  { fontSize: 13, color: COLORS.gray500, textAlign: 'center', lineHeight: 20 },
+  emptyTx: {
+    backgroundColor: KB.white, borderRadius: 18,
+    padding: SPACING.xl, alignItems: 'center',
+    marginBottom: SPACING.lg, ...SHADOWS.sm,
+  },
+
+  /* ── Movimientos recientes ── */
+  txRow: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: KB.white, borderRadius: 14,
+    padding: SPACING.md, marginBottom: SPACING.sm,
+    ...SHADOWS.sm, gap: SPACING.sm,
+  },
+  txIconWrap: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  txInfo:     { flex: 1 },
+  txDesc:     { fontSize: 14, fontWeight: '600', color: COLORS.gray800 },
+  // Fila tipo · fecha
+  txMeta:     { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
+  txType:     { fontSize: 11, fontWeight: '700' },
+  txDot:      { fontSize: 11, color: COLORS.gray400 },
+  txDate:     { fontSize: 11, color: COLORS.gray400 },
+  txAmount:   { fontSize: 14, fontWeight: '800' },
+
+  /* ── Logout ── */
+  logoutBtn: {
+    marginTop: SPACING.lg,
+    borderRadius: BORDER_RADIUS.lg,
+    borderWidth: 1.5, borderColor: 'rgba(239,68,68,0.3)',
+    padding: SPACING.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(239,68,68,0.06)',
+  },
+  logoutText: { color: '#EF4444', fontWeight: '700', fontSize: 14 },
+
+  /* ── Estilos legacy que se mantienen por compatibilidad ── */
   card: {
-    borderRadius: 20, overflow: 'hidden',
-    backgroundColor: KB.navyLight,
+    borderRadius: 20, overflow: 'hidden', backgroundColor: KB.navyLight,
     padding: SPACING.lg, marginBottom: SPACING.sm,
-    ...SHADOWS.md,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
+    ...SHADOWS.md, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
   },
-  cardGrad: {
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: KB.navyMid, opacity: 0.6,
-  },
-  cardTop: {
-    flexDirection: 'row', justifyContent: 'space-between',
-    alignItems: 'center', marginBottom: SPACING.lg,
-  },
+  cardGrad:       { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: KB.navyMid, opacity: 0.6 },
+  cardTop:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.lg },
   cardBank:       { fontSize: 13, fontWeight: '900', color: KB.white, letterSpacing: 3 },
   cardChip:       { width: 32, height: 24, borderRadius: 4, backgroundColor: KB.gold, opacity: 0.85 },
   cardMid:        { marginBottom: SPACING.lg },
@@ -188,58 +215,11 @@ export const s = StyleSheet.create({
   cardBot:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
   cardMeta:       { fontSize: 10, color: 'rgba(255,255,255,0.5)', marginBottom: 2 },
   cardNum:        { fontSize: 15, fontWeight: '700', color: KB.white, letterSpacing: 2 },
-
-  statusBadge:  { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 99 },
-  badgeActive:  { backgroundColor: 'rgba(16,185,129,0.2)', borderWidth: 1, borderColor: 'rgba(16,185,129,0.4)' },
-  badgeInactive:{ backgroundColor: 'rgba(239,68,68,0.2)',  borderWidth: 1, borderColor: 'rgba(239,68,68,0.4)'  },
-  badgeText:    { fontSize: 10, fontWeight: '800', color: KB.white, letterSpacing: 1 },
-
-  dotRow:    { flexDirection: 'row', justifyContent: 'center', gap: 6, marginBottom: SPACING.md },
-  dot:       { width: 6, height: 6, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.15)' },
-  dotActive: { width: 18, backgroundColor: '#3B7DD8' },
-
-  /* Empty states */
-  emptyCard: {
-    backgroundColor: KB.white,
-    borderRadius: 18,
-    padding: SPACING.xl,
-    alignItems: 'center',
-    marginBottom: SPACING.lg,
-    ...SHADOWS.sm,
-  },
-  emptyIcon:  { fontSize: 34, marginBottom: SPACING.sm },
-  emptyTitle: { fontSize: 15, fontWeight: '700', color: COLORS.gray800, marginBottom: 4 },
-  emptyText:  { fontSize: 13, color: COLORS.gray500, textAlign: 'center', lineHeight: 20 },
-
-  emptyTx: {
-    backgroundColor: KB.white,
-    borderRadius: 18,
-    padding: SPACING.xl,
-    alignItems: 'center',
-    marginBottom: SPACING.lg,
-    ...SHADOWS.sm,
-  },
-
-  /* Movimientos recientes */
-  txRow: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: KB.white, borderRadius: 14,
-    padding: SPACING.md, marginBottom: SPACING.sm, ...SHADOWS.sm,
-    gap: SPACING.sm,
-  },
-  txIconWrap: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  txIcon:     { fontSize: 16, fontWeight: '700', color: COLORS.gray700 },
-  txInfo:     { flex: 1 },
-  txDesc:     { fontSize: 14, fontWeight: '600', color: COLORS.gray800 },
-  txDate:     { fontSize: 11, color: COLORS.gray400, marginTop: 2 },
-  txAmount:   { fontSize: 14, fontWeight: '800' },
-
-  /* Logout */
-  logoutBtn: {
-    marginTop: SPACING.lg, borderRadius: BORDER_RADIUS.lg,
-    borderWidth: 1.5, borderColor: 'rgba(239,68,68,0.3)',
-    padding: SPACING.md, alignItems: 'center',
-    backgroundColor: 'rgba(239,68,68,0.06)',
-  },
-  logoutText: { color: '#EF4444', fontWeight: '700', fontSize: 14 },
+  statusBadge:    { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 99 },
+  badgeActive:    { backgroundColor: 'rgba(16,185,129,0.2)', borderWidth: 1, borderColor: 'rgba(16,185,129,0.4)' },
+  badgeInactive:  { backgroundColor: 'rgba(239,68,68,0.2)', borderWidth: 1, borderColor: 'rgba(239,68,68,0.4)' },
+  badgeText:      { fontSize: 10, fontWeight: '800', color: KB.white, letterSpacing: 1 },
+  dotRow:         { flexDirection: 'row', justifyContent: 'center', gap: 6, marginBottom: SPACING.md },
+  dot:            { width: 6, height: 6, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.15)' },
+  dotActive:      { width: 18, backgroundColor: '#3B7DD8' },
 });
