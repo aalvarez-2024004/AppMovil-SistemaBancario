@@ -2,8 +2,6 @@
 import {generateAccountNumber} from '../helpers/account-number.js'
 import Account from './account.model.js';
 import axios from 'axios';
-import { User } from '../../../AuthBanco/src/users/user.model.js'; // ajusta la ruta según tu estructura
-
 // Crear cuenta (ADMIN)
 export const createAccount = async (req, res) => {
     try {

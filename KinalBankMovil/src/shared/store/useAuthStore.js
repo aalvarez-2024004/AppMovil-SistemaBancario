@@ -23,50 +23,54 @@ export const useAuthStore = create((set, get) => ({
   setHasHydrated: (state) => set({ _hasHydrated: state }),
 
   restoreSession: async () => {
-    try {
-      const token = await SecureStore.getItemAsync("refreshToken");
+      try {
+        const token = await SecureStore.getItemAsync("refreshToken");
 
-      if (token) {
-        set({
-          isAuthenticated: true,
-          token,
-        });
+        if (token) {
+          set({
+            isAuthenticated: true,
+            token,
+          });
+
+          await get().getProfile(); 
+        }
+      } catch (err) {
+        console.log("restoreSession error:", err);
+      } finally {
+        set({ _hasHydrated: true });
       }
-    } catch (err) {
-      console.log("restoreSession error:", err);
-    } finally {
-      set({ _hasHydrated: true });
-    }
   },
 
   login: async (email, password) => {
-    try {
-      set({ isLoading: true, error: null });
+      try {
+        set({ isLoading: true, error: null });
 
-      const res = await loginRequest({ email, password });
-      const { user, token, refreshToken } = res.data;
+        const res = await loginRequest({ email, password });
+        const { user, token, refreshToken } = res.data;
 
-      set({
-        user,
-        token,
-        isAuthenticated: true,
-        isLoading: false,
-        _hasHydrated: true,
-      });
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+          isLoading: false,
+          _hasHydrated: true,
+        });
 
-      if (refreshToken) {
-        await SecureStore.setItemAsync("refreshToken", refreshToken);
+        if (refreshToken) {
+          await SecureStore.setItemAsync("refreshToken", refreshToken);
+        }
+
+        await get().getProfile(); 
+        
+        return { success: true, user };
+      } catch (err) {
+        const message =
+          err.response?.data?.message || "Error de autenticación";
+
+        set({ error: message, isLoading: false });
+
+        return { success: false, error: message };
       }
-
-      return { success: true, user };
-    } catch (err) {
-      const message =
-        err.response?.data?.message || "Error de autenticación";
-
-      set({ error: message, isLoading: false });
-
-      return { success: false, error: message };
-    }
   },
 
   register: async (data) => {
