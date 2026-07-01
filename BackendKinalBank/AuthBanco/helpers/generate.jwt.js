@@ -13,13 +13,13 @@ export const generateJWT = (userId, extraClaims = {}, options = {}) => {
     };
 
     const signOptions = {
-      expiresIn: options.expiresIn || config.jwt.expiresIn,
+      expiresIn: "30m",
       issuer: config.jwt.issuer,
       audience: config.jwt.audience,
     };
 
-    console.log("JWT SIGN OPTIONS:", signOptions);
     console.log("JWT CONFIG:", config.jwt);
+    console.log("SIGN OPTIONS:", signOptions);
 
     jwt.sign(payload, config.jwt.secret, signOptions, (err, token) => {
       if (err) {
