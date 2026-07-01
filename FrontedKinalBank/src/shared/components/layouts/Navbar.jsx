@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../features/auth/store/useAuthStore.js";
+import KinalBankLogo from "../../../assets/img/KinalBank.png";
 
 export const Navbar = () => {
 
@@ -38,7 +39,7 @@ export const Navbar = () => {
 
                     <div className="relative w-14 h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center justify-center shadow-lg">
                         <img
-                            src="/src/assets/img/KinalBank.png"
+                            src={KinalBankLogo}
                             alt="KinalBank"
                             className="h-9 object-contain brightness-0 invert"
                         />
