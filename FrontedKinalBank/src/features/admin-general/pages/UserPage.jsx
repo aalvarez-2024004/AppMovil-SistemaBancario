@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUsersStore } from "../store/useUserStore.js";
-import { ApproveDrawer } from "../components/ApproveDrawer";
+import { ApproveModal as ApproveDrawer } from "../components/ApproveModal";
 
 
 const UsersIcon = ({ className }) => (
