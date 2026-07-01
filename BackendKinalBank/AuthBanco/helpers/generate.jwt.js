@@ -18,6 +18,9 @@ export const generateJWT = (userId, extraClaims = {}, options = {}) => {
       audience: config.jwt.audience,
     };
 
+    console.log("JWT SIGN OPTIONS:", signOptions);
+    console.log("JWT CONFIG:", config.jwt);
+
     jwt.sign(payload, config.jwt.secret, signOptions, (err, token) => {
       if (err) {
         console.error('Error generating JWT:', err);
