@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ForgotPasswordForm } from "../components/ForgotPassword"
 import { LoginForm } from "../components/LoginForm"
 import { RegisterForm } from "../components/RegisterForm"
+import KinalBankLogo from "../../../assets/img/KinalBank.png"
 
 export const AuthPage = () => {
     const [isForgot, setIsForgot] = useState(false)
