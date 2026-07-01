@@ -34,7 +34,7 @@ export const AuthPage = () => {
 
                     <div className="auth-brand">
                         <img
-                            src="/src/assets/img/KinalBank.png"
+                            src={KinalBankLogo}
                             alt="Kinal Bank"
                             className="auth-brand__logo"
                         />
