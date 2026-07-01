@@ -162,7 +162,7 @@ const SkeletonRow = () => (
         <td className="px-4 py-4"><div className="h-4 bg-slate-100 rounded w-20" /></td>
         <td className="px-4 py-4"><div className="h-8 bg-slate-100 rounded-2xl w-24" /></td>
         <td className="px-4 py-4"><div className="h-6 bg-slate-100 rounded-full w-20" /></td>
-        <td className="px-4 py-4"><div className="h-10 bg-slate-200 rounded-2xl w-24" /></td>
+        <td className="sticky right-0 bg-white px-4 py-4"><div className="h-10 bg-slate-200 rounded-2xl w-24" /></td>
     </tr>
 );
 
@@ -596,7 +596,7 @@ export const UsersPage = () => {
                                     <table className="w-full min-w-[920px]">
                                         <thead>
                                             <tr className="border-b border-slate-100 bg-gradient-to-r from-slate-50/80 to-slate-50/50">
-                                                {["Cliente", "Usuario", "Correo", "DPI", "Telefono", "Trabajo", "Ingreso", "Estado", "Acciones"].map((item, index) => (
+                                                {["Cliente", "Usuario", "Correo", "DPI", "Telefono", "Trabajo", "Ingreso", "Estado"].map((item, index) => (
                                                     <th
                                                         key={item}
                                                         className="px-4 py-4 text-left text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400"
@@ -607,6 +607,9 @@ export const UsersPage = () => {
                                                         </span>
                                                     </th>
                                                 ))}
+                                                <th className="sticky right-0 z-10 px-4 py-4 text-left text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 bg-slate-50 shadow-[-8px_0_12px_-4px_rgba(0,0,0,0.06)]">
+                                                    Acciones
+                                                </th>
                                             </tr>
                                         </thead>
 
@@ -698,7 +701,7 @@ export const UsersPage = () => {
                                                         </div>
                                                     </td>
 
-                                                    <td className="px-4 py-5">
+                                                    <td className="sticky right-0 z-10 px-4 py-5 bg-white group-hover:bg-indigo-50/40 shadow-[-8px_0_12px_-4px_rgba(0,0,0,0.06)]">
                                                         <button
                                                             onClick={() => setSelected(user)}
                                                             className="group/btn relative overflow-hidden px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-105 active:scale-100 transition-all duration-300"

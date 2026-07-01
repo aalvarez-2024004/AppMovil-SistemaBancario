@@ -175,7 +175,7 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
             <div
                 role="dialog"
                 aria-modal="true"
-                className="approve-drawer-panel fixed inset-y-0 right-0 z-50 w-full sm:w-[440px] md:w-[480px] bg-white shadow-2xl flex flex-col max-h-screen"
+                className="approve-drawer-panel fixed inset-0 sm:inset-y-0 sm:left-auto sm:right-0 z-50 w-full sm:w-[440px] md:w-[480px] h-[100dvh] bg-white shadow-2xl flex flex-col"
             >
                 <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 flex-shrink-0" />
 
@@ -204,7 +204,7 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                 </div>
 
                 {/* Contenido con scroll */}
-                <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-5">
+                <div className="flex-1 min-h-0 overflow-y-auto px-5 sm:px-6 py-5 space-y-5">
                     <div className="flex items-center gap-4">
                         <div className="relative flex-shrink-0">
                             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 text-white font-bold text-xl flex items-center justify-center shadow-xl">
