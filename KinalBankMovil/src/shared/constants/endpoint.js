@@ -1,12 +1,20 @@
 import { Platform } from "react-native";
 
-const BASE_URL = Platform.OS === "web"
-  ? "http://localhost:3005/api/v1"
-  : "http://192.168.0.4:3005/api/v1";
+const USE_LOCAL_LAN = false;
 
-const BANK_BASE_URL = Platform.OS === "web"
-  ? "http://localhost:3006/kinalBank/v1"
-  : "http://192.168.0.4:3006/kinalBank/v1";
+const BASE_URL =
+  Platform.OS === "web"
+    ? "https://kinalbank-auth-api.onrender.com/api/v1"
+    : USE_LOCAL_LAN
+    ? "http://192.168.0.4:3005/api/v1"
+    : "https://kinalbank-auth-api.onrender.com/api/v1";
+
+const BANK_BASE_URL =
+  Platform.OS === "web"
+    ? "https://appmovil-sistemabancario.onrender.com/kinalBank/v1"
+    : USE_LOCAL_LAN
+    ? "http://192.168.0.6:3006/kinalBank/v1"
+    : "https://appmovil-sistemabancario.onrender.com/kinalBank/v1";
 
 export const AUTH_ENDPOINTS = {
   LOGIN:          `${BASE_URL}/auth/login`,
