@@ -23,9 +23,9 @@ export const AUTH_ENDPOINTS = {
   REFRESH:        `${BASE_URL}/auth/refresh`,
   PROFILE:        `${BASE_URL}/users/me`,
   UPDATE_PROFILE: `${BASE_URL}/users/me`,
-  REQUEST_RESET:  `${BASE_URL}/auth/password-reset/request`,
-  VERIFY_CODE:    `${BASE_URL}/auth/password-reset/verify`,
-  RESET_PASSWORD: `${BASE_URL}/auth/password-reset/confirm`,
+  REQUEST_RESET:  `${BASE_URL}/auth/forgot-password/request`,
+  VERIFY_CODE:    `${BASE_URL}/auth/forgot-password/verify`,
+  RESET_PASSWORD: `${BASE_URL}/auth/forgot-password/reset`,
 };
 
 export const CLIENT_ENDPOINTS = {
