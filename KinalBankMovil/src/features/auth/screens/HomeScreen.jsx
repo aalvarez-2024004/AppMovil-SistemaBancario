@@ -89,8 +89,8 @@ const HomeScreen = () => {
     acc?.status?.toString()?.trim()?.toUpperCase() === 'ACTIVA' || acc?.isActive === true;
 
   /* Inicial del avatar — usa Name/Username (mayúscula, del modelo Sequelize) */
-  const avatarLetter = (user?.Name?.[0] || user?.Username?.[0] || 'U').toUpperCase();
-  const firstName    = user?.Name?.split(' ')[0] || user?.Username || 'Usuario';
+  const avatarLetter = (user?.name?.[0] || user?.username?.[0] || 'U').toUpperCase();
+  const firstName    = user?.name?.split(' ')[0] || user?.username || 'Usuario';
 
   if (loading) {
     return (

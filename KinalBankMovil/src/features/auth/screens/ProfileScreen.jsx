@@ -170,17 +170,17 @@ const ProfileScreen = () => {
     >
       {/* ── Hero ── */}
       <View style={styles.hero}>
-        <Avatar name={user.Name} />
-        <Text style={styles.heroName}>{user.Name}</Text>
-        <Text style={styles.heroUsername}>@{user.Username}</Text>
-        <StatusBadge active={user.Status} />
+        <Avatar name={user.name} />
+        <Text style={styles.heroName}>{user.name}</Text>
+        <Text style={styles.heroUsername}>@{user.username}</Text>
+        <StatusBadge active={user.status} />
       </View>
 
       {/* ── Tarjeta de cuenta ── */}
       <View style={styles.accountCard}>
         <View>
           <Text style={styles.accountLabel}>Número de cuenta</Text>
-          <Text style={styles.accountNumber}>{maskAccount(user.AccountNumber)}</Text>
+          <Text style={styles.accountNumber}>{maskAccount(user.accountNumber)}</Text>
         </View>
         <View style={styles.accountIcon}>
           <Ionicons name="card" size={22} color={KB.white} />
@@ -189,16 +189,16 @@ const ProfileScreen = () => {
 
       {/* ── Info personal ── */}
       <Section title="Información personal">
-        <InfoRow icon="mail-outline"    label="Correo electrónico" value={user.Email} />
-        <InfoRow icon="call-outline"    label="Teléfono"           value={user.Phone} />
-        <InfoRow icon="location-outline" label="Dirección"         value={user.Address} />
-        <InfoRow icon="card-outline"    label="DPI"                value={maskDPI(user.DPI)} mono />
+        <InfoRow icon="mail-outline"     label="Correo electrónico" value={user.email} />
+        <InfoRow icon="call-outline"     label="Teléfono"           value={user.phone} />
+        <InfoRow icon="location-outline" label="Dirección"          value={user.address} />
+        <InfoRow icon="card-outline"     label="DPI"                value={maskDPI(user.dpi)} mono />
       </Section>
 
       {/* ── Info laboral ── */}
       <Section title="Información laboral">
-        <InfoRow icon="briefcase-outline" label="Ocupación"       value={user.Job} />
-        <InfoRow icon="cash-outline"      label="Ingreso mensual" value={formatCurrency(user.MonthlyIncome)} />
+        <InfoRow icon="briefcase-outline" label="Ocupación"       value={user.job} />
+        <InfoRow icon="cash-outline"      label="Ingreso mensual" value={formatCurrency(user.monthlyIncome)} />
       </Section>
 
       {/* ── Acciones ── */}
