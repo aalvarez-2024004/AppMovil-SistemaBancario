@@ -73,19 +73,16 @@ export const Navbar = () => {
                 <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
 
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-white font-black shadow-lg shadow-indigo-500/30">
-                        {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                        {user?.Name?.charAt(0)?.toUpperCase() || "U"}
                     </div>
 
                     <div className="flex flex-col">
-
                         <span className="text-white text-sm font-semibold">
-                            {user?.name || "Usuario"}
+                            {user?.Name || "Usuario"}
                         </span>
-
                         <span className="text-slate-400 text-xs">
                             {isAdmin ? "Administrador" : "Cliente"}
                         </span>
-
                     </div>
 
                 </div>
