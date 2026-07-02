@@ -1,28 +1,27 @@
 'use strict';
 
-import nodemailer from 'nodemailer';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'realiqueznoriega80@gmail.com',
-        pass: 'crdjpusurqpzuzel',
-    },
-});
+const client = SibApiV3Sdk.ApiClient.instance;
+const apiKeyAuth = client.authentications['api-key'];
+apiKeyAuth.apiKey = process.env.BREVO_API_KEY;
+
+const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 /**
  * Envía el código de recuperación de contraseña al correo del usuario.
- * @param {string} toEmail  - Correo destino
- * @param {string} code     - Código de 6 dígitos
+ * @param {string} toEmail - Correo destino
+ * @param {string} code    - Código de 6 dígitos
  */
 export const sendPasswordResetCode = async (toEmail, code) => {
-    const mailOptions = {
-        from: '"KinalBank" <realiqueznoriega80@gmail.com>',
-        to: toEmail,
+    const sendSmtpEmail = {
+        sender: {
+            email: process.env.BREVO_SENDER_EMAIL,
+            name: process.env.BREVO_SENDER_NAME,
+        },
+        to: [{ email: toEmail }],
         subject: 'Código de recuperación de contraseña - KinalBank',
-        html: `
+        htmlContent: `
         <div style="font-family:'Helvetica Neue',sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#ffffff;border-radius:8px;border:1px solid #e5e7eb;">
             <div style="text-align:center;margin-bottom:24px;">
             <h2 style="margin:0;font-size:20px;font-weight:700;color:#111827;letter-spacing:-0.01em;">KinalBank</h2>
@@ -49,5 +48,12 @@ export const sendPasswordResetCode = async (toEmail, code) => {
         `,
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+        const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
+        console.log(`✅ Correo de recuperación enviado a ${toEmail}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Error enviando correo con Brevo:', error.response?.body || error.message);
+        throw error;
+    }
 };
