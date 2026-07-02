@@ -128,14 +128,14 @@ export const updateMyProfile = async (req, res) => {
   try {
     const userId = req.userId; // ← CORREGIDO: usa req.userId que pone el middleware
 
-    const { Name, Address, Job, MonthlyIncome } = req.body;
+    const { name, Address, Job, MonthlyIncome } = req.body;
 
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    if (Name)          user.Name          = Name;
+    if (name)          user.Name          = name;
     if (Address)       user.Address       = Address;
     if (Job)           user.Job           = Job;
     if (MonthlyIncome) user.MonthlyIncome = MonthlyIncome;
@@ -146,10 +146,10 @@ export const updateMyProfile = async (req, res) => {
       success: true,
       message: 'Perfil actualizado correctamente',
       user: {
-        Id:            user.Id,
-        Name:          user.Name,
-        Username:      user.Username,
-        Email:         user.Email,
+        id:            user.Id,
+        name:          user.Name,
+        username:      user.Username,
+        email:         user.Email,
         Address:       user.Address,
         Job:           user.Job,
         MonthlyIncome: user.MonthlyIncome,
@@ -164,7 +164,7 @@ export const updateMyProfile = async (req, res) => {
 // Obtener perfil propio (cliente)
 export const getMyProfile = async (req, res) => {
   try {
-    const userId = req.userId; // ← CORREGIDO también aquí por consistencia
+    const userId = req.userId;
 
     const user = await User.findByPk(userId, {
       attributes: { exclude: ['Password'] }
@@ -174,7 +174,22 @@ export const getMyProfile = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    return res.json({ success: true, user });
+    return res.json({
+      success: true,
+      user: {
+        id:            user.Id,
+        name:          user.Name,
+        username:      user.Username,
+        email:         user.Email,
+        dpi:           user.DPI,
+        address:       user.Address,
+        phone:         user.Phone,
+        job:           user.Job,
+        monthlyIncome: user.MonthlyIncome,
+        accountNumber: user.AccountNumber,
+        status:        user.Status,
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error al obtener perfil' });

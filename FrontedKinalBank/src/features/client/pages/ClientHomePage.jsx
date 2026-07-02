@@ -165,8 +165,8 @@ export const ClientHomePage = () => {
                             {greeting}
                         </p>
                         <h1 className="text-3xl font-black text-gray-900">
-                            {user?.Name
-                                ? <>Hola, {user?.Name.split(" ")[0]}{" "}<span className="text-gray-500">{user.Name.split(" ").slice(1).join(" ")}</span></>
+                            {user?.name
+                                ? <>Hola, {user?.name.split(" ")[0]}{" "}<span className="text-gray-500">{user.name.split(" ").slice(1).join(" ")}</span></>
                                 : "Bienvenido"
                             }
                         </h1>

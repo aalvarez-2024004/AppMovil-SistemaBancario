@@ -135,10 +135,10 @@ export const login = async (req, res) => {
       success: true,
       token,
       user: {
-        Id: user.Id,
-        Name: user.Name,
-        Username: user.Username,
-        Email: user.Email,
+        id: user.Id,
+        name: user.Name,
+        username: user.Username,
+        email: user.Email,
         role: user.role.Name,
       },
     });

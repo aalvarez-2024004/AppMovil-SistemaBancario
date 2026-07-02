@@ -5,7 +5,7 @@ export const EditProfileModal = ({ onClose }) => {
     const { user, updateProfile, loading } = useAuthStore();
 
     const [form, setForm] = useState({
-        Name: user?.Name || "",
+        name: user?.name || "",
         Address: user?.Address || "",
         Job: user?.Job || "",
         MonthlyIncome: user?.MonthlyIncome || "",
@@ -60,13 +60,13 @@ export const EditProfileModal = ({ onClose }) => {
                         <div className="rounded-xl bg-gray-50 border border-gray-100 px-4 py-3">
                             <p className="text-[11px] text-gray-400 mb-1">Usuario</p>
                             <p className="text-sm font-semibold text-gray-500">
-                                @{user?.Username}
+                                @{user?.username}
                             </p>
                         </div>
                         <div className="rounded-xl bg-gray-50 border border-gray-100 px-4 py-3">
                             <p className="text-[11px] text-gray-400 mb-1">Correo</p>
                             <p className="text-sm font-semibold text-gray-500 truncate">
-                                {user?.Email}
+                                {user?.email}
                             </p>
                         </div>
                     </div>
@@ -81,8 +81,8 @@ export const EditProfileModal = ({ onClose }) => {
                             Nombre completo
                         </label>
                         <input
-                            name="Name"
-                            value={form.Name}
+                            name="name"
+                            value={form.name}
                             onChange={handleChange}
                             className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
                             placeholder="Tu nombre completo"
