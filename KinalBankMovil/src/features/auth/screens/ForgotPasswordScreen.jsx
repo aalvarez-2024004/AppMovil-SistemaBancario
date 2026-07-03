@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  Alert,
   useWindowDimensions,
   Keyboard,
 } from 'react-native';
@@ -19,7 +18,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { KB, s, fi, btn, sb, isTablet, scale, isSmallDevice } from '../../../shared/constants/register';
 import { STEPS, local } from '../../../shared/constants/forgotPassword';
-import { StepBar, StepEmail, StepCode, StepNewPassword } from '../../../shared/components/ForgotPasswordComponents';
+
+import { StepBar, StepEmail, StepCode, StepNewPassword, SuccessModal } from '../../../shared/components/ForgotPasswordComponents';
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
@@ -27,21 +27,24 @@ const ForgotPasswordScreen = () => {
 
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
+  
+  // Estado para controlar la visibilidad del Modal personalizado
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     return () => Keyboard.dismiss();
   }, []);
 
+  // Al finalizar con éxito, en lugar de una Alerta nativa, abrimos el Modal
   const handleDone = () => {
-    Alert.alert('¡Contraseña actualizada!', 'Ya puedes ingresar con tu nueva contraseña.', [
-      {
-        text: 'Ir al login',
-        onPress: () => {
-          Keyboard.dismiss();
-          navigation.navigate('Login');
-        },
-      },
-    ]);
+    Keyboard.dismiss();
+    setModalVisible(true);
+  };
+
+  // Función encargada de redireccionar cuando el usuario presiona "IR AL LOGIN" en el modal
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    navigation.navigate('Login');
   };
 
   const cardContainerStyle = isTablet ? { width: '100%', maxWidth: 560, alignSelf: 'center' } : null;
@@ -49,6 +52,9 @@ const ForgotPasswordScreen = () => {
   return (
     <View style={[s.root, { overflow: 'hidden' }]}>
       <StatusBar barStyle="light-content" backgroundColor={KB.blueDark} />
+
+      {/* RENDERIZADO DEL MODAL */}
+      <SuccessModal visible={modalVisible} onClose={handleCloseModal} />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

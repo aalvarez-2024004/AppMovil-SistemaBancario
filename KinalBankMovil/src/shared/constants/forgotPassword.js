@@ -33,3 +33,48 @@ export const local = StyleSheet.create({
   btnWithIcon: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   linkWithIcon: { flexDirection: 'row', alignItems: 'center', gap: 4 },
 });
+
+export const modalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.75)', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: scale(24),
+  },
+  content: {
+    backgroundColor: KB.white,
+    width: '90%',
+    maxWidth: scale(340),
+    borderRadius: scale(24), 
+    paddingVertical: scale(32), 
+    paddingHorizontal: scale(24), 
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  iconCircle: {
+    backgroundColor: 'rgba(16, 185, 129, 0.12)', 
+    padding: scale(14),
+    marginBottom: scale(20),
+  },
+  title: {
+    fontSize: scale(20), 
+    fontWeight: '800',
+    color: KB.textDark,
+    marginBottom: scale(12),
+    textAlign: 'center',
+    letterSpacing: -0.3,
+  },
+  body: {
+    fontSize: scale(14),
+    color: '#64748B', 
+    textAlign: 'center',
+    marginBottom: scale(28),
+    lineHeight: scale(20), 
+    paddingHorizontal: scale(8),
+  },
+});

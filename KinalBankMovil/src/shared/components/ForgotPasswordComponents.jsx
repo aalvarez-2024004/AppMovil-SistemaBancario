@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Modal, StyleSheet } from 'react-native';
 import {
   View,
   Text,
@@ -13,7 +13,24 @@ import { useAuthStore } from '../store/useAuthStore';
 
 import {KB,s,fi,btn,sb,scale,} from '../constants/register';
 
-import { local, STEPS } from '../constants/forgotPassword';
+import { local, STEPS, modalStyles } from '../constants/forgotPassword';
+
+export const SuccessModal = ({ visible, onClose }) => (
+  <Modal visible={visible} transparent animationType="fade">
+    <View style={modalStyles.overlay}>
+      <View style={modalStyles.content}>
+        <View style={modalStyles.iconCircle}>
+          <Ionicons name="checkmark-done-circle" size={scale(45)} color={KB.success} />
+        </View>
+        <Text style={modalStyles.title}>¡Contraseña Actualizada!</Text>
+        <Text style={modalStyles.body}>
+          Tu contraseña se ha cambiado correctamente. Ya puedes ingresar a tu cuenta de forma segura.
+        </Text>
+        <KBButton title="IR AL LOGIN" onPress={onClose} />
+      </View>
+    </View>
+  </Modal>
+);
 
 export const KBButton = ({ title, onPress, disabled, variant = 'primary', icon }) => (
   <TouchableOpacity
@@ -248,8 +265,13 @@ export const StepNewPassword = ({ email, onDone }) => {
     setApiErr(null);
     const cleanEmail = email.trim().toLowerCase();
     const res = await resetPassword(cleanEmail, password);
-    if (res.success) onDone();
-    else setApiErr(res.error);
+
+    if (res?.success) {
+      // Directamente disparamos el flujo final sin Alerts nativos
+      onDone();
+    } else {
+      setApiErr(res?.error || 'Error desconocido');
+    }
   };
 
   return (
