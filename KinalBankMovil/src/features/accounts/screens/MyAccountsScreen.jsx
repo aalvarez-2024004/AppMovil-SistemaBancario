@@ -8,11 +8,12 @@ import {
   StatusBar,
   ActivityIndicator,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../../shared/store/useAuthStore.js";
 import { getMyAccountsRequest } from "../../../shared/api/bankClient.js";
-import {COLORS, styles} from "../../../shared/constants/MyAccounts"
+import { COLORS, GRADIENTS, styles } from "../../../shared/constants/MyAccounts"
 import {
   formatCurrency,
   StatCard,
@@ -88,9 +89,25 @@ const MyAccountsScreen = () => {
           />
         }
       >
-        {/* ── Hero ── */}
-        <View style={styles.hero}>
-          <Text style={styles.heroLabel}>KinalBank</Text>
+        {/* ── Hero (degradado) ── */}
+        <LinearGradient
+          colors={GRADIENTS.hero}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.hero}
+        >
+          <View style={styles.heroCircle1} pointerEvents="none" />
+          <View style={styles.heroCircle2} pointerEvents="none" />
+
+          <View style={styles.heroTopRow}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.75}
+            >
+              <Ionicons name="arrow-back" size={19} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.heroTitle}>
             Mis{"\n"}
             <Text style={styles.heroTitleAccent}>Cuentas</Text>
@@ -112,13 +129,14 @@ const MyAccountsScreen = () => {
               {activeAccounts.length !== 1 ? "s" : ""}
             </Text>
           </View>
-        </View>
+        </LinearGradient>
 
         {/* ── Stats ── */}
         <View style={styles.statsRow}>
           <StatCard
             icon="albums-outline"
             iconBg={COLORS.bgCardAlt}
+            iconColor={COLORS.accent}
             value={accounts.length}
             label="Total cuentas"
             sublabel={`${activeAccounts.length} activa${activeAccounts.length !== 1 ? "s" : ""}`}

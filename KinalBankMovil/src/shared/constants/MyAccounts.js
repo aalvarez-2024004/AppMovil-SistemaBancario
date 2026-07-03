@@ -3,15 +3,20 @@ import { StyleSheet, Dimensions, Platform } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const COLORS = {
-  bg:           "#F8F9FB",
+  bg:           "#F2F8FD",
   bgCard:       "#FFFFFF",
-  bgCardAlt:    "#EAF1FC",
+  bgCardAlt:    "#EAF6FC",
 
   navy:         "#0F1F3D",
+  navyLight:    "#1E3A5F",
 
   accent:       "#3B7DD8",
   accentLight:  "#7DAEF0",
   accentGlow:   "rgba(59,125,216,0.08)",
+
+  celeste:      "#7EC8E8",
+  celesteSoft:  "#BFE4F5",
+  celesteLight: "#EAF6FC",
 
   active:       "#10B981",
   activeLight:  "rgba(16,185,129,0.12)",
@@ -24,6 +29,11 @@ export const COLORS = {
 
   border:       "#EEF1F5",
   borderLight:  "#E2E8F0",
+};
+
+/* Degradado del hero — misma familia visual que HomeScreen */
+export const GRADIENTS = {
+  hero: ["#0F1F3D", "#1E3A5F", "#3B84C4", "#7EC8E8"],
 };
 
 export const FONT = {
@@ -48,15 +58,40 @@ export const styles = StyleSheet.create({
 
   hero: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === "ios" ? 64 : 48,
+    paddingTop: Platform.OS === "ios" ? 56 : 40,
     paddingBottom: 56,
-    backgroundColor: COLORS.navy,
+    overflow: "hidden",
+    borderBottomLeftRadius: 40,
+  },
+  heroCircle1: {
+    position: "absolute", width: 240, height: 240, borderRadius: 120,
+    backgroundColor: "rgba(126,200,232,0.16)", top: -100, right: -60,
+  },
+  heroCircle2: {
+    position: "absolute", width: 150, height: 150, borderRadius: 75,
+    backgroundColor: "rgba(255,255,255,0.05)", bottom: -50, left: -30,
+  },
+  heroTopRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 18,
+  },
+  backBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.22)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
   },
   heroLabel: {
     fontSize: FONT.xs,
     fontWeight: "700",
     letterSpacing: 2.5,
-    color: COLORS.accentLight,
+    color: COLORS.celesteSoft,
     marginBottom: 6,
     textTransform: "uppercase",
   },
@@ -67,7 +102,7 @@ export const styles = StyleSheet.create({
     lineHeight: 36,
   },
   heroTitleAccent: {
-    color: COLORS.accentLight,
+    color: COLORS.celesteSoft,
   },
   heroSubtitle: {
     fontSize: FONT.sm,
@@ -82,10 +117,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     shadowColor: "#0F1F3D",
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 6,
   },
   balanceLabel: {
     fontSize: FONT.xs,
@@ -209,7 +244,6 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  // ✅ NUEVO: card inactiva con borde sutil
   accountCardInactive: {
     borderWidth: 1,
     borderColor: COLORS.inactiveLight,
@@ -389,7 +423,6 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 20,
   },
-  // ✅ NUEVO: header del modal con icono + título alineados
   modalHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -413,7 +446,6 @@ export const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     marginTop: 2,
   },
-  // ✅ NUEVO: caja de balance dentro del modal
   modalBalanceBox: {
     backgroundColor: COLORS.bgCardAlt,
     borderRadius: 16,
