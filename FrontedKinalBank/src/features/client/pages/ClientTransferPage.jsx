@@ -79,12 +79,12 @@ export const ClientTransferPage = () => {
             />
 
             {/* ── Full-width wrapper ── */}
-            <div className="w-full min-h-screen" style={{ background: "#f0f4f8" }}>
+            <div className="w-full min-h-screen overflow-x-hidden" style={{ background: "#f0f4f8" }}>
 
                 {/* ── Hero banner — card flotante igual a Mis Movimientos ── */}
-                <div className="w-full px-4 sm:px-6 pt-4 sm:pt-6">
+                <div className="w-full px-3 xs:px-4 sm:px-6 pt-4 sm:pt-6">
                     <div
-                        className="relative overflow-hidden w-full px-5 sm:px-8 py-6 sm:py-7"
+                        className="relative overflow-hidden w-full px-4 xs:px-5 sm:px-8 py-5 sm:py-7"
                         style={{
                             background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%)",
                             borderRadius: "20px",
@@ -92,50 +92,50 @@ export const ClientTransferPage = () => {
                         }}
                     >
                         {/* Decorative orbs */}
-                        <div className="absolute -top-16 right-24 w-60 h-60 rounded-full pointer-events-none"
+                        <div className="absolute -top-16 right-24 w-60 h-60 rounded-full pointer-events-none hidden sm:block"
                             style={{ background: "radial-gradient(circle, rgba(99,102,241,0.20) 0%, transparent 70%)" }} />
-                        <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full pointer-events-none"
+                        <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full pointer-events-none hidden sm:block"
                             style={{ background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
 
                         {/* Left accent bar */}
                         <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full"
                             style={{ background: "linear-gradient(180deg,#ffffff,#7dd3fc,#0ea5e9)" }} />
 
-                        <div className="relative flex items-center justify-between gap-6 sm:gap-8 flex-wrap">
+                        <div className="relative flex items-center justify-between gap-5 sm:gap-8 flex-wrap">
 
                             {/* Title */}
-                            <div>
+                            <div className="min-w-0">
                                 <div className="flex items-center gap-2 mb-2">
                                     <div className="w-5 h-0.5 rounded-full flex-shrink-0"
                                         style={{ background: "linear-gradient(90deg,#ffffff,#7dd3fc)" }} />
                                     <p className="text-[9px] font-black tracking-[0.35em] uppercase"
                                         style={{ color: "#818cf8" }}>KinalBank</p>
                                 </div>
-                                <h1 className="text-3xl sm:text-4xl font-black leading-none tracking-tighter mb-1.5">
+                                <h1 className="text-2xl xs:text-3xl sm:text-4xl font-black leading-none tracking-tighter mb-1.5">
                                     <span style={{ color: "#ffffff" }}>Transferir</span>
                                     <span style={{ color: "#38bdf8" }}> Fondos</span>
                                 </h1>
-                                <p className="text-slate-400 text-sm">Mueve dinero de forma segura e inmediata.</p>
+                                <p className="text-slate-400 text-xs sm:text-sm">Mueve dinero de forma segura e inmediata.</p>
                             </div>
 
                             {/* Stats cards — idéntico a Mis Movimientos */}
-                            <div className="grid grid-cols-3 gap-2 sm:flex sm:items-stretch sm:gap-3 w-full sm:w-auto">
+                            <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:flex sm:items-stretch sm:gap-3 w-full sm:w-auto">
 
                                 {/* Card 1 — Límite diario (estilo "Registros" azul) */}
                                 <div
-                                    className="rounded-xl sm:rounded-2xl px-2.5 sm:px-5 py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
+                                    className="rounded-lg xs:rounded-xl sm:rounded-2xl px-2 xs:px-2.5 sm:px-5 py-2.5 xs:py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
                                     style={{
                                         background: "linear-gradient(135deg, rgba(56,189,248,0.22) 0%, rgba(14,165,233,0.12) 100%)",
                                         border: "1px solid rgba(56,189,248,0.40)",
                                         boxShadow: "0 0 20px rgba(56,189,248,0.15)",
                                     }}
                                 >
-                                    <p className="text-[7px] sm:text-[9px] font-black tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1"
+                                    <p className="text-[6px] xs:text-[7px] sm:text-[9px] font-black tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1 truncate"
                                         style={{ color: "#7dd3fc" }}>✦ Límite</p>
-                                    <p className="text-lg sm:text-4xl font-black text-white leading-none">10,000</p>
+                                    <p className="text-base xs:text-lg sm:text-4xl font-black text-white leading-none truncate">10,000</p>
                                     <p className="text-[8px] sm:text-[10px] mt-1 sm:mt-2 hidden sm:flex items-center gap-1"
                                         style={{ color: "rgba(125,211,252,0.65)" }}>
-                                        <span className="inline-block w-1.5 h-1.5 rounded-full"
+                                        <span className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
                                             style={{ background: "#38bdf8" }}></span>
                                         Q 2,000 por operación
                                     </p>
@@ -143,15 +143,15 @@ export const ClientTransferPage = () => {
 
                                 {/* Card 2 — Entradas (verde) */}
                                 <div
-                                    className="rounded-xl sm:rounded-2xl px-2.5 sm:px-5 py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
+                                    className="rounded-lg xs:rounded-xl sm:rounded-2xl px-2 xs:px-2.5 sm:px-5 py-2.5 xs:py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
                                     style={{
                                         background: "rgba(16,185,129,0.10)",
                                         border: "1px solid rgba(16,185,129,0.30)",
                                     }}
                                 >
-                                    <p className="text-[7px] sm:text-[9px] font-black tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1"
+                                    <p className="text-[6px] xs:text-[7px] sm:text-[9px] font-black tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1 truncate"
                                         style={{ color: "#6ee7b7" }}>↓ Entradas</p>
-                                    <p className="text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#34d399" }}>
+                                    <p className="text-[11px] xs:text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#34d399" }}>
                                         Q {activeAccounts
                                             .reduce((s, a) => s + Number(a.balance), 0)
                                             .toLocaleString("es-GT", { minimumFractionDigits: 2 })}
@@ -163,15 +163,15 @@ export const ClientTransferPage = () => {
 
                                 {/* Card 3 — Salidas (rojo) */}
                                 <div
-                                    className="rounded-xl sm:rounded-2xl px-2.5 sm:px-5 py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
+                                    className="rounded-lg xs:rounded-xl sm:rounded-2xl px-2 xs:px-2.5 sm:px-5 py-2.5 xs:py-3 sm:py-4 flex flex-col justify-between min-w-0 sm:min-w-[130px]"
                                     style={{
                                         background: "rgba(239,68,68,0.09)",
                                         border: "1px solid rgba(239,68,68,0.28)",
                                     }}
                                 >
-                                    <p className="text-[7px] sm:text-[9px] font-black tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1"
+                                    <p className="text-[6px] xs:text-[7px] sm:text-[9px] font-black tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1 truncate"
                                         style={{ color: "#fca5a5" }}>↑ Salidas</p>
-                                    <p className="text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#f87171" }}>
+                                    <p className="text-[11px] xs:text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#f87171" }}>
                                         Q {amountNum > 0
                                             ? amountNum.toLocaleString("es-GT", { minimumFractionDigits: 2 })
                                             : "0.00"}
@@ -187,7 +187,7 @@ export const ClientTransferPage = () => {
                 </div>
 
                 {/* ── Two-column body ── */}
-                <div className="w-full px-4 sm:px-6 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5 sm:gap-8">
+                <div className="w-full px-3 xs:px-4 sm:px-6 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 sm:gap-8">
 
                     {/* ══════════════ LEFT — main form ══════════════ */}
                     <div className="space-y-4 sm:space-y-5 min-w-0">
@@ -214,13 +214,13 @@ export const ClientTransferPage = () => {
                         {transferSuccess && (
                             <div className="rounded-2xl px-4 sm:px-5 py-4 flex items-center gap-3 text-sm font-semibold"
                                 style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", color: "#15803d" }}>
-                                <span>✅</span> {transferSuccess}
+                                <span className="flex-shrink-0">✅</span> <span className="min-w-0">{transferSuccess}</span>
                             </div>
                         )}
                         {transferError && (
                             <div className="rounded-2xl px-4 sm:px-5 py-4 flex items-center gap-3 text-sm font-semibold"
                                 style={{ background: "#fff1f2", border: "1px solid #fecdd3", color: "#be123c" }}>
-                                <span>⚠️</span> {transferError}
+                                <span className="flex-shrink-0">⚠️</span> <span className="min-w-0">{transferError}</span>
                             </div>
                         )}
 
@@ -229,29 +229,29 @@ export const ClientTransferPage = () => {
                             style={{ border: "1px solid #e2e8f0", boxShadow: "0 4px 32px rgba(0,0,0,0.07)" }}>
 
                             {/* Card header */}
-                            <div className="relative overflow-hidden px-5 sm:px-8 py-5 flex items-center gap-4"
+                            <div className="relative overflow-hidden px-4 xs:px-5 sm:px-8 py-4 sm:py-5 flex items-center gap-3 sm:gap-4"
                                 style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)" }}>
                                 <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full pointer-events-none"
                                     style={{ background: "radial-gradient(circle, rgba(56,189,248,0.15), transparent)" }} />
-                                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 relative"
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-lg sm:text-xl flex-shrink-0 relative"
                                     style={{ background: "rgba(56,189,248,0.15)", border: "1px solid rgba(56,189,248,0.3)" }}>
                                     💸
                                 </div>
                                 <div className="relative min-w-0">
-                                    <p className="text-white font-black text-base">Nueva transferencia</p>
-                                    <p className="text-[11px] mt-0.5" style={{ color: "rgba(125,211,252,0.6)" }}>
+                                    <p className="text-white font-black text-sm sm:text-base">Nueva transferencia</p>
+                                    <p className="text-[10px] sm:text-[11px] mt-0.5 leading-snug" style={{ color: "rgba(125,211,252,0.6)" }}>
                                         Límite: Q 2,000 por operación · Q 10,000 diarios
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="p-5 sm:p-8 space-y-6 sm:space-y-7">
+                            <div className="p-4 xs:p-5 sm:p-8 space-y-5 sm:space-y-7">
 
                                 {/* Origen + Destino */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
 
                                     {/* Cuenta origen */}
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">
                                             Cuenta origen
                                         </label>
@@ -276,7 +276,7 @@ export const ClientTransferPage = () => {
                                             </select>
                                         </div>
                                         {selectedAccount && (
-                                            <p className="text-[11px] text-slate-400 mt-1.5">
+                                            <p className="text-[11px] text-slate-400 mt-1.5 truncate">
                                                 Disponible: <span className="font-bold text-slate-600">
                                                     {symbol} {Number(selectedAccount.balance).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                                 </span>
@@ -285,13 +285,13 @@ export const ClientTransferPage = () => {
                                     </div>
 
                                     {/* Cuenta destino */}
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">
                                             Cuenta destino
                                         </label>
                                         <div className="flex items-center rounded-xl overflow-hidden transition-all"
                                             style={{ border: `1.5px solid ${form.toAccount.length > 0 && !toAccountComplete ? "#fbbf24" : "#e2e8f0"}` }}>
-                                            <div className="flex-shrink-0 w-11 h-11 flex items-center justify-center border-r border-slate-100 bg-slate-50 text-base">
+                                            <div className="flex-shrink-0 w-10 sm:w-11 h-11 flex items-center justify-center border-r border-slate-100 bg-slate-50 text-base">
                                                 {prefill.toAccount ? "⭐" : "🏦"}
                                             </div>
                                             <input
@@ -304,13 +304,13 @@ export const ClientTransferPage = () => {
                                                 }}
                                                 placeholder="0000000000"
                                                 maxLength={10}
-                                                className="flex-1 min-w-0 px-3 py-3 text-sm text-slate-800 bg-white focus:outline-none font-mono tracking-wider placeholder-slate-300"
+                                                className="flex-1 min-w-0 w-full px-2 xs:px-3 py-3 text-xs xs:text-sm text-slate-800 bg-white focus:outline-none font-mono tracking-wider placeholder-slate-300"
                                             />
-                                            <div className={`flex-shrink-0 px-3 text-xs font-black tabular-nums ${toAccountComplete ? "text-cyan-500" : "text-slate-300"}`}>
+                                            <div className={`flex-shrink-0 px-2 xs:px-3 text-[10px] xs:text-xs font-black tabular-nums ${toAccountComplete ? "text-cyan-500" : "text-slate-300"}`}>
                                                 {form.toAccount.length}/10
                                             </div>
                                         </div>
-                                        <p className="text-[11px] mt-1.5 text-slate-400">
+                                        <p className="text-[11px] mt-1.5 text-slate-400 truncate">
                                             {form.toAccount.length > 0 && !toAccountComplete
                                                 ? <span className="text-amber-500 font-semibold">Faltan {10 - form.toAccount.length} dígitos</span>
                                                 : prefill.toAccount
@@ -322,10 +322,10 @@ export const ClientTransferPage = () => {
 
                                 {/* Aviso conversión */}
                                 {willConvert && (
-                                    <div className="rounded-xl px-4 py-3 flex items-center gap-2.5"
+                                    <div className="rounded-xl px-3 xs:px-4 py-3 flex items-start xs:items-center gap-2.5"
                                         style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
                                         <span className="text-lg flex-shrink-0">🔄</span>
-                                        <p className="text-xs text-amber-700 font-medium">
+                                        <p className="text-xs text-amber-700 font-medium leading-relaxed">
                                             Se aplicará conversión automática de <strong>{selectedAccount.currency}</strong> → <strong>{toAccount.currency}</strong> al tipo de cambio vigente.
                                         </p>
                                     </div>
@@ -335,16 +335,16 @@ export const ClientTransferPage = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
 
                                     {/* Monto */}
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">
                                             Monto
                                         </label>
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex-shrink-0 h-14 px-4 flex flex-col items-center justify-center rounded-xl"
+                                        <div className="flex items-center gap-2 xs:gap-3">
+                                            <div className="flex-shrink-0 h-14 px-2.5 xs:px-4 flex flex-col items-center justify-center rounded-xl"
                                                 style={{ background: "linear-gradient(135deg,#0f172a,#1e1b4b)", border: "1.5px solid rgba(56,189,248,0.3)" }}>
-                                                <span className="text-base font-black font-mono leading-none" style={{ color: "#38bdf8" }}>{symbol}</span>
+                                                <span className="text-sm xs:text-base font-black font-mono leading-none whitespace-nowrap" style={{ color: "#38bdf8" }}>{symbol}</span>
                                                 {selectedAccount && (
-                                                    <span className="text-[8px] font-black tracking-wider mt-0.5" style={{ color: "rgba(56,189,248,0.5)" }}>
+                                                    <span className="text-[7px] xs:text-[8px] font-black tracking-wider mt-0.5 whitespace-nowrap" style={{ color: "rgba(56,189,248,0.5)" }}>
                                                         {selectedAccount.currency}
                                                     </span>
                                                 )}
@@ -356,7 +356,7 @@ export const ClientTransferPage = () => {
                                                 onChange={handleChange}
                                                 placeholder="0.00"
                                                 min="0.01" max="2000" step="0.01"
-                                                className="flex-1 min-w-0 rounded-xl px-4 py-3 text-2xl sm:text-3xl font-black text-slate-900 placeholder-slate-200 focus:outline-none h-14 transition-all"
+                                                className="flex-1 min-w-0 w-full rounded-xl px-3 xs:px-4 py-3 text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 placeholder-slate-200 focus:outline-none h-14 transition-all"
                                                 style={{ border: "1.5px solid #e2e8f0" }}
                                                 onFocus={e => e.target.style.borderColor = "#38bdf8"}
                                                 onBlur={e => e.target.style.borderColor = "#e2e8f0"}
@@ -376,7 +376,7 @@ export const ClientTransferPage = () => {
                                     </div>
 
                                     {/* Descripción */}
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">
                                             Descripción <span className="text-slate-300 font-normal normal-case">· opcional</span>
                                         </label>
@@ -398,7 +398,7 @@ export const ClientTransferPage = () => {
                                 <button
                                     onClick={handleSubmit}
                                     disabled={!canSubmit}
-                                    className="w-full font-black text-base py-4 rounded-2xl transition-all duration-200"
+                                    className="w-full font-black text-sm xs:text-base py-3.5 sm:py-4 rounded-2xl transition-all duration-200"
                                     style={canSubmit ? {
                                         background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
                                         color: "#38bdf8",
@@ -428,14 +428,14 @@ export const ClientTransferPage = () => {
                                     border: "1px solid rgba(56,189,248,0.2)",
                                     boxShadow: "0 8px 32px rgba(15,23,42,0.25)",
                                 }}>
-                                <div className="px-5 sm:px-6 pt-6 pb-4">
+                                <div className="px-4 xs:px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
                                     <p className="text-[9px] font-black tracking-[0.3em] uppercase mb-4" style={{ color: "#818cf8" }}>
                                         ✦ Resumen
                                     </p>
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-xs text-slate-400 flex-shrink-0">Monto a enviar</span>
-                                            <span className="text-lg font-black text-white truncate">{symbol} {amountNum.toLocaleString("es-GT", { minimumFractionDigits: 2 })}</span>
+                                            <span className="text-base xs:text-lg font-black text-white truncate">{symbol} {amountNum.toLocaleString("es-GT", { minimumFractionDigits: 2 })}</span>
                                         </div>
                                         {selectedAccount && (
                                             <div className="flex justify-between items-center gap-2">
@@ -458,7 +458,7 @@ export const ClientTransferPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mx-5 sm:mx-6 mb-5">
+                                <div className="mx-4 xs:mx-5 sm:mx-6 mb-5">
                                     <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                                         <div className="h-full rounded-full transition-all duration-500"
                                             style={{ width: `${amountPct}%`, background: barColor }} />
@@ -470,7 +470,7 @@ export const ClientTransferPage = () => {
                         {/* Info cards verticales */}
                         <div className="rounded-3xl overflow-hidden bg-white"
                             style={{ border: "1px solid #e2e8f0", boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
-                            <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+                            <div className="px-4 xs:px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Información</p>
                             </div>
                             <div className="divide-y divide-slate-50">
@@ -479,8 +479,8 @@ export const ClientTransferPage = () => {
                                     { icon: "⚡", title: "Tiempo real", desc: "El saldo se actualiza al instante en ambas cuentas.", accent: "rgba(56,189,248,0.08)", border: "rgba(56,189,248,0.15)" },
                                     { icon: "🔁", title: "Conversión automática", desc: "Si las cuentas tienen monedas distintas, aplicamos el tipo de cambio vigente.", accent: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.15)" },
                                 ].map((item, i) => (
-                                    <div key={i} className="px-5 sm:px-6 py-5 flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                                    <div key={i} className="px-4 xs:px-5 sm:px-6 py-4 sm:py-5 flex items-start gap-3 sm:gap-4">
+                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-base sm:text-lg flex-shrink-0"
                                             style={{ background: item.accent, border: `1px solid ${item.border}` }}>
                                             {item.icon}
                                         </div>
@@ -496,18 +496,18 @@ export const ClientTransferPage = () => {
                         {/* Límites breakdown */}
                         <div className="rounded-3xl overflow-hidden bg-white"
                             style={{ border: "1px solid #e2e8f0", boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
-                            <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+                            <div className="px-4 xs:px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Límites de operación</p>
                             </div>
-                            <div className="px-5 sm:px-6 py-5 space-y-4">
+                            <div className="px-4 xs:px-5 sm:px-6 py-4 sm:py-5 space-y-4">
                                 {[
                                     { label: "Por transferencia", value: "Q 2,000", pct: 100, color: "#818cf8" },
                                     { label: "Diario", value: "Q 10,000", pct: 100, color: "#38bdf8" },
                                 ].map((item, i) => (
                                     <div key={i}>
-                                        <div className="flex justify-between mb-1.5">
-                                            <span className="text-xs text-slate-500">{item.label}</span>
-                                            <span className="text-xs font-black text-slate-800">{item.value}</span>
+                                        <div className="flex justify-between mb-1.5 gap-2">
+                                            <span className="text-xs text-slate-500 truncate">{item.label}</span>
+                                            <span className="text-xs font-black text-slate-800 flex-shrink-0">{item.value}</span>
                                         </div>
                                         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#f1f5f9" }}>
                                             <div className="h-full rounded-full" style={{ width: `${item.pct}%`, background: item.color }} />
