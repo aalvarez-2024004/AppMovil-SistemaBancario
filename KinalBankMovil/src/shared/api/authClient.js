@@ -13,7 +13,7 @@ export const registerRequest = (data)  => authClient.post(AUTH_ENDPOINTS.REGISTE
 
 export const requestPasswordResetRequest = (data) => authClient.post(AUTH_ENDPOINTS.REQUEST_RESET, data);
 export const verifyResetCodeRequest      = (data) => authClient.post(AUTH_ENDPOINTS.VERIFY_CODE, data);
-export const resetPasswordRequest        = (data) => authClient.post(AUTH_ENDPOINTS.RESET_PASSWORD, data);
+export const resetPasswordRequest = (data) => authClient.put(AUTH_ENDPOINTS.RESET_PASSWORD, data);
 
 export const profileRequest = (token) =>
   authClient.get(AUTH_ENDPOINTS.PROFILE, {
