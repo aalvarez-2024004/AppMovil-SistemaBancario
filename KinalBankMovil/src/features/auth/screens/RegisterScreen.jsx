@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  StatusBar,
-  Alert,
-  useWindowDimensions,
-  Keyboard,
+  View, Text, ScrollView, KeyboardAvoidingView, Platform,
+  TouchableOpacity, StatusBar, Alert, useWindowDimensions, Keyboard,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { SuccessModal } from '../../../shared/components/SuccesModal';
@@ -34,7 +26,6 @@ const RegisterScreen = () => {
 
   const update = (field) => (value) => setForm((prev) => ({ ...prev, [field]: value }));
 
-  /* Validación por paso */
   const validateStep = (n) => {
     const e = {};
     if (n === 1) {
@@ -85,13 +76,8 @@ const RegisterScreen = () => {
     : null;
 
   return (
-    // ✅ overflow: 'hidden' evita el espacio en blanco al deslizar lateralmente
     <View style={[s.root, { overflow: 'hidden' }]}>
-      <StatusBar barStyle="light-content" backgroundColor={KB.navy} />
-
-      {/* Círculos decorativos */}
-      <View style={s.circle1} pointerEvents="none" />
-      <View style={s.circle2} pointerEvents="none" />
+      <StatusBar barStyle="light-content" backgroundColor={KB.blueDark} />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -99,42 +85,37 @@ const RegisterScreen = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView
-          contentContainerStyle={[
-            s.scroll,
-            // ✅ minHeight anclado a la altura real de la ventana
-            { minHeight: height },
-          ]}
+          contentContainerStyle={[s.scroll, { minHeight: height }]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
-          // ✅ Sin scroll horizontal ni rebote lateral
-          horizontal={false}
           bounces={false}
           overScrollMode="never"
         >
-          <View style={cardContainerStyle}>
-            {/* Encabezado */}
-            <View style={s.header}>
-              <Text style={s.brandName}>KINAL BANK</Text>
-              <Text style={s.pageTitle}>Crear cuenta</Text>
-              <Text style={s.pageSub}>Paso {step} de {STEPS.length}</Text>
+          {/* Header con gradiente, mismo estilo que login */}
+          <LinearGradient
+            colors={[KB.blueDark, KB.blueMid]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={s.header}
+          >
+            <Text style={s.brandName}>KINAL BANK</Text>
+            <Text style={s.pageTitle}>Crear cuenta</Text>
+            <Text style={s.pageSub}>Paso {step} de {STEPS.length}</Text>
+          </LinearGradient>
+
+          <View style={[s.cardWrap, cardContainerStyle]}>
+            <View style={s.stepBarWrap}>
+              <StepBar current={step} />
             </View>
 
-            {/* Stepper */}
-            <StepBar current={step} />
-
-            {/* Card del paso actual */}
             <View style={s.card}>
               {step === 1 && <Step1 form={form} errors={errors} update={update} onNext={goNext} />}
               {step === 2 && <Step2 form={form} errors={errors} update={update} onNext={goNext} onBack={goBack} />}
               {step === 3 && <Step3 form={form} errors={errors} update={update} onSubmit={handleSubmit} onBack={goBack} isLoading={isLoading} />}
             </View>
 
-            {/* Link al login */}
             <TouchableOpacity
-              onPress={() => {
-                Keyboard.dismiss();
-                navigation.navigate('Login');
-              }}
+              onPress={() => { Keyboard.dismiss(); navigation.navigate('Login'); }}
               style={s.loginRow}
             >
               <Text style={s.loginText}>¿Ya tienes cuenta? </Text>

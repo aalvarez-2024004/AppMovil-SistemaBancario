@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { sb, fi, btn, s, KB, scale, isSmallDevice, STEPS } from '../constants/register';
 
 export const StepBar = ({ current }) => (
@@ -12,11 +13,10 @@ export const StepBar = ({ current }) => (
           <View style={sb.item}>
             <View style={[sb.circle, active && sb.circleActive, done && sb.circleDone]}>
               {done
-                ? <Text style={sb.checkText}>✓</Text>
+                ? <Ionicons name="checkmark" size={18} color={KB.white} />
                 : <Text style={[sb.numText, active && sb.numActive]}>{step.id}</Text>
               }
             </View>
-            {/* En pantallas muy chicas ocultamos el label largo para no romper el layout */}
             {!isSmallDevice && (
               <Text style={[sb.label, active && sb.labelActive]} numberOfLines={2}>
                 {step.title}
@@ -59,7 +59,7 @@ export const KBInput = ({
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setShowPass(!showPass)} style={fi.eye} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Text style={fi.eyeText}>{showPass ? '🙈' : '👁'}</Text>
+            <Ionicons name={showPass ? 'eye-off-outline' : 'eye-outline'} size={20} color={KB.gray} />
           </TouchableOpacity>
         )}
       </View>
@@ -90,7 +90,9 @@ export const KBButton = ({ title, onPress, disabled, variant = 'primary' }) => (
 export const Step1 = ({ form, errors, update, onNext }) => (
   <View>
     <View style={s.stepHeader}>
-      <Text style={s.stepIcon}>👤</Text>
+      <View style={s.stepIconCircle}>
+        <Ionicons name="person-outline" size={22} color={KB.blueMid} />
+      </View>
       <View style={s.stepHeaderText}>
         <Text style={s.stepTitle}>Datos personales</Text>
         <Text style={s.stepSub}>Cuéntanos quién eres</Text>
@@ -137,12 +139,8 @@ export const Step1 = ({ form, errors, update, onNext }) => (
 
 export const Step2 = ({ form, errors, update, onNext, onBack }) => (
   <View>
-    <View style={s.stepHeader}>
-      <Text style={s.stepIcon}>💼</Text>
-      <View style={s.stepHeaderText}>
-        <Text style={s.stepTitle}>Datos laborales</Text>
-        <Text style={s.stepSub}>Para evaluar tu perfil financiero</Text>
-      </View>
+    <View style={s.stepIconCircle}>
+      <Ionicons name="briefcase-outline" size={22} color={KB.blueMid} />
     </View>
 
     <KBInput label="Ocupación" placeholder="Desarrollador de Software"
@@ -155,7 +153,7 @@ export const Step2 = ({ form, errors, update, onNext, onBack }) => (
 
     {/* Tarjeta informativa */}
     <View style={s.infoCard}>
-      <Text style={s.infoCardIcon}>🔐</Text>
+      <Ionicons name="shield-checkmark-outline" size={18} color={KB.blueMid} />
       <Text style={s.infoCardText}>
         Tu información financiera está protegida y solo se usa para validar tu solicitud de cuenta.
       </Text>
@@ -183,12 +181,8 @@ export const Step3 = ({ form, errors, update, onSubmit, onBack, isLoading }) => 
 
   return (
     <View>
-      <View style={s.stepHeader}>
-        <Text style={s.stepIcon}>🔒</Text>
-        <View style={s.stepHeaderText}>
-          <Text style={s.stepTitle}>Seguridad</Text>
-          <Text style={s.stepSub}>Elige una contraseña segura</Text>
-        </View>
+      <View style={s.stepIconCircle}>
+        <Ionicons name="lock-closed-outline" size={22} color={KB.blueMid} />
       </View>
 
       <KBInput label="Contraseña" placeholder="••••••••"
@@ -215,14 +209,18 @@ export const Step3 = ({ form, errors, update, onSubmit, onBack, isLoading }) => 
       {/* Checklist visual */}
       <View style={s.checkList}>
         {[
-          { ok: form.password.length >= 8,          text: 'Mínimo 8 caracteres' },
-          { ok: /[A-Z]/.test(form.password),         text: 'Una letra mayúscula' },
-          { ok: /[0-9]/.test(form.password),         text: 'Un número' },
+          { ok: form.password.length >= 8, text: 'Mínimo 8 caracteres' },
+          { ok: /[A-Z]/.test(form.password), text: 'Una letra mayúscula' },
+          { ok: /[0-9]/.test(form.password), text: 'Un número' },
           { ok: form.password === form.confirmPassword && form.confirmPassword.length > 0,
-                                                      text: 'Contraseñas coinciden' },
+                                              text: 'Contraseñas coinciden' },
         ].map(({ ok, text }) => (
           <View key={text} style={s.checkItem}>
-            <Text style={{ color: ok ? KB.success : KB.gray, fontSize: scale(13) }}>{ok ? '✓' : '○'}</Text>
+            <Ionicons
+              name={ok ? 'checkmark-circle' : 'ellipse-outline'}
+              size={16}
+              color={ok ? KB.success : KB.gray}
+            />
             <Text style={[s.checkText, ok && s.checkTextOk]}>{text}</Text>
           </View>
         ))}
