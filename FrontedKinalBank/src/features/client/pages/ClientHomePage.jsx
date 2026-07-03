@@ -5,21 +5,21 @@ import { useAuthStore } from "../../auth/store/useAuthStore.js";
 import { EditProfileModal } from "../components/EditProfileModal.jsx";
 
 const StatCard = ({ label, value, sub, icon, accent }) => (
-    <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-0">
         <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center text-lg flex-shrink-0"
-            style={{ background: `Q{accent}15`, color: accent }}
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-base sm:text-lg flex-shrink-0"
+            style={{ background: `${accent}15`, color: accent }}
         >
             {icon}
         </div>
-        <div className="min-w-0">
-            <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-0.5">
+        <div className="min-w-0 flex-1">
+            <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-0.5 truncate">
                 {label}
             </p>
-            <p className="text-lg font-extrabold text-gray-900 leading-none truncate">
+            <p className="text-base sm:text-lg font-extrabold text-gray-900 leading-none truncate">
                 {value}
             </p>
-            {sub && <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>}
+            {sub && <p className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5 truncate">{sub}</p>}
         </div>
     </div>
 );
@@ -27,15 +27,15 @@ const StatCard = ({ label, value, sub, icon, accent }) => (
 const QuickAction = ({ icon, label, onClick, accent }) => (
     <button
         onClick={onClick}
-        className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all group"
+        className="flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all group flex-1 min-w-[75px] sm:min-w-[100px]"
     >
         <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-base sm:text-lg transition-transform group-hover:scale-110 flex-shrink-0"
             style={{ background: `${accent}15`, color: accent }}
         >
             {icon}
         </div>
-        <span className="text-[11px] font-semibold text-gray-600">{label}</span>
+        <span className="text-[10px] sm:text-[11px] font-semibold text-gray-600 truncate w-full text-center">{label}</span>
     </button>
 );
 
@@ -47,7 +47,7 @@ const AccountCard = ({ account, onClick }) => {
     return (
         <div
             onClick={() => onClick(account)}
-            className="relative overflow-hidden rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:-translate-y-0.5"
+            className="relative overflow-hidden rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 select-none w-full"
             style={{
                 background: "linear-gradient(145deg, #1a1f36 0%, #0f1221 100%)",
                 boxShadow: "0 4px 24px rgba(15,18,33,0.18)",
@@ -55,20 +55,19 @@ const AccountCard = ({ account, onClick }) => {
             onMouseEnter={e => e.currentTarget.style.boxShadow = "0 8px 32px rgba(99,102,241,0.25)"}
             onMouseLeave={e => e.currentTarget.style.boxShadow = "0 4px 24px rgba(15,18,33,0.18)"}
         >
-            {/* watermark */}
             <div className="absolute -right-2 -bottom-3 text-7xl font-black select-none pointer-events-none"
                  style={{ color: "rgba(255,255,255,0.04)", lineHeight: 1 }}>
                 {symbol}
             </div>
 
-            <div className="flex items-start justify-between mb-5">
+            <div className="flex items-center justify-between mb-5 relative z-10">
                 <div className="flex gap-1">
                     {[...Array(4)].map((_, i) => (
                         <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/20" />
                     ))}
                 </div>
                 <span
-                    className="text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide"
+                    className="text-[9px] sm:text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide"
                     style={
                         isActive
                             ? { background: "rgba(74,222,128,0.15)", color: "#4ade80" }
@@ -79,15 +78,17 @@ const AccountCard = ({ account, onClick }) => {
                 </span>
             </div>
 
-            <p className="text-2xl font-black text-white leading-none mb-1">
-                {symbol} {balance}
-            </p>
-            <p className="text-[10px] font-mono tracking-widest text-white/30 mb-3">
-                {account.accountNumber}
-            </p>
-            <p className="text-[10px] font-semibold text-white/40">
-                {account.currency} · {account.accountType ?? "Cuenta de Ahorro"}
-            </p>
+            <div className="relative z-10 min-w-0">
+                <p className="text-xl sm:text-2xl font-black text-white leading-none mb-1 truncate">
+                    {symbol} {balance}
+                </p>
+                <p className="text-[10px] font-mono tracking-widest text-white/30 mb-3 truncate">
+                    {account.accountNumber}
+                </p>
+                <p className="text-[9px] sm:text-[10px] font-semibold text-white/40 truncate">
+                    {account.currency} · {account.accountType ?? "Cuenta de Ahorro"}
+                </p>
+            </div>
         </div>
     );
 };
@@ -106,7 +107,7 @@ const TxRow = ({ tx, myAccountIds }) => {
     const symbol = (isCredit ? tx.currencyTo : tx.currencyFrom) === "GTQ" ? "Q" : "$";
 
     return (
-        <div className="flex items-center gap-3 py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 -mx-5 px-5 rounded-xl transition-colors">
+        <div className="flex items-center gap-3 py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 -mx-4 sm:-mx-5 px-4 sm:px-5 rounded-xl transition-colors min-w-0">
             <div
                 className="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0 font-bold"
                 style={
@@ -127,7 +128,7 @@ const TxRow = ({ tx, myAccountIds }) => {
                     })}
                 </p>
             </div>
-            <p className={`text-sm font-extrabold flex-shrink-0 ${isCredit ? "text-green-600" : "text-red-500"}`}>
+            <p className={`text-sm font-extrabold flex-shrink-0 ml-2 ${isCredit ? "text-green-600" : "text-red-500"}`}>
                 {isCredit ? "+" : "-"}{symbol}{amount.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
             </p>
         </div>
@@ -156,28 +157,28 @@ export const ClientHomePage = () => {
 
     return (
         <>
-            <div className="max-w-5xl mx-auto space-y-6">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
                 {/* ── Header ─── */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <p className="text-xs font-bold tracking-[0.18em] uppercase text-indigo-500 mb-1">
                             {greeting}
                         </p>
-                        <h1 className="text-3xl font-black text-gray-900">
+                        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
                             {user?.name
-                                ? <>Hola, {user?.name.split(" ")[0]}{" "}<span className="text-gray-500">{user.name.split(" ").slice(1).join(" ")}</span></>
+                                ? <>Hola, {user?.name.split(" ")[0]}{" "}<span className="text-gray-400 font-normal">{user.name.split(" ").slice(1).join(" ")}</span></>
                                 : "Bienvenido"
                             }
                         </h1>
-                        <p className="text-sm text-gray-400 mt-1">
+                        <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
                             Aquí tienes un resumen de tu situación financiera.
                         </p>
                     </div>
 
                     <button
                         onClick={() => setEditOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-sm font-semibold text-gray-600 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 shadow-sm transition-all whitespace-nowrap"
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-xs sm:text-sm font-semibold text-gray-600 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 shadow-sm transition-all whitespace-nowrap self-start sm:self-center w-full sm:w-auto"
                     >
                         ✏️ Editar perfil
                     </button>
@@ -185,24 +186,25 @@ export const ClientHomePage = () => {
 
                 {/* ── Balance Hero ── */}
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-7">
-                        <div>
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 p-5 sm:p-7">
+                        <div className="min-w-0">
                             <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-2">
                                 Balance total · Cuentas activas
                             </p>
-                            <div className="flex items-end gap-3 flex-wrap">
-                                <p className="text-4xl font-black text-gray-900 leading-none">
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                                <p className="text-3xl sm:text-4xl font-black text-gray-900 leading-none break-all">
                                     Q {totalGTQ.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                 </p>
                                 {totalUSD > 0 && (
-                                    <p className="text-base font-bold text-gray-400 mb-0.5">
+                                    <p className="text-sm sm:text-base font-bold text-gray-400 whitespace-nowrap">
                                         + $ {totalUSD.toLocaleString("es-GT", { minimumFractionDigits: 2 })} USD
                                     </p>
                                 )}
                             </div>
                         </div>
 
-                        <div className="flex gap-3 flex-wrap">
+                        {/* Contenedor de acciones rápidas - Grid auto-ajustable en móviles */}
+                        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2.5 w-full lg:w-auto">
                             <QuickAction icon="↗️" label="Transferir"   onClick={() => navigate("/dashboard/client/transfer")}     accent="#6366f1" />
                             <QuickAction icon="📋" label="Movimientos"  onClick={() => navigate("/dashboard/client/transactions")} accent="#3b82f6" />
                             <QuickAction icon="⭐" label="Favoritos"    onClick={() => navigate("/dashboard/client/favorites")}    accent="#f59e0b" />
@@ -212,8 +214,8 @@ export const ClientHomePage = () => {
                     <div className="h-1" style={{ background: "linear-gradient(90deg, #6366f1, #3b82f6, #10b981, #f59e0b)" }} />
                 </div>
 
-                {/* ── Stat Cards ───*/}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* ── Stat Cards ─── */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <StatCard label="Cuentas activas" value={accounts.filter(a => a.status === "ACTIVA").length} icon="💳" accent="#6366f1" />
                     <StatCard label="Total en GTQ"    value={`Q ${totalGTQ.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`}  icon="🇬🇹" accent="#22c55e" />
                     <StatCard label="Total en USD"    value={`$ ${totalUSD.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`}  icon="🇺🇸" accent="#3b82f6" />
@@ -223,9 +225,9 @@ export const ClientHomePage = () => {
                 {/* ── Accounts + Transactions ── */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-                    {/* Accounts */}
-                    <div className="lg:col-span-3">
-                        <div className="flex items-center justify-between mb-4">
+                    {/* Accounts Column */}
+                    <div className="lg:col-span-3 space-y-4">
+                        <div className="flex items-center justify-between">
                             <h2 className="text-xs font-extrabold text-gray-500 tracking-[0.15em] uppercase">
                                 Mis cuentas
                             </h2>
@@ -236,7 +238,7 @@ export const ClientHomePage = () => {
                         </div>
 
                         {loading ? (
-                            <div className="text-center py-10 text-sm text-gray-400">Cargando cuentas…</div>
+                            <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-sm text-gray-400">Cargando cuentas…</div>
                         ) : accounts.length === 0 ? (
                             <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
                                 <p className="text-3xl mb-2">🏦</p>
@@ -255,9 +257,9 @@ export const ClientHomePage = () => {
                         )}
                     </div>
 
-                    {/* Transactions */}
-                    <div className="lg:col-span-2">
-                        <div className="flex items-center justify-between mb-4">
+                    {/* Transactions Column */}
+                    <div className="lg:col-span-2 space-y-4">
+                        <div className="flex items-center justify-between">
                             <h2 className="text-xs font-extrabold text-gray-500 tracking-[0.15em] uppercase">
                                 Movimientos recientes
                             </h2>
@@ -267,22 +269,22 @@ export const ClientHomePage = () => {
                             </button>
                         </div>
 
-                        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-2 h-full">
+                        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 sm:px-5 py-2 flex flex-col justify-between min-h-[220px]">
                             {loading ? (
-                                <p className="text-center text-sm text-gray-400 py-6">Cargando movimientos…</p>
+                                <p className="text-center text-sm text-gray-400 py-10 my-auto">Cargando movimientos…</p>
                             ) : recentTx.length === 0 ? (
-                                <p className="text-center text-sm text-gray-400 py-6">Sin movimientos recientes.</p>
+                                <p className="text-center text-sm text-gray-400 py-10 my-auto">Sin movimientos recientes.</p>
                             ) : (
-                                recentTx.map((tx, i) => (
-                                    <TxRow key={tx._id ?? i} tx={tx} myAccountIds={accounts.map(a => String(a._id))} />
-                                ))
+                                <div className="divide-y divide-gray-50 w-full">
+                                    {recentTx.map((tx, i) => (
+                                        <TxRow key={tx._id ?? i} tx={tx} myAccountIds={accounts.map(a => String(a._id))} />
+                                    ))}
+                                </div>
                             )}
                         </div>
                     </div>
 
                 </div>
-
-                <div className="h-2" />
             </div>
 
             {editOpen && <EditProfileModal onClose={() => setEditOpen(false)} />}
