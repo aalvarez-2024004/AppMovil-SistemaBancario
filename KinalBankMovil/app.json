@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "KinalBankMovil",
-    "slug": "KinalBankMovil",
+    "slug": "kinalbank",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,6 +29,12 @@
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0b227572-3858-4285-9efb-f38afdde77f8"
+      }
+    },
+    "owner": "alannlacanns-team"
   }
 }
