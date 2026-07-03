@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Navbar } from "../../../shared/components/layouts/Navbar";
 
 export const ClientLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const principalItems = [
         { to: "/dashboard/client", label: "Inicio", icon: "🏠", end: true },
@@ -23,21 +25,38 @@ export const ClientLayout = () => {
 
             <Navbar />
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden relative">
 
-                {/* Sidebar */}
-                <aside className="w-72 bg-[#071126] relative overflow-hidden flex flex-col flex-shrink-0 border-r border-white/5">
+                {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
 
-                    {/* Glow */}
+                <aside
+                    className={`
+                        fixed lg:relative top-0 left-0 h-full
+                        w-72 bg-[#071126] overflow-hidden
+                        flex flex-col flex-shrink-0
+                        border-r border-white/5
+                        z-40
+                        transition-transform duration-300
+                        ${
+                            sidebarOpen
+                                ? "translate-x-0"
+                                : "-translate-x-full lg:translate-x-0"
+                        }
+                    `}
+                >
+
                     <div className="absolute top-[-120px] right-[-120px] w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
                     <div className="absolute bottom-[-100px] left-[-100px] w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
 
-                    <div className="relative z-10 flex flex-col h-full p-6">
+                    <div className="relative z-10 flex flex-col h-full p-5 lg:p-6">
 
-                        {/* Navigation */}
                         <nav className="space-y-1">
 
-                            {/* Principal */}
                             <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-[0.25em] px-3 pt-2 pb-1">
                                 Principal
                             </p>
@@ -47,6 +66,7 @@ export const ClientLayout = () => {
                                     key={item.to}
                                     to={item.to}
                                     end={item.end}
+                                    onClick={() => setSidebarOpen(false)}
                                     className={({ isActive }) =>
                                         `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                                             isActive
@@ -63,7 +83,6 @@ export const ClientLayout = () => {
                                 </NavLink>
                             ))}
 
-                            {/* Operaciones */}
                             <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-[0.25em] px-3 pt-4 pb-1">
                                 Operaciones
                             </p>
@@ -72,6 +91,7 @@ export const ClientLayout = () => {
                                 <NavLink
                                     key={item.to}
                                     to={item.to}
+                                    onClick={() => setSidebarOpen(false)}
                                     className={({ isActive }) =>
                                         `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                                             isActive
@@ -88,7 +108,6 @@ export const ClientLayout = () => {
                                 </NavLink>
                             ))}
 
-                            {/* Explorar */}
                             <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-[0.25em] px-3 pt-4 pb-1">
                                 Explorar
                             </p>
@@ -97,6 +116,7 @@ export const ClientLayout = () => {
                                 <NavLink
                                     key={item.to}
                                     to={item.to}
+                                    onClick={() => setSidebarOpen(false)}
                                     className={({ isActive }) =>
                                         `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                                             isActive
@@ -115,9 +135,8 @@ export const ClientLayout = () => {
 
                         </nav>
 
-                        {/* Footer */}
                         <div className="mt-auto pt-6">
-                            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-5">
+                            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-5">
 
                                 <p className="text-white font-bold text-sm mb-1">
                                     Con tus ahorros,
@@ -138,8 +157,28 @@ export const ClientLayout = () => {
                     </div>
                 </aside>
 
-                {/* Contenido */}
-                <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#f8fafc] to-[#eef4ff] p-8">
+                <main
+                    className="
+                        flex-1
+                        overflow-y-auto
+                        bg-gradient-to-br
+                        from-[#f8fafc]
+                        to-[#eef4ff]
+                        p-4
+                        sm:p-6
+                        lg:p-8
+                    "
+                >
+
+                    <div className="lg:hidden mb-4">
+                        <button
+                            onClick={() => setSidebarOpen(true)}
+                            className="w-11 h-11 rounded-xl bg-white shadow-md border border-slate-200 flex items-center justify-center text-xl hover:bg-slate-50 transition"
+                        >
+                            ☰
+                        </button>
+                    </div>
+
                     <Outlet />
                 </main>
 
