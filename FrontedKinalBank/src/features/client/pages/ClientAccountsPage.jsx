@@ -35,22 +35,22 @@ const TxRow = ({ tx, accountId }) => {
     const month = d.toLocaleDateString("es-GT", { month: "short" }).replace(".", "").toUpperCase();
 
     return (
-        <div className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-all duration-200 border-b border-slate-100 last:border-0 group cursor-default">
-            <div className="w-10 flex-shrink-0 text-center">
-                <p className="text-lg font-black text-slate-800 leading-none">{day}</p>
+        <div className="flex items-center gap-2.5 sm:gap-4 px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-all duration-200 border-b border-slate-100 last:border-0 group cursor-default">
+            <div className="w-8 sm:w-10 flex-shrink-0 text-center">
+                <p className="text-base sm:text-lg font-black text-slate-800 leading-none">{day}</p>
                 <p className="text-[8px] font-bold tracking-widest text-slate-400 uppercase mt-0.5">{month}</p>
             </div>
             <div className={`w-0.5 h-10 flex-shrink-0 rounded-full ${meta.line}`} />
-            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-sm font-black flex-shrink-0 shadow-sm ${isCredit ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-600"}`}>
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center text-sm font-black flex-shrink-0 shadow-sm ${isCredit ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-600"}`}>
                 {meta.icon}
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-700 truncate">{tx.description ?? tx.type}</p>
+                <p className="text-xs sm:text-sm font-semibold text-slate-700 truncate">{tx.description ?? tx.type}</p>
                 <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${meta.pill}`}>
                     {meta.label}
                 </span>
             </div>
-            <p className={`text-sm font-black tabular-nums flex-shrink-0 ${isCredit ? "text-emerald-600" : "text-rose-500"}`}>
+            <p className={`text-xs sm:text-sm font-black tabular-nums flex-shrink-0 whitespace-nowrap ${isCredit ? "text-emerald-600" : "text-rose-500"}`}>
                 {isCredit ? "+" : "−"}{symbol} {amount.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
             </p>
         </div>
@@ -68,22 +68,22 @@ const DepositRow = ({ deposit, currency }) => {
     const month = d.toLocaleDateString("es-GT", { month: "short" }).replace(".", "").toUpperCase();
 
     return (
-        <div className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-all duration-200 border-b border-slate-100 last:border-0">
-            <div className="w-10 flex-shrink-0 text-center">
-                <p className="text-lg font-black text-slate-800 leading-none">{day}</p>
+        <div className="flex items-center gap-2.5 sm:gap-4 px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-all duration-200 border-b border-slate-100 last:border-0">
+            <div className="w-8 sm:w-10 flex-shrink-0 text-center">
+                <p className="text-base sm:text-lg font-black text-slate-800 leading-none">{day}</p>
                 <p className="text-[8px] font-bold tracking-widest text-slate-400 uppercase mt-0.5">{month}</p>
             </div>
             <div className={`w-0.5 h-10 flex-shrink-0 rounded-full ${isRevertido ? "bg-rose-300" : "bg-emerald-400"}`} />
-            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-sm font-black flex-shrink-0 shadow-sm ${isRevertido ? "bg-rose-100 text-rose-600" : "bg-emerald-100 text-emerald-700"}`}>
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center text-sm font-black flex-shrink-0 shadow-sm ${isRevertido ? "bg-rose-100 text-rose-600" : "bg-emerald-100 text-emerald-700"}`}>
                 {isRevertido ? "↩" : "↓"}
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-700 truncate">Depósito bancario</p>
+                <p className="text-xs sm:text-sm font-semibold text-slate-700 truncate">Depósito bancario</p>
                 <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${isRevertido ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}`}>
                     {isRevertido ? "Revertido" : "Completado"}
                 </span>
             </div>
-            <p className={`text-sm font-black tabular-nums flex-shrink-0 ${isRevertido ? "text-rose-400 line-through" : "text-emerald-600"}`}>
+            <p className={`text-xs sm:text-sm font-black tabular-nums flex-shrink-0 whitespace-nowrap ${isRevertido ? "text-rose-400 line-through" : "text-emerald-600"}`}>
                 +{symbol} {amount.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
             </p>
         </div>
@@ -131,11 +131,11 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
             />
 
             {/* Panel */}
-            <div className="fixed top-0 right-0 h-full w-full max-w-[460px] z-50 flex flex-col shadow-2xl"
+            <div className="fixed top-0 right-0 h-full w-full sm:max-w-[460px] z-50 flex flex-col shadow-2xl"
                 style={{ background: "#fff" }}>
 
                 {/* Header con gradiente vibrante */}
-                <div className="relative overflow-hidden px-7 pt-7 pb-6"
+                <div className="relative overflow-hidden px-5 sm:px-7 pt-6 sm:pt-7 pb-5 sm:pb-6"
                     style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 100%)" }}>
 
                     {/* Orbes decorativos */}
@@ -144,39 +144,39 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
                     <div className="absolute bottom-0 left-12 w-24 h-24 rounded-full opacity-10"
                         style={{ background: "radial-gradient(circle, #38bdf8, transparent)" }} />
 
-                    <div className="relative flex items-start justify-between">
-                        <div>
+                    <div className="relative flex items-start justify-between gap-3">
+                        <div className="min-w-0">
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[10px]"
+                                <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[10px] flex-shrink-0"
                                     style={{ background: "rgba(129,140,248,0.3)" }}>
                                     📋
                                 </div>
                                 <p className="text-[9px] font-black tracking-[0.3em] uppercase"
                                     style={{ color: "#a5b4fc" }}>Historial de cuenta</p>
                             </div>
-                            <h2 className="text-2xl font-black text-white leading-tight mb-1">Movimientos</h2>
-                            <p className="font-mono text-[11px]" style={{ color: "#64748b" }}>
+                            <h2 className="text-xl sm:text-2xl font-black text-white leading-tight mb-1">Movimientos</h2>
+                            <p className="font-mono text-[11px] truncate" style={{ color: "#64748b" }}>
                                 Nº {account.accountNumber}
                             </p>
                         </div>
                         <button
                             onClick={onClose}
-                            className="w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-bold transition-all hover:scale-110 cursor-pointer"
+                            className="w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-bold transition-all hover:scale-110 cursor-pointer flex-shrink-0"
                             style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}>
                             ✕
                         </button>
                     </div>
 
                     {/* Balance strip */}
-                    <div className="mt-5 rounded-2xl p-4 flex items-center justify-between"
+                    <div className="mt-5 rounded-2xl p-4 flex items-center justify-between gap-3 flex-wrap"
                         style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                        <div>
+                        <div className="min-w-0">
                             <p className="text-[9px] font-black tracking-[0.2em] uppercase mb-1" style={{ color: "rgba(165,180,252,0.7)" }}>Saldo actual</p>
-                            <p className="text-2xl font-black text-white tabular-nums">
+                            <p className="text-xl sm:text-2xl font-black text-white tabular-nums truncate">
                                 {symbol} {Number(account.balance).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                             </p>
                         </div>
-                        <div className="text-right">
+                        <div className="text-right flex-shrink-0">
                             <p className="text-xs font-black text-white">{account.accountType ?? "Ahorro"}</p>
                             <p className="text-[10px]" style={{ color: "rgba(148,163,184,0.6)" }}>{account.currency}</p>
                         </div>
@@ -185,21 +185,21 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 border-b border-slate-100">
-                    <div className="px-6 py-4 border-r border-slate-100 bg-emerald-50/50">
+                    <div className="px-4 sm:px-6 py-3 sm:py-4 border-r border-slate-100 bg-emerald-50/50">
                         <div className="flex items-center gap-1.5 mb-1.5">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
                             <p className="text-[8px] font-black tracking-widest text-slate-400 uppercase">Entradas</p>
                         </div>
-                        <p className="text-base font-black text-emerald-600 tabular-nums">
+                        <p className="text-sm sm:text-base font-black text-emerald-600 tabular-nums truncate">
                             +{symbol} {totalCreditos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                         </p>
                     </div>
-                    <div className="px-6 py-4 bg-rose-50/50">
+                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-rose-50/50">
                         <div className="flex items-center gap-1.5 mb-1.5">
-                            <span className="w-2 h-2 rounded-full bg-rose-400" />
+                            <span className="w-2 h-2 rounded-full bg-rose-400 flex-shrink-0" />
                             <p className="text-[8px] font-black tracking-widest text-slate-400 uppercase">Salidas</p>
                         </div>
-                        <p className="text-base font-black text-rose-500 tabular-nums">
+                        <p className="text-sm sm:text-base font-black text-rose-500 tabular-nums truncate">
                             −{symbol} {totalDebitos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                         </p>
                     </div>
@@ -214,7 +214,7 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 py-3 text-[11px] font-black tracking-wide uppercase transition-all cursor-pointer ${
+                            className={`flex-1 py-3 text-[10px] sm:text-[11px] font-black tracking-wide uppercase transition-all cursor-pointer ${
                                 activeTab === tab.key
                                     ? `${tab.activeColor} border-b-2`
                                     : "text-slate-400 hover:text-slate-600"
@@ -242,8 +242,8 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
                             </div>
                         ) : (
                             <>
-                                <div className="px-6 pt-4 pb-2 flex items-center gap-2">
-                                    <div className="w-4 h-0.5 bg-indigo-400 rounded-full" />
+                                <div className="px-4 sm:px-6 pt-4 pb-2 flex items-center gap-2">
+                                    <div className="w-4 h-0.5 bg-indigo-400 rounded-full flex-shrink-0" />
                                     <p className="text-[9px] font-black tracking-[0.2em] text-slate-400 uppercase">
                                         {txs.length} movimiento{txs.length !== 1 ? "s" : ""}
                                     </p>
@@ -259,8 +259,8 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
                             </div>
                         ) : (
                             <>
-                                <div className="px-6 pt-4 pb-2 flex items-center gap-2">
-                                    <div className="w-4 h-0.5 bg-emerald-400 rounded-full" />
+                                <div className="px-4 sm:px-6 pt-4 pb-2 flex items-center gap-2">
+                                    <div className="w-4 h-0.5 bg-emerald-400 rounded-full flex-shrink-0" />
                                     <p className="text-[9px] font-black tracking-[0.2em] text-slate-400 uppercase">
                                         {deps.length} depósito{deps.length !== 1 ? "s" : ""}
                                     </p>
@@ -342,12 +342,12 @@ const AccountCard = ({ account, onViewHistory, index }) => {
                 style={{ background: `radial-gradient(circle, rgba(${pal.glow},0.2) 0%, transparent 70%)` }} />
 
             {/* Decorative big number */}
-            <div className="absolute right-4 top-8 text-[72px] font-black leading-none select-none pointer-events-none"
+            <div className="absolute right-4 top-8 text-[56px] sm:text-[72px] font-black leading-none select-none pointer-events-none"
                 style={{ color: `rgba(${pal.glow},0.07)` }}>
                 {String(account.accountNumber ?? "").slice(-4) || "0000"}
             </div>
 
-            <div className="relative p-6 flex flex-col gap-5 flex-1">
+            <div className="relative p-5 sm:p-6 flex flex-col gap-4 sm:gap-5 flex-1">
                 {/* Top row */}
                 <div className="flex items-center justify-between">
                     {/* Chip */}
@@ -369,11 +369,11 @@ const AccountCard = ({ account, onViewHistory, index }) => {
                 </div>
 
                 {/* Balance */}
-                <div>
-                    <p className="text-[9px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: `rgba(${pal.glow},0.5)` }}>
+                <div className="min-w-0">
+                    <p className="text-[9px] font-black tracking-[0.2em] uppercase mb-2 truncate" style={{ color: `rgba(${pal.glow},0.5)` }}>
                         Nº {account.accountNumber}
                     </p>
-                    <p className="text-[28px] font-black text-white leading-none tabular-nums tracking-tight">
+                    <p className="text-2xl sm:text-[28px] font-black text-white leading-none tabular-nums tracking-tight truncate">
                         {symbol} {bal}
                     </p>
                     <p className="text-xs font-bold mt-2" style={{ color: pal.accent }}>
@@ -385,8 +385,8 @@ const AccountCard = ({ account, onViewHistory, index }) => {
                 <div className="h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
 
                 {/* Footer */}
-                <div className="flex items-end justify-between gap-3">
-                    <div className="space-y-1.5">
+                <div className="flex items-end justify-between gap-3 flex-wrap">
+                    <div className="space-y-1.5 min-w-0">
                         {account.createdAt && (
                             <div>
                                 <p className="text-[8px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.2)" }}>Apertura</p>
@@ -398,9 +398,9 @@ const AccountCard = ({ account, onViewHistory, index }) => {
                             </div>
                         )}
                         {account.owner && (
-                            <div>
+                            <div className="min-w-0">
                                 <p className="text-[8px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.2)" }}>Titular</p>
-                                <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.5)" }}>{account.owner}</p>
+                                <p className="text-xs font-semibold truncate" style={{ color: "rgba(255,255,255,0.5)" }}>{account.owner}</p>
                             </div>
                         )}
                     </div>
@@ -423,7 +423,7 @@ const AccountCard = ({ account, onViewHistory, index }) => {
 
 /* ─── Tarjeta de estadística ─────────────────────────────────────────── */
 const StatCard = ({ label, value, sub, gradient, iconBg, iconText, icon }) => (
-    <div className="relative overflow-hidden rounded-3xl bg-white border border-slate-100 p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+    <div className="relative overflow-hidden rounded-3xl bg-white border border-slate-100 p-5 sm:p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
         {/* Top gradient bar */}
         <div className="absolute top-0 left-0 right-0 h-1 rounded-t-3xl" style={{ background: gradient }} />
 
@@ -431,16 +431,16 @@ const StatCard = ({ label, value, sub, gradient, iconBg, iconText, icon }) => (
         <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             style={{ background: `radial-gradient(circle, ${iconBg}60, transparent)` }} />
 
-        <div className="relative flex items-start justify-between mb-5 pt-2">
+        <div className="relative flex items-start justify-between mb-4 sm:mb-5 pt-2">
             <p className="text-[10px] font-black tracking-[0.25em] text-slate-400 uppercase leading-tight">{label}</p>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 flex-shrink-0"
                 style={{ background: iconBg, color: iconText }}>
                 {icon}
             </div>
         </div>
 
         <div className="relative">
-            <h2 className="text-5xl font-black leading-none" style={{ color: iconText }}>{value}</h2>
+            <h2 className="text-4xl sm:text-5xl font-black leading-none" style={{ color: iconText }}>{value}</h2>
             <p className="text-sm text-slate-400 mt-3 font-medium">{sub}</p>
         </div>
     </div>
@@ -467,11 +467,11 @@ export const ClientAccountsPage = () => {
 
     return (
         <>
-            <div className="relative max-w-5xl mx-auto pb-20 space-y-8">
+            <div className="relative max-w-5xl mx-auto pb-16 sm:pb-20 space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
 
                 {/* ── Hero banner ── */}
                 <div
-                    className="relative overflow-hidden rounded-3xl border shadow-2xl p-8"
+                    className="relative overflow-hidden rounded-3xl border shadow-2xl p-5 sm:p-8"
                     style={{
                         background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%)",
                         borderColor: "rgba(255,255,255,0.05)",
@@ -489,18 +489,18 @@ export const ClientAccountsPage = () => {
                         style={{ background: "linear-gradient(180deg,#ffffff,#7dd3fc,#0ea5e9)" }} />
 
                     {/* Balance en marca de agua */}
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[80px] font-black leading-none select-none pointer-events-none tracking-tighter whitespace-nowrap"
+                    <span className="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 text-[50px] md:text-[80px] font-black leading-none select-none pointer-events-none tracking-tighter whitespace-nowrap"
                         style={{ color: "rgba(255,255,255,0.03)" }}>
                         Q {totalStr}
                     </span>
 
-                    <div className="relative flex items-end justify-between gap-6 flex-wrap">
-                        <div>
+                    <div className="relative flex items-end justify-between gap-5 sm:gap-6 flex-wrap">
+                        <div className="min-w-0">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-6 h-0.5 rounded-full" style={{ background: "linear-gradient(90deg,#38bdf8,#818cf8)" }} />
+                                <div className="w-6 h-0.5 rounded-full flex-shrink-0" style={{ background: "linear-gradient(90deg,#38bdf8,#818cf8)" }} />
                                 <p className="text-[9px] font-black tracking-[0.3em] uppercase" style={{ color: "#818cf8" }}>KinalBank</p>
                             </div>
-                            <h1 className="text-5xl font-black leading-none tracking-tighter mb-3">
+                            <h1 className="text-4xl sm:text-5xl font-black leading-none tracking-tighter mb-3">
                                 <span style={{ color: "#ffffff" }}>Mis</span>
                                 <br />
                                 <span style={{ color: "#38bdf8" }}>Cuentas</span>
@@ -511,7 +511,7 @@ export const ClientAccountsPage = () => {
                         </div>
 
                         {accounts.length > 0 && (
-                            <div className="rounded-2xl px-7 py-5 min-w-[210px] flex-shrink-0 relative overflow-hidden"
+                            <div className="w-full sm:w-auto rounded-2xl px-6 sm:px-7 py-5 sm:min-w-[210px] flex-shrink-0 relative overflow-hidden"
                                 style={{
                                     background: "linear-gradient(135deg, rgba(56,189,248,0.2) 0%, rgba(14,165,233,0.1) 100%)",
                                     border: "1px solid rgba(56,189,248,0.4)",
@@ -522,11 +522,11 @@ export const ClientAccountsPage = () => {
                                     style={{ background: "radial-gradient(circle, rgba(56,189,248,0.3), transparent)" }} />
                                 <p className="text-[9px] font-black tracking-[0.3em] uppercase mb-2 relative"
                                     style={{ color: "#7dd3fc" }}>✦ Balance total</p>
-                                <p className="text-4xl font-black text-white tabular-nums tracking-tight relative leading-none">
+                                <p className="text-3xl sm:text-4xl font-black text-white tabular-nums tracking-tight relative leading-none truncate">
                                     Q {totalStr}
                                 </p>
                                 <div className="mt-3 flex items-center gap-1.5 relative">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0"
                                         style={{ boxShadow: "0 0 6px #38bdf8" }} />
                                     <p className="text-[11px] font-bold" style={{ color: "#7dd3fc" }}>
                                         {activas.length} cuenta{activas.length !== 1 ? "s" : ""} activa{activas.length !== 1 ? "s" : ""}
@@ -539,7 +539,7 @@ export const ClientAccountsPage = () => {
 
                 {/* ── Stat cards ── */}
                 {accounts.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
                         <StatCard
                             label="Total cuentas"
                             value={accounts.length}
@@ -572,19 +572,19 @@ export const ClientAccountsPage = () => {
 
                 {/* ── Error ── */}
                 {error && (
-                    <div className="bg-rose-50 border-l-4 border-rose-400 text-rose-700 text-sm px-5 py-4 rounded-2xl flex items-center gap-3">
+                    <div className="bg-rose-50 border-l-4 border-rose-400 text-rose-700 text-sm px-4 sm:px-5 py-4 rounded-2xl flex items-center gap-3">
                         <span>⚠️</span> {error}
                     </div>
                 )}
 
                 {/* ── Loading / empty / cuentas ── */}
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-28 gap-4">
+                    <div className="flex flex-col items-center justify-center py-20 sm:py-28 gap-4">
                         <div className="w-10 h-10 rounded-full border-[3px] border-indigo-100 border-t-indigo-500 animate-spin" />
                         <p className="text-sm font-semibold text-slate-400 tracking-wide">Cargando cuentas…</p>
                     </div>
                 ) : accounts.length === 0 ? (
-                    <div className="rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50 p-20 text-center">
+                    <div className="rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 sm:p-20 text-center">
                         <p className="text-7xl font-black text-slate-200 mb-4">0</p>
                         <p className="text-sm font-bold text-slate-500">Aún no tienes cuentas asociadas</p>
                         <p className="text-xs text-slate-400 mt-1">Contacta con el banco para abrir una.</p>
@@ -592,18 +592,18 @@ export const ClientAccountsPage = () => {
                 ) : (
                     <>
                         {activas.length > 0 && (
-                            <section className="space-y-5">
+                            <section className="space-y-4 sm:space-y-5">
                                 {/* Section header */}
-                                <div className="flex items-center gap-4">
-                                    <div className="flex items-center gap-2.5">
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                    <div className="flex items-center gap-2.5 flex-shrink-0">
                                         <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                                         <p className="text-[10px] font-black tracking-[0.25em] text-slate-500 uppercase">Cuentas Activas</p>
                                     </div>
                                     <div className="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent" />
-                                    <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-full">{activas.length}</span>
+                                    <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-full flex-shrink-0">{activas.length}</span>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                                     {activas.map((acc, i) => (
                                         <AccountCard key={acc._id} account={acc} onViewHistory={setSelectedAccount} index={i} />
                                     ))}
@@ -612,16 +612,16 @@ export const ClientAccountsPage = () => {
                         )}
 
                         {inactivas.length > 0 && (
-                            <section className="space-y-5">
-                                <div className="flex items-center gap-4">
-                                    <div className="flex items-center gap-2.5">
+                            <section className="space-y-4 sm:space-y-5">
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                    <div className="flex items-center gap-2.5 flex-shrink-0">
                                         <span className="w-2 h-2 rounded-full bg-slate-400" />
                                         <p className="text-[10px] font-black tracking-[0.25em] text-slate-500 uppercase">Cuentas Inactivas</p>
                                     </div>
                                     <div className="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent" />
-                                    <span className="text-[10px] font-black text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full">{inactivas.length}</span>
+                                    <span className="text-[10px] font-black text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex-shrink-0">{inactivas.length}</span>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 opacity-60">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 opacity-60">
                                     {inactivas.map((acc, i) => (
                                         <AccountCard key={acc._id} account={acc} onViewHistory={setSelectedAccount} index={activas.length + i} />
                                     ))}
