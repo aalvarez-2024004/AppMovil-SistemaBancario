@@ -62,11 +62,21 @@ const getMeta = (item, isCredit) => {
   return TX_TYPE_MAP.transfer;
 };
 
+// Tipos donde el "destino" es el propio banco (compras, pagos de servicios, etc.)
+// y por lo tanto nunca deberían mostrarse como "desconocido".
+const BANK_DESTINATION_TYPES = ["COMPRA", "PAGO", "PAGO_SERVICIO", "PRODUCTO"];
+
 const getCounterpart = (item, isCredit) => {
   const acc = isCredit ? item.fromAccount : item.toAccount;
   const name = acc?.holderName || acc?.ownerName || acc?.name || acc?.fullName || null;
   const accountNumber = acc?.accountNumber ? String(acc.accountNumber) : null;
   return { name, accountNumber };
+};
+
+// Texto de respaldo cuando no hay cuenta/nombre asociado al movimiento.
+const getFallbackLabel = (item, isCredit) => {
+  if (!isCredit && BANK_DESTINATION_TYPES.includes(item.type)) return "KinalBank";
+  return isCredit ? "Origen desconocido" : "Destino desconocido";
 };
 
 export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
@@ -76,8 +86,8 @@ export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
   const isPending = item.status === "pending";
 
   const { name, accountNumber } = getCounterpart(item, credit);
-  const maskedAccount = accountNumber ? `Cuenta •••• ${accountNumber.slice(-4)}` : null;
-  const mainLabel      = name || maskedAccount || (credit ? "Origen desconocido" : "Destino desconocido");
+  const maskedAccount = accountNumber ? `Cuenta •••••• ${accountNumber.slice(-4)}` : null;
+  const mainLabel      = name || maskedAccount || getFallbackLabel(item, credit);
   const showSubAccount = Boolean(name && maskedAccount);
 
   return (
@@ -166,7 +176,8 @@ export const TransactionDetailModal = ({ visible, transaction, myAccountIds = []
   const isPending = transaction.status === "pending";
 
   const { name, accountNumber } = getCounterpart(transaction, credit);
-  const maskedAccount = accountNumber ? `Cuenta •••• ${accountNumber.slice(-4)}` : null;
+  const maskedAccount = accountNumber ? `Cuenta •••••• ${accountNumber.slice(-4)}` : null;
+  const mainLabel = name || maskedAccount || getFallbackLabel(transaction, credit);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -203,7 +214,7 @@ export const TransactionDetailModal = ({ visible, transaction, myAccountIds = []
         </View>
 
         <ScrollView style={styles.modalDetails}>
-          <DetailRow label={credit ? "De" : "Para"} value={name || maskedAccount || "—"} />
+          <DetailRow label={credit ? "De" : "Para"} value={mainLabel} />
           {maskedAccount && name && <DetailRow label="Cuenta" value={maskedAccount} />}
           <DetailRow label="Fecha" value={new Date(transaction.createdAt).toLocaleString("es-GT")} />
           <DetailRow label="Tipo" value={transaction.type} />

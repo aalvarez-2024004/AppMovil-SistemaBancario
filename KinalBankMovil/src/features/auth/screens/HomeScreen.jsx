@@ -232,7 +232,7 @@ const HomeScreen = () => {
                     </View>
                     <View>
                       <Text style={s.accountNum}>
-                        •••• {acc?.accountNumber?.slice(-4) ?? '----'}
+                        •••••• {acc?.accountNumber?.slice(-4) ?? '----'}
                       </Text>
                       <View style={s.accountStatusRow}>
                         <View style={[s.statusDot, { backgroundColor: active ? '#10B981' : '#EF4444' }]} />

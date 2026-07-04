@@ -13,7 +13,7 @@ export const formatCurrency = (amount, currency = "GTQ") =>
 
 export const maskNumber = (num = "") => {
   const str = String(num);
-  return `•••• ${str.slice(-4)}`;
+  return `•••••• ${str.slice(-4)}`;
 };
 
 /* ─── StatCard ────────────────────────────────────────────── */
@@ -68,7 +68,7 @@ export const AccountCard = ({ account, onPress }) => {
 
       {/* Número estilo tarjeta */}
       <View style={styles.accountNumberRow}>
-        <Text style={styles.accountNumberDots}>••••  ••••  ••••</Text>
+        <Text style={styles.accountNumberDots}>••••• •</Text>
         <Text style={styles.accountNumberLast}>{lastFour}</Text>
       </View>
 
@@ -194,7 +194,7 @@ export const AccountDetailModal = ({ visible, account, onClose }) => {
             <ModalRow
               icon="card-outline"
               label="Número de cuenta"
-              value={`•••• •••• •••• ${lastFour}`}
+              value={`••••• •${lastFour}`}
               mono
             />
             <ModalRow
