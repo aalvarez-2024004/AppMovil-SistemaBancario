@@ -5,7 +5,6 @@ import {
     ScrollView,
     TouchableOpacity,
     ActivityIndicator,
-    Modal,
     Pressable,
     StatusBar,
     KeyboardAvoidingView,
@@ -27,7 +26,7 @@ import {
 } from "../../../shared/components/ProfileComponents";
 
 const ProfileScreen = () => {
-    const { user, isLoading, updateProfile, logout } = useAuthStore();
+    const { user, token, isLoading, updateProfile, logout } = useAuthStore();
     const { accounts, fetchMyAccounts } = useTransactionStore();
 
     const [editing, setEditing] = useState(false);
@@ -44,8 +43,10 @@ const ProfileScreen = () => {
     });
 
     useEffect(() => {
-        fetchMyAccounts?.();
-    }, []);
+        if (token) {
+            fetchMyAccounts(token);
+        }
+    }, [token]);
 
     // Se usa la primera cuenta activa como cuenta principal a mostrar en la tarjeta azul.
     const primaryAccount = useMemo(
@@ -92,7 +93,9 @@ const ProfileScreen = () => {
 
     // Nota: no usamos Alert.alert aquí porque no funciona en react-native-web
     // (en web no muestra ningún diálogo y el botón parece no responder).
-    // En su lugar mostramos un modal propio controlado por estado.
+    // En su lugar mostramos un overlay propio controlado por estado (sin <Modal>,
+    // ya que el Modal de RN en web deja un overlay fantasma que bloquea los clics
+    // de toda la pantalla incluso cuando visible={false}).
     const confirmLogout = async () => {
         setLoggingOut(true);
         await logout();
@@ -234,50 +237,46 @@ const ProfileScreen = () => {
                 </View>
             </ScrollView>
 
-            <Modal
-                visible={confirmLogoutVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setConfirmLogoutVisible(false)}
-            >
-                <Pressable
-                    style={styles.modalBackdrop}
-                    onPress={() => !loggingOut && setConfirmLogoutVisible(false)}
-                >
-                    {/* Pressable interno para que tocar la tarjeta no cierre el modal */}
-                    <Pressable onPress={() => {}} style={styles.modalCard}>
-                        <View style={styles.modalIconWrap}>
-                            <Ionicons name="log-out-outline" size={24} color={COLORS.danger} />
-                        </View>
-                        <Text style={styles.modalTitle}>Cerrar sesión</Text>
-                        <Text style={styles.modalMessage}>
-                            ¿Estás seguro que deseas salir de tu cuenta?
-                        </Text>
-                        <View style={styles.modalActions}>
-                            <TouchableOpacity
-                                style={styles.modalCancelBtn}
-                                onPress={() => setConfirmLogoutVisible(false)}
-                                disabled={loggingOut}
-                                activeOpacity={0.75}
-                            >
-                                <Text style={styles.modalCancelBtnText}>Cancelar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.modalConfirmBtn}
-                                onPress={confirmLogout}
-                                disabled={loggingOut}
-                                activeOpacity={0.85}
-                            >
-                                {loggingOut ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={styles.modalConfirmBtnText}>Salir</Text>
-                                )}
-                            </TouchableOpacity>
-                        </View>
+            {confirmLogoutVisible && (
+                <View style={[styles.modalBackdrop, { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }]}>
+                    <Pressable
+                        style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "center" }}
+                        onPress={() => !loggingOut && setConfirmLogoutVisible(false)}
+                    >
+                        <Pressable onPress={() => {}} style={styles.modalCard}>
+                            <View style={styles.modalIconWrap}>
+                                <Ionicons name="log-out-outline" size={24} color={COLORS.danger} />
+                            </View>
+                            <Text style={styles.modalTitle}>Cerrar sesión</Text>
+                            <Text style={styles.modalMessage}>
+                                ¿Estás seguro que deseas salir de tu cuenta?
+                            </Text>
+                            <View style={styles.modalActions}>
+                                <TouchableOpacity
+                                    style={styles.modalCancelBtn}
+                                    onPress={() => setConfirmLogoutVisible(false)}
+                                    disabled={loggingOut}
+                                    activeOpacity={0.75}
+                                >
+                                    <Text style={styles.modalCancelBtnText}>Cancelar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.modalConfirmBtn}
+                                    onPress={confirmLogout}
+                                    disabled={loggingOut}
+                                    activeOpacity={0.85}
+                                >
+                                    {loggingOut ? (
+                                        <ActivityIndicator color="#fff" />
+                                    ) : (
+                                        <Text style={styles.modalConfirmBtnText}>Salir</Text>
+                                    )}
+                                </TouchableOpacity>
+                            </View>
+                        </Pressable>
                     </Pressable>
-                </Pressable>
-            </Modal>
+                </View>
+            )}
         </KeyboardAvoidingView>
     );
 };
