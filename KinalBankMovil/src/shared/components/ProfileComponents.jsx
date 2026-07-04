@@ -16,8 +16,9 @@ export const maskDPI = (dpi = "") => {
 };
 
 export const getInitials = (user) => {
-    const a = user?.firstName?.[0] || "";
-    const b = user?.lastName?.[0] || "";
+    const parts = (user?.name || "").trim().split(/\s+/);
+    const a = parts[0]?.[0] || "";
+    const b = parts[1]?.[0] || "";
     return (a + b).toUpperCase() || "U";
 };
 
@@ -36,7 +37,7 @@ export const ProfileHeader = ({ user, isActive = true }) => (
         </View>
 
         <Text style={styles.name}>
-            {user?.firstName} {user?.lastName}
+            {user?.name}
         </Text>
         {!!user?.username && <Text style={styles.username}>@{user.username}</Text>}
 

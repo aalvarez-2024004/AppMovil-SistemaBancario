@@ -165,27 +165,24 @@ export const useAuthStore = create((set, get) => ({
   },
 
   updateProfile: async (data) => {
-    try {
-      set({ isLoading: true, error: null });
+      try {
+        set({ isLoading: true, error: null });
+        const { token } = get();
+        const res = await updateProfileRequest(data, token);
+console.log("RESPUESTA CRUDA DEL BACKEND:", JSON.stringify(res.data, null, 2));
 
-      const { token } = get();
+        set((state) => ({
+          user: { ...state.user, ...res.data.user },
+          isLoading: false,
+        }));
 
-      const res = await updateProfileRequest(data, token);
-
-      set({
-        user: res.data.user,
-        isLoading: false,
-      });
-
-      return { success: true };
-    } catch (err) {
-      const message =
-        err.response?.data?.message || "Error al actualizar perfil";
-
-      set({ error: message, isLoading: false });
-
-      return { success: false, error: message };
-    }
+        return { success: true };
+      } catch (err) {
+        const message =
+          err.response?.data?.message || "Error al actualizar perfil";
+        set({ error: message, isLoading: false });
+        return { success: false, error: message };
+      }
   },
 
   logout: async () => {

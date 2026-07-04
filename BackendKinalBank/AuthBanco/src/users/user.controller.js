@@ -126,9 +126,9 @@ export const getUsersByIds = async (req, res) => {
 // Editar perfil propio (cliente)
 export const updateMyProfile = async (req, res) => {
   try {
-    const userId = req.userId; // ← CORREGIDO: usa req.userId que pone el middleware
+    const userId = req.userId;
 
-    const { name, Address, Job, MonthlyIncome } = req.body;
+    const { name, phone, address, job, monthlyIncome } = req.body;
 
     const user = await User.findByPk(userId);
     if (!user) {
@@ -136,9 +136,10 @@ export const updateMyProfile = async (req, res) => {
     }
 
     if (name)          user.Name          = name;
-    if (Address)       user.Address       = Address;
-    if (Job)           user.Job           = Job;
-    if (MonthlyIncome) user.MonthlyIncome = MonthlyIncome;
+    if (phone)         user.Phone         = phone;
+    if (address)       user.Address       = address;
+    if (job)           user.Job           = job;
+    if (monthlyIncome) user.MonthlyIncome = monthlyIncome;
 
     await user.save();
 
@@ -150,9 +151,10 @@ export const updateMyProfile = async (req, res) => {
         name:          user.Name,
         username:      user.Username,
         email:         user.Email,
-        Address:       user.Address,
-        Job:           user.Job,
-        MonthlyIncome: user.MonthlyIncome,
+        phone:         user.Phone,
+        address:       user.Address,
+        job:           user.Job,
+        monthlyIncome: user.MonthlyIncome,
       }
     });
   } catch (error) {
