@@ -4,9 +4,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS, TABS, TX_TYPE_MAP } from "../constants/MyTransactions";
+import { styles, COLORS, TABS, TX_TYPE_MAP, HEADER_GRADIENT } from "../constants/MyTransactions";
 
 const getFromId = (tx) => String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
 
@@ -51,35 +54,75 @@ export const groupByDate = (transactions) => {
   return Object.entries(groups).map(([title, data]) => ({ title, data }));
 };
 
+const getMeta = (item, isCredit) => {
+  if (item.type === "DEPOSITO" || item.type === "CREDITO") return TX_TYPE_MAP.deposit;
+  if (item.type === "RETIRO"   || item.type === "COMPRA")  return TX_TYPE_MAP.withdraw;
+  if (item.type === "TRANSFERENCIA") return isCredit ? TX_TYPE_MAP.received : TX_TYPE_MAP.transfer;
+  return TX_TYPE_MAP.transfer;
+};
+
+const getCounterpart = (item, isCredit) => {
+  const acc = isCredit ? item.fromAccount : item.toAccount;
+  const name = acc?.holderName || acc?.ownerName || acc?.name || acc?.fullName || null;
+  const accountNumber = acc?.accountNumber ? String(acc.accountNumber) : null;
+  return { name, accountNumber };
+};
+
 export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
   const credit    = isCreditTx(item, myAccountIds);
-  // Si es una transferencia recibida, mostramos el mismo ícono/etiqueta de depósito
-  const mappedKey = item.type === "TRANSFERENCIA" && credit ? "DEPOSITO" : item.type;
-  const meta      = TX_TYPE_MAP[mappedKey] || TX_TYPE_MAP.TRANSFERENCIA || TX_TYPE_MAP.transfer;
+  const meta      = getMeta(item, credit);
   const amount    = formatAmount(item, myAccountIds);
   const isPending = item.status === "pending";
+
+  const { name, accountNumber } = getCounterpart(item, credit);
+  const maskedAccount = accountNumber ? `Cuenta •••• ${accountNumber.slice(-4)}` : null;
+  const mainLabel      = name || maskedAccount || (credit ? "Origen desconocido" : "Destino desconocido");
+  const showSubAccount = Boolean(name && maskedAccount);
 
   return (
     <TouchableOpacity
       style={styles.txItem}
-      activeOpacity={0.7}
+      activeOpacity={0.75}
       onPress={() => onPress?.(item)}
     >
-      <View style={[styles.txIcon, { backgroundColor: meta.bg }]}>
-        <Ionicons name={meta.iconName} size={21} color={meta.color} />
+      <View style={[styles.txAccentBar, { backgroundColor: meta.color }]} />
+
+      <View>
+        <View style={[styles.txIconRing, { backgroundColor: meta.bg }]}>
+          <View style={styles.txIcon}>
+            <Ionicons name={meta.iconName} size={20} color={meta.color} />
+          </View>
+        </View>
+        <View
+          style={[
+            styles.txDirBadge,
+            { backgroundColor: credit ? COLORS.success : COLORS.danger },
+          ]}
+        >
+          <Ionicons name={credit ? "arrow-down" : "arrow-up"} size={9} color="#fff" />
+        </View>
       </View>
 
       <View style={styles.txInfo}>
         <Text style={styles.txType} numberOfLines={1}>
           {item.description || meta.label}
         </Text>
-        <Text style={styles.txAccount} numberOfLines={1}>
-          {item.fromAccount?.accountNumber
-            ? `De: •••• ${String(item.fromAccount.accountNumber).slice(-4)}`
-            : item.toAccount?.accountNumber
-            ? `A: •••• ${String(item.toAccount.accountNumber).slice(-4)}`
-            : "Sin cuenta"}
-        </Text>
+
+        {/* recuadro blanco: nombre + número de cuenta de a quién se pagó / de quién vino */}
+        <View style={styles.txCounterpartBox}>
+          <View style={styles.txCounterpartTextWrap}>
+            <Text style={styles.txCounterpartName} numberOfLines={1}>
+              {credit ? "De: " : "Para: "}
+              {mainLabel}
+            </Text>
+            {showSubAccount && (
+              <Text style={styles.txCounterpartAccount} numberOfLines={1}>
+                {maskedAccount}
+              </Text>
+            )}
+          </View>
+        </View>
+
         <View style={[styles.badge, isPending ? styles.badgePending : styles.badgeDone]}>
           <View
             style={[
@@ -103,6 +146,72 @@ export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
   );
 };
 
+const DetailRow = ({ label, value }) => (
+  <View style={styles.modalDetailRow}>
+    <Text style={styles.modalDetailLabel}>{label}</Text>
+    <Text style={styles.modalDetailValue} numberOfLines={1}>{value}</Text>
+  </View>
+);
+
+export const TransactionDetailModal = ({ visible, transaction, myAccountIds = [], onClose }) => {
+  if (!transaction) return null;
+
+  const credit    = isCreditTx(transaction, myAccountIds);
+  const meta      = getMeta(transaction, credit);
+  const amount    = formatAmount(transaction, myAccountIds);
+  const isPending = transaction.status === "pending";
+
+  const { name, accountNumber } = getCounterpart(transaction, credit);
+  const maskedAccount = accountNumber ? `Cuenta •••• ${accountNumber.slice(-4)}` : null;
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.modalBackdrop} />
+      </TouchableWithoutFeedback>
+
+      <View style={styles.modalSheet}>
+        <View style={styles.modalHandle} />
+
+        <View style={styles.modalHeader}>
+          <View style={[styles.txIconRing, { backgroundColor: meta.bg }]}>
+            <Ionicons name={meta.iconName} size={22} color={meta.color} />
+          </View>
+          <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
+            <Ionicons name="close" size={20} color={COLORS.textMuted} />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={[styles.modalAmount, amount.isCredit ? styles.amountCredit : styles.amountDebit]}>
+          {amount.text}
+        </Text>
+        <Text style={styles.modalType}>{transaction.description || meta.label}</Text>
+
+        <View
+          style={[
+            styles.badge,
+            isPending ? styles.badgePending : styles.badgeDone,
+            { alignSelf: "center", marginTop: 8 },
+          ]}
+        >
+          <View style={[styles.badgeDot, { backgroundColor: isPending ? COLORS.warning : COLORS.success }]} />
+          <Text style={[styles.badgeText, isPending ? styles.badgeTextPending : styles.badgeTextDone]}>
+            {isPending ? "Pendiente" : "Completado"}
+          </Text>
+        </View>
+
+        <ScrollView style={styles.modalDetails}>
+          <DetailRow label={credit ? "De" : "Para"} value={name || maskedAccount || "—"} />
+          {maskedAccount && name && <DetailRow label="Cuenta" value={maskedAccount} />}
+          <DetailRow label="Fecha" value={new Date(transaction.createdAt).toLocaleString("es-GT")} />
+          <DetailRow label="Tipo" value={transaction.type} />
+          {transaction._id && <DetailRow label="No. de referencia" value={transaction._id} />}
+        </ScrollView>
+      </View>
+    </Modal>
+  );
+};
+
 export const TransactionSectionHeader = ({ title }) => (
   <Text style={styles.sectionLabel}>{title}</Text>
 );
@@ -120,16 +229,23 @@ export const TransactionEmptyState = () => (
 );
 
 export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack }) => (
-  <View style={styles.header}>
+  <LinearGradient
+    colors={HEADER_GRADIENT}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={styles.header}
+  >
+    <View style={styles.headerDecoOne} pointerEvents="none" />
+    <View style={styles.headerDecoTwo} pointerEvents="none" />
+
     <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.7}>
       <Ionicons name="arrow-back" size={18} color="#fff" />
     </TouchableOpacity>
 
     <View style={styles.headerTop}>
-      <Text style={styles.brandEyebrow}>Kinalbank</Text>
       <Text style={styles.headerTitle}>
         Mis{"\n"}
-        <Text style={styles.headerTitleAccent}>movimientos</Text>
+        <Text style={styles.headerTitleAccent}>Movimientos</Text>
       </Text>
     </View>
 
@@ -146,7 +262,7 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
     <View style={styles.pillsRow}>
       <View style={styles.pill}>
         <View style={[styles.pillIconWrap, styles.pillIconWrapIn]}>
-          <Ionicons name="arrow-down-outline" size={16} color="#4ADE80" />
+          <Ionicons name="arrow-down-outline" size={16} color={COLORS.success} />
         </View>
         <View>
           <Text style={styles.pillLabel}>ENTRADAS</Text>
@@ -158,7 +274,7 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
 
       <View style={styles.pill}>
         <View style={[styles.pillIconWrap, styles.pillIconWrapOut]}>
-          <Ionicons name="arrow-up-outline" size={16} color="#F87171" />
+          <Ionicons name="arrow-up-outline" size={16} color={COLORS.danger} />
         </View>
         <View>
           <Text style={styles.pillLabel}>SALIDAS</Text>
@@ -168,7 +284,7 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
         </View>
       </View>
     </View>
-  </View>
+  </LinearGradient>
 );
 
 export const TransactionSearchBar = ({ value, onChange }) => (

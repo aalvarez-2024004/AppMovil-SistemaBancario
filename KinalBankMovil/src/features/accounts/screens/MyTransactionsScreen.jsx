@@ -23,6 +23,7 @@ import {
   TransactionItem,
   TransactionSectionHeader,
   TransactionEmptyState,
+  TransactionDetailModal,
 } from "../../../shared/components/MyTransactionsComponents";
 import { styles, COLORS } from "../../../shared/constants/MyTransactions";
 
@@ -59,6 +60,7 @@ const MyTransactionsScreen = () => {
   const [search,     setSearch]     = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedTx, setSelectedTx] = useState(null);
 
   useEffect(() => {
     if (token) {
@@ -139,7 +141,13 @@ const MyTransactionsScreen = () => {
   const renderItem = ({ item }) => {
     if (item.type === "header")
       return <TransactionSectionHeader title={item.title} />;
-    return <TransactionItem item={item} myAccountIds={myAccountIds} />;
+    return (
+      <TransactionItem
+        item={item}
+        myAccountIds={myAccountIds}
+        onPress={setSelectedTx}
+      />
+    );
   };
 
   const renderFooter = () => {
@@ -167,6 +175,8 @@ const MyTransactionsScreen = () => {
         currentBalance={currentBalance}
         totalRecords={totalRecords}
         onBack={() => navigation.goBack()}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       />
 
       <View style={styles.content}>
@@ -217,6 +227,13 @@ const MyTransactionsScreen = () => {
           />
         )}
       </View>
+
+      <TransactionDetailModal
+        visible={!!selectedTx}
+        transaction={selectedTx}
+        myAccountIds={myAccountIds}
+        onClose={() => setSelectedTx(null)}
+      />
     </View>
   );
 };

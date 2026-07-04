@@ -25,6 +25,8 @@ export const COLORS = {
   shadow:        "#0B1B33",
 };
 
+export const HEADER_GRADIENT = ["#112241", "#559ED2"];
+
 export const TABS = [
   { key: "all",      label: "Todos",          icon: "apps-outline" },
   { key: "deposit",  label: "Depósitos",      icon: "arrow-down-circle-outline" },
@@ -59,25 +61,27 @@ const softShadow = {
 export const styles = StyleSheet.create({
   container:        { flex: 1, backgroundColor: COLORS.navy },
 
-  // ---- Header ----
-  header:           { backgroundColor: COLORS.navy, paddingHorizontal: 20, paddingTop: 18, paddingBottom: 28 },
-  backBtn:          { width: 34, height: 34, borderRadius: 17, backgroundColor: "rgba(255,255,255,0.10)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)", marginBottom: 16 },
+  // ---- Header (degradado) ----
+  header:           { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 30, overflow: "hidden", position: "relative" },
+  headerDecoOne:    { position: "absolute", width: 220, height: 220, borderRadius: 110, backgroundColor: "rgba(255,255,255,0.10)", top: -80, right: -60 },
+  headerDecoTwo:    { position: "absolute", width: 130, height: 130, borderRadius: 65,  backgroundColor: "rgba(255,255,255,0.08)", top: 10, right: 10 },
+  backBtn:          { width: 34, height: 34, borderRadius: 17, backgroundColor: "rgba(255,255,255,0.14)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.18)", marginBottom: 16 },
   headerTop:        { marginBottom: 24 },
-  brandEyebrow:     { color: COLORS.accent, fontSize: 11, fontWeight: "700", letterSpacing: 1.6, marginBottom: 6, textTransform: "uppercase" },
+  brandEyebrow:     { color: "#BFE0FF", fontSize: 11, fontWeight: "700", letterSpacing: 1.6, marginBottom: 6, textTransform: "uppercase" },
   headerTitle:      { color: "#fff", fontSize: 28, fontWeight: "800", letterSpacing: -0.6, lineHeight: 32 },
-  headerTitleAccent:{ color: COLORS.accent, fontWeight: "800" },
+  headerTitleAccent:{ color: "#BFE0FF", fontWeight: "800" },
 
   balanceRow:       { marginBottom: 22 },
-  balanceLabel:     { color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: "700", letterSpacing: 1.4, marginBottom: 8 },
+  balanceLabel:     { color: "rgba(255,255,255,0.55)", fontSize: 11, fontWeight: "700", letterSpacing: 1.4, marginBottom: 8 },
   balanceAmount:    { color: "#fff", fontSize: 36, fontWeight: "800", letterSpacing: -0.8 },
-  balanceSub:       { color: "rgba(255,255,255,0.40)", fontSize: 12.5, marginTop: 6 },
+  balanceSub:       { color: "rgba(255,255,255,0.50)", fontSize: 12.5, marginTop: 6 },
 
   pillsRow:         { flexDirection: "row", gap: 12 },
-  pill:             { flex: 1, backgroundColor: "rgba(255,255,255,0.06)", borderRadius: 16, padding: 14, flexDirection: "row", alignItems: "center", gap: 12, borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  pill:             { flex: 1, backgroundColor: "rgba(255,255,255,0.10)", borderRadius: 16, padding: 14, flexDirection: "row", alignItems: "center", gap: 12, borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
   pillIconWrap:     { width: 32, height: 32, borderRadius: 10, justifyContent: "center", alignItems: "center" },
-  pillIconWrapIn:   { backgroundColor: "rgba(74,222,128,0.16)" },
-  pillIconWrapOut:  { backgroundColor: "rgba(248,113,113,0.16)" },
-  pillLabel:        { color: "rgba(255,255,255,0.45)", fontSize: 9.5, fontWeight: "700", letterSpacing: 1 },
+  pillIconWrapIn:   { backgroundColor: "rgba(74,222,128,0.22)" },
+  pillIconWrapOut:  { backgroundColor: "rgba(248,113,113,0.22)" },
+  pillLabel:        { color: "rgba(255,255,255,0.55)", fontSize: 9.5, fontWeight: "700", letterSpacing: 1 },
   pillAmount:       { color: "#fff", fontSize: 14.5, fontWeight: "700", marginTop: 3, letterSpacing: -0.2 },
 
   // ---- Content sheet ----
@@ -96,12 +100,100 @@ export const styles = StyleSheet.create({
 
   sectionLabel:     { fontSize: 11.5, color: COLORS.textMuted, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1, marginHorizontal: 20, marginTop: 10, marginBottom: 10 },
 
-  // ---- Transaction card (no more bordered rows — floating cards) ----
-  txItem:           { flexDirection: "row", alignItems: "center", gap: 12, padding: 14, marginHorizontal: 16, marginBottom: 10, backgroundColor: COLORS.white, borderRadius: 18, ...cardShadow },
-  txIcon:           { width: 44, height: 44, borderRadius: 14, justifyContent: "center", alignItems: "center" },
-  txInfo:           { flex: 1, minWidth: 0 },
-  txType:           { fontSize: 13.5, fontWeight: "700", color: COLORS.textPrimary },
-  txAccount:        { fontSize: 11.5, color: COLORS.textMuted, marginTop: 3 },
+  /* ================================================================ */
+  /*  TARJETA DE TRANSACCIÓN                                            */
+  /* ================================================================ */
+  txItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    padding: 14,
+    paddingLeft: 16,
+    marginHorizontal: 16,
+    marginBottom: 12,
+    backgroundColor: COLORS.white,
+    borderRadius: 18,
+    overflow: "hidden",
+    position: "relative",
+    ...cardShadow,
+  },
+  txAccentBar: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+  },
+  txIconRing: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  txIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  txDirBadge: {
+    position: "absolute",
+    bottom: -2,
+    right: -2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: COLORS.white,
+  },
+
+  txInfo: { flex: 1, minWidth: 0 },
+  txType: { fontSize: 13.5, fontWeight: "700", color: COLORS.textPrimary },
+
+  // ---- recuadro grande con nombre + número de cuenta de la contraparte ----
+  txCounterpartBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 6,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  txCounterpartAvatar: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    justifyContent: "center",
+    alignItems: "center",
+    flexShrink: 0,
+  },
+  txCounterpartAvatarText: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: COLORS.white,
+  },
+  txCounterpartTextWrap: { flex: 1, minWidth: 0 },
+  txCounterpartName: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: COLORS.textPrimary,
+  },
+  txCounterpartAccount: {
+    fontSize: 11.5,
+    color: COLORS.textMuted,
+    marginTop: 2,
+    fontVariant: ["tabular-nums"],
+  },
 
   badge:            { flexDirection: "row", alignItems: "center", gap: 4, alignSelf: "flex-start", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, marginTop: 6 },
   badgeDot:         { width: 5, height: 5, borderRadius: 2.5 },
@@ -132,4 +224,76 @@ export const styles = StyleSheet.create({
 
   loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", gap: 14, paddingTop: 60 },
   loadingText:      { fontSize: 13, color: COLORS.textMuted, fontWeight: "500" },
+
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(15, 23, 42, 0.5)",
+  },
+  modalSheet: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 30,
+    maxHeight: "75%",
+  },
+  modalHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#E2E8F0",
+    alignSelf: "center",
+    marginBottom: 14,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  modalCloseBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#F1F5F9",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalAmount: {
+    fontSize: 30,
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 14,
+  },
+  modalType: {
+    fontSize: 14,
+    color: COLORS.textMuted,
+    textAlign: "center",
+    marginTop: 4,
+  },
+  modalDetails: {
+    marginTop: 20,
+  },
+  modalDetailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
+  },
+  modalDetailLabel: {
+    fontSize: 13,
+    color: COLORS.textMuted,
+  },
+  modalDetailValue: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: COLORS.textSecondary,
+    maxWidth: "60%",
+    textAlign: "right",
+  },
 });
