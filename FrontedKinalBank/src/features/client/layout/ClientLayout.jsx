@@ -23,7 +23,7 @@ export const ClientLayout = () => {
     return (
         <div className="h-screen w-screen bg-[#f4f7fb] flex flex-col overflow-hidden">
 
-            <Navbar />
+            <Navbar sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
             <div className="flex flex-1 overflow-hidden relative">
 
@@ -38,7 +38,8 @@ export const ClientLayout = () => {
                 {/* Sidebar */}
                 <aside
                     className={`
-                        fixed lg:relative top-0 left-0 h-full
+                        fixed lg:relative top-[78px] lg:top-0 left-0
+                        h-[calc(100%-78px)] lg:h-full
                         w-72 bg-[#071126] overflow-hidden
                         flex flex-col flex-shrink-0
                         border-r border-white/5
@@ -55,7 +56,7 @@ export const ClientLayout = () => {
                     <div className="absolute top-[-120px] right-[-120px] w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
                     <div className="absolute bottom-[-100px] left-[-100px] w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
 
-                    <div className="relative z-10 flex flex-col h-full p-5 lg:p-6 pt-24 lg:pt-6">
+                    <div className="relative z-10 flex flex-col h-full p-5 lg:p-6 pt-6">
 
                         <nav className="space-y-1 overflow-y-auto flex-1 pr-1 scrollbar-none">
 
@@ -152,18 +153,6 @@ export const ClientLayout = () => {
 
                     </div>
                 </aside>
-
-                {/* Botón de hamburguesa superior izquierdo para móviles */}
-                <div className="lg:hidden fixed top-[18px] left-4 z-[60]">
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col items-center justify-center gap-1.5 text-white active:scale-95 transition-all"
-                    >
-                        <span className={`w-5 h-0.5 bg-white transition-all duration-300 ${sidebarOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                        <span className={`w-5 h-0.5 bg-white transition-all duration-300 ${sidebarOpen ? 'opacity-0' : ''}`} />
-                        <span className={`w-5 h-0.5 bg-white transition-all duration-300 ${sidebarOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-                    </button>
-                </div>
 
                 {/* Main Content */}
                 <main
