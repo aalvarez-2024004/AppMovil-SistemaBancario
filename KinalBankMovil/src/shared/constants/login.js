@@ -93,16 +93,19 @@ export const s = StyleSheet.create({
     marginBottom: 0,
   },
   logoImage: {
-    width: '100%',
-    height: '100%',
+    width: '80%',
+    height: '80%',
     tintColor: '#FFFFFF',
-},
+  },
+  brandTagTittle: {
+    fontSize: 25,
+    color: 'rgb(255, 255, 255)',
+  },
   brandTagline: {
     fontSize: 19,
     color: 'rgba(255,255,255,0.8)',
   },
 
-  /* Card blanca */
   card: {
     backgroundColor: KB.white,
     marginTop: -28,

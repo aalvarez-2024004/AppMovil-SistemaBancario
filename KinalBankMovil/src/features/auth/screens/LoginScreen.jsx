@@ -72,11 +72,12 @@ const LoginScreen = () => {
             <View style={s.headerDecor} pointerEvents="none" />
             <View style={s.logoRing}>
               <Image
-                source={require('../../../../assets/KinalBank.png')}
+                source={require('../../../../assets/KinalBankLogo.png')}
                 style={[s.logoImage, { tintColor: '#FFFFFF' }]}
                 resizeMode="contain"
               />
             </View>
+            <Text style={s.brandTagTittle}>KINAL BANK</Text>
             <Text style={s.brandTagline}>Con tus ahorros, construyes logros.</Text>
           </LinearGradient>
 
