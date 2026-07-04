@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -54,6 +54,7 @@ export const groupByDate = (transactions) => {
   return Object.entries(groups).map(([title, data]) => ({ title, data }));
 };
 
+/* ---- mapea el tipo real de la transacción a la meta visual (TX_TYPE_MAP) ---- */
 const getMeta = (item, isCredit) => {
   if (item.type === "DEPOSITO" || item.type === "CREDITO") return TX_TYPE_MAP.deposit;
   if (item.type === "RETIRO"   || item.type === "COMPRA")  return TX_TYPE_MAP.withdraw;
@@ -146,6 +147,9 @@ export const TransactionItem = ({ item, myAccountIds = [], onPress }) => {
   );
 };
 
+/* ------------------------------------------------------------------ */
+/*  Modal de detalle de transacción (bottom sheet)                     */
+/* ------------------------------------------------------------------ */
 const DetailRow = ({ label, value }) => (
   <View style={styles.modalDetailRow}>
     <Text style={styles.modalDetailLabel}>{label}</Text>
@@ -166,9 +170,7 @@ export const TransactionDetailModal = ({ visible, transaction, myAccountIds = []
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.modalBackdrop} />
-      </TouchableWithoutFeedback>
+      <Pressable onPress={onClose} style={styles.modalBackdrop} />
 
       <View style={styles.modalSheet}>
         <View style={styles.modalHandle} />
@@ -228,6 +230,9 @@ export const TransactionEmptyState = () => (
   </View>
 );
 
+/* ------------------------------------------------------------------ */
+/*  Header con degradado azul (igual estilo que "Mis Cuentas")          */
+/* ------------------------------------------------------------------ */
 export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack }) => (
   <LinearGradient
     colors={HEADER_GRADIENT}

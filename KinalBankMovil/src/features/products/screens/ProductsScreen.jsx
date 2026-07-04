@@ -22,6 +22,7 @@ import {
     ProductsEmptyState,
     SuccessStrip,
     ProductPurchaseModal,
+    MarketplaceHeader,
 } from "../../../shared/components/ProductsComponents";
 
 const ProductsScreen = () => {
@@ -190,71 +191,12 @@ const ProductsScreen = () => {
                 backgroundColor={COLORS.navy}
             />
 
-            {/* HEADER MARKETPLACE */}
-            <View style={styles.marketplaceHeader}>
+            <MarketplaceHeader
+                totalRegistros={products.length}
+                totalProductos={productCount}
+                totalServicios={serviceCount}
+            />
 
-                <Text style={styles.marketplaceLabel}>
-                    ✦ KINALBANK MARKETPLACE
-                </Text>
-
-                <Text style={styles.marketplaceTitle}>
-                    Productos &
-                    {"\n"}
-                    <Text style={styles.marketplaceAccent}>
-                        Servicios
-                    </Text>
-                </Text>
-
-                <Text style={styles.marketplaceSubtitle}>
-                    Soluciones bancarias diseñadas
-                    para ayudarte a crecer y administrar tu dinero.
-                </Text>
-
-                {/* ESTADISTICAS */}
-                <View style={styles.heroStats}>
-                    <View style={styles.statCard}>
-                        <Text style={styles.statLabel}>
-                            ✦ REGISTROS
-                        </Text>
-
-                        <Text style={styles.statNumber}>
-                            {products.length}
-                        </Text>
-
-                        <Text style={styles.statFooter}>
-                            Total disponibles
-                        </Text>
-
-                    </View>
-                    <View style={styles.statCard}>
-
-                        <Text style={styles.statLabel}>
-                            ● PRODUCTOS
-                        </Text>
-
-                        <Text style={styles.statNumber}>
-                            {productCount}
-                        </Text>
-
-                        <Text style={styles.statFooter}>
-                            Disponibles
-                        </Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Text style={styles.statLabel}>
-                            ⚡ SERVICIOS
-                        </Text>
-
-                        <Text style={styles.statNumber}>
-                            {serviceCount}
-                        </Text>
-
-                        <Text style={styles.statFooter}>
-                            Disponibles
-                        </Text>
-                    </View>
-                </View>
-            </View>
             <ScrollView
                 style={styles.content}
                 showsVerticalScrollIndicator={false}
