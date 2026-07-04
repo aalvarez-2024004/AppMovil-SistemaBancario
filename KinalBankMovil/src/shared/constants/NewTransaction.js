@@ -6,11 +6,14 @@ export const COLORS = {
     bgCardAlt: "#EAF1FC",
 
     navy: "#0F1F3D",
+    navyMid: "#13294D",
+    navyLight: "#1E3A66",
     navyDeep: "#071122",
 
     accent: "#3B7DD8",
     accentLight: "#7DAEF0",
     accentGlow: "rgba(59,125,216,0.08)",
+    accentGlowStrong: "rgba(59,125,216,0.16)",
 
     success: "#10B981",
     successLight: "rgba(16,185,129,0.12)",
@@ -25,6 +28,17 @@ export const COLORS = {
 
     border: "#EEF1F5",
     borderLight: "#E2E8F0",
+
+    white08: "rgba(255,255,255,0.08)",
+    white06: "rgba(255,255,255,0.06)",
+    white12: "rgba(255,255,255,0.12)",
+};
+
+// Reusable gradient tuples so every screen that adopts this hero
+// treatment (Home, Cuentas, Transferencia...) stays visually in sync.
+export const GRADIENTS = {
+    hero: [COLORS.navyMid, COLORS.navyLight, "#2E5794"],
+    button: [COLORS.navy, COLORS.navyLight],
 };
 
 export const FONT = {
@@ -45,6 +59,14 @@ const cardShadow = {
     elevation: 2,
 };
 
+const accentShadow = {
+    shadowColor: "#3B7DD8",
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
+};
+
 export const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "#0F1F3D" },
     scrollContent: { paddingBottom: 48 },
@@ -52,7 +74,35 @@ export const styles = StyleSheet.create({
     hero: {
         paddingHorizontal: 20,
         paddingTop: Platform.OS === "ios" ? 56 : 40,
-        paddingBottom: 32,
+        paddingBottom: 40,
+        position: "relative",
+        overflow: "hidden",
+    },
+    // Soft bokeh blobs, same language as the Home / Cuentas headers
+    heroDecorCircleLg: {
+        position: "absolute",
+        top: -70,
+        right: -50,
+        width: 220,
+        height: 220,
+        borderRadius: 110,
+        backgroundColor: "rgba(255,255,255,0.05)",
+    },
+    heroDecorCircleSm: {
+        position: "absolute",
+        top: 40,
+        right: -60,
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+        backgroundColor: "rgba(125,174,240,0.12)",
+    },
+
+    heroTopRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 22,
     },
     backBtn: {
         width: 36,
@@ -65,14 +115,25 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 18,
     },
-    heroLabel: {
-        fontSize: 11,
-        fontWeight: "700",
-        letterSpacing: 2.5,
-        color: "#7DAEF0",
-        marginBottom: 6,
+    heroBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        backgroundColor: "rgba(255,255,255,0.08)",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.10)",
+        paddingHorizontal: 12,
+        paddingVertical: 7,
+        borderRadius: 20,
+    },
+    heroBadgeText: {
+        fontSize: 10,
+        fontWeight: "800",
+        letterSpacing: 1.6,
+        color: "#BFD7F5",
         textTransform: "uppercase",
     },
+
     heroTitle: {
         fontSize: 30,
         fontWeight: "800",
@@ -91,7 +152,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#F8F9FB",
         borderTopLeftRadius: 28,
         borderTopRightRadius: 28,
-        marginTop: -16,
+        marginTop: -20,
         paddingTop: 22,
     },
 
@@ -112,9 +173,9 @@ export const styles = StyleSheet.create({
 
     accountsRow: { gap: 12, paddingRight: 4 },
     accountOption: {
-        width: 200,
+        width: 210,
         backgroundColor: "#FFFFFF",
-        borderRadius: 16,
+        borderRadius: 18,
         padding: 16,
         borderWidth: 1.5,
         borderColor: "#EEF1F5",
@@ -122,20 +183,32 @@ export const styles = StyleSheet.create({
     },
     accountOptionSelected: {
         borderColor: "#3B7DD8",
-        backgroundColor: "rgba(59,125,216,0.08)",
+        backgroundColor: "rgba(59,125,216,0.06)",
     },
     accountOptionTop: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: 14,
+        marginBottom: 16,
+    },
+    accountOptionIconChip: {
+        width: 38,
+        height: 38,
+        borderRadius: 12,
+        backgroundColor: "rgba(59,125,216,0.10)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    accountOptionIconChipSelected: {
+        backgroundColor: "#3B7DD8",
     },
     accountOptionType: {
-        fontSize: 11,
+        fontSize: 10,
         fontWeight: "700",
         letterSpacing: 1,
         color: "#9CA3AF",
         textTransform: "uppercase",
+        marginTop: 8,
     },
     accountOptionRadio: {
         width: 18,
@@ -154,11 +227,19 @@ export const styles = StyleSheet.create({
         backgroundColor: "#3B7DD8",
     },
     accountOptionNumber: {
-        fontSize: 15,
-        fontWeight: "700",
+        fontSize: 16,
+        fontWeight: "800",
         color: "#1A2333",
-        marginBottom: 4,
+        marginBottom: 10,
         letterSpacing: 1,
+    },
+    accountOptionBalanceLabel: {
+        fontSize: 9,
+        fontWeight: "700",
+        color: "#9CA3AF",
+        textTransform: "uppercase",
+        letterSpacing: 0.6,
+        marginBottom: 2,
     },
     accountOptionBalance: {
         fontSize: 18,
@@ -223,7 +304,12 @@ export const styles = StyleSheet.create({
         backgroundColor: "#FFFFFF",
         borderRadius: 16,
         paddingHorizontal: 16,
+        borderWidth: 1.5,
+        borderColor: "transparent",
         ...cardShadow,
+    },
+    inputCardFocused: {
+        borderColor: "#3B7DD8",
     },
     inputRow: {
         flexDirection: "row",
@@ -257,10 +343,15 @@ export const styles = StyleSheet.create({
 
     amountCard: {
         backgroundColor: "#FFFFFF",
-        borderRadius: 16,
-        paddingVertical: 20,
+        borderRadius: 18,
+        paddingVertical: 22,
         alignItems: "center",
+        borderWidth: 1.5,
+        borderColor: "transparent",
         ...cardShadow,
+    },
+    amountCardActive: {
+        borderColor: "#3B7DD8",
     },
     amountRow: { flexDirection: "row", alignItems: "center", gap: 6 },
     amountPrefix: { fontSize: 28, fontWeight: "800", color: "#9CA3AF" },
@@ -277,6 +368,34 @@ export const styles = StyleSheet.create({
         color: "#9CA3AF",
         marginTop: 6,
         fontWeight: "600",
+    },
+
+    quickAmountsRow: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: 8,
+        marginTop: 16,
+    },
+    quickAmountChip: {
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 12,
+        backgroundColor: "#EAF1FC",
+        borderWidth: 1,
+        borderColor: "transparent",
+    },
+    quickAmountChipSelected: {
+        backgroundColor: "#3B7DD8",
+        borderColor: "#3B7DD8",
+    },
+    quickAmountChipText: {
+        fontSize: 13,
+        fontWeight: "700",
+        color: "#3B7DD8",
+    },
+    quickAmountChipTextSelected: {
+        color: "#FFFFFF",
     },
 
     hintBox: {
@@ -315,11 +434,11 @@ export const styles = StyleSheet.create({
     submitBtn: {
         height: 56,
         borderRadius: 16,
-        backgroundColor: "#0F1F3D",
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
         gap: 8,
+        ...accentShadow,
     },
     submitBtnDisabled: { opacity: 0.5 },
     submitBtnText: {
@@ -336,6 +455,15 @@ export const styles = StyleSheet.create({
         paddingTop: 64,
         paddingHorizontal: 28,
     },
+    successIconOuterGlow: {
+        width: 132,
+        height: 132,
+        borderRadius: 66,
+        backgroundColor: "rgba(16,185,129,0.06)",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 22,
+    },
     successIconWrap: {
         width: 96,
         height: 96,
@@ -343,7 +471,6 @@ export const styles = StyleSheet.create({
         backgroundColor: "rgba(16,185,129,0.12)",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: 22,
     },
     successTitle: {
         fontSize: 22,

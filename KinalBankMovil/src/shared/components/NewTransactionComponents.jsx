@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles, COLORS } from "../constants/NewTransaction";
@@ -10,7 +11,7 @@ export const formatCurrency = (amount) =>
 
 export const maskAccount = (num = "") => {
     const str = String(num);
-    return str.length > 4 ? `•••• ${str.slice(-4)}` : str;
+    return str.length > 4 ? `•••••• ${str.slice(-4)}` : str;
 };
 
 export const SourceAccountSelector = ({ accounts, selectedId, onSelect }) => {
@@ -41,9 +42,18 @@ export const SourceAccountSelector = ({ accounts, selectedId, onSelect }) => {
                         onPress={() => onSelect(acc)}
                     >
                         <View style={styles.accountOptionTop}>
-                            <Text style={styles.accountOptionType}>
-                                {acc.accountType || "MONETARIA"} · {acc.currency || "GTQ"}
-                            </Text>
+                            <View
+                                style={[
+                                    styles.accountOptionIconChip,
+                                    selected && styles.accountOptionIconChipSelected,
+                                ]}
+                            >
+                                <Ionicons
+                                    name="card-outline"
+                                    size={18}
+                                    color={selected ? "#FFFFFF" : COLORS.accent}
+                                />
+                            </View>
                             <View
                                 style={[
                                     styles.accountOptionRadio,
@@ -53,9 +63,15 @@ export const SourceAccountSelector = ({ accounts, selectedId, onSelect }) => {
                                 {selected && <View style={styles.accountOptionRadioDot} />}
                             </View>
                         </View>
+
+                        <Text style={styles.accountOptionType}>
+                            {acc.accountType || "MONETARIA"} · {acc.currency || "GTQ"}
+                        </Text>
                         <Text style={styles.accountOptionNumber}>
                             {maskAccount(acc.accountNumber)}
                         </Text>
+
+                        <Text style={styles.accountOptionBalanceLabel}>Saldo disponible</Text>
                         <Text style={styles.accountOptionBalance}>
                             {formatCurrency(acc.balance)}
                         </Text>
@@ -108,69 +124,126 @@ export const FavoritesQuickPicker = ({ favorites, selectedAccountNumber, onSelec
     </ScrollView>
 );
 
-export const DestinationInput = ({ value, onChangeText, matchedFavorite }) => (
-    <View>
-        <View style={styles.inputCard}>
+export const DestinationInput = ({ value, onChangeText, matchedFavorite }) => {
+    const [focused, setFocused] = useState(false);
+    return (
+        <View>
+            <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
+                <View style={styles.inputRow}>
+                    <View style={styles.inputIcon}>
+                        <Ionicons
+                            name="person-outline"
+                            size={18}
+                            color={focused ? COLORS.accent : COLORS.textMuted}
+                        />
+                    </View>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Número de cuenta destino"
+                        placeholderTextColor={COLORS.textMuted}
+                        value={value}
+                        onChangeText={onChangeText}
+                        keyboardType="number-pad"
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                    />
+                </View>
+            </View>
+
+            {matchedFavorite && (
+                <View style={styles.selectedFavoriteBanner}>
+                    <Ionicons name="star" size={14} color={COLORS.success} />
+                    <Text style={styles.selectedFavoriteBannerText}>
+                        Enviarás a tu favorito "{matchedFavorite.alias}"
+                    </Text>
+                </View>
+            )}
+        </View>
+    );
+};
+
+const QUICK_AMOUNTS = [50, 100, 200, 500];
+
+export const AmountInput = ({ value, onChangeText, currency = "GTQ", quickAmounts = QUICK_AMOUNTS }) => {
+    const [focused, setFocused] = useState(false);
+    const active = focused || String(value || "").length > 0;
+
+    return (
+        <View>
+            <View style={[styles.amountCard, active && styles.amountCardActive]}>
+                <View style={styles.amountRow}>
+                    <Text style={styles.amountPrefix}>Q</Text>
+                    <TextInput
+                        style={styles.amountInput}
+                        placeholder="0.00"
+                        placeholderTextColor={COLORS.textMuted}
+                        value={value}
+                        onChangeText={onChangeText}
+                        keyboardType="decimal-pad"
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                    />
+                </View>
+                <Text style={styles.amountCurrency}>{currency}</Text>
+
+                {!!quickAmounts?.length && (
+                    <View style={styles.quickAmountsRow}>
+                        {quickAmounts.map((q) => {
+                            const selected = String(value) === String(q);
+                            return (
+                                <TouchableOpacity
+                                    key={q}
+                                    style={[
+                                        styles.quickAmountChip,
+                                        selected && styles.quickAmountChipSelected,
+                                    ]}
+                                    activeOpacity={0.8}
+                                    onPress={() => onChangeText(String(q))}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.quickAmountChipText,
+                                            selected && styles.quickAmountChipTextSelected,
+                                        ]}
+                                    >
+                                        Q{q}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                )}
+            </View>
+        </View>
+    );
+};
+
+export const DescriptionInput = ({ value, onChangeText }) => {
+    const [focused, setFocused] = useState(false);
+    return (
+        <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
             <View style={styles.inputRow}>
                 <View style={styles.inputIcon}>
-                    <Ionicons name="person-outline" size={18} color={COLORS.textMuted} />
+                    <Ionicons
+                        name="create-outline"
+                        size={18}
+                        color={focused ? COLORS.accent : COLORS.textMuted}
+                    />
                 </View>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Número de cuenta destino"
+                    placeholder="Nota (opcional)"
                     placeholderTextColor={COLORS.textMuted}
                     value={value}
                     onChangeText={onChangeText}
-                    keyboardType="number-pad"
+                    maxLength={120}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
                 />
             </View>
         </View>
-
-        {matchedFavorite && (
-            <View style={styles.selectedFavoriteBanner}>
-                <Ionicons name="star" size={14} color={COLORS.success} />
-                <Text style={styles.selectedFavoriteBannerText}>
-                    Enviarás a tu favorito "{matchedFavorite.alias}"
-                </Text>
-            </View>
-        )}
-    </View>
-);
-
-export const AmountInput = ({ value, onChangeText, currency = "GTQ" }) => (
-    <View style={styles.amountCard}>
-        <View style={styles.amountRow}>
-            <Text style={styles.amountPrefix}>Q</Text>
-            <TextInput
-                style={styles.amountInput}
-                placeholder="0.00"
-                placeholderTextColor={COLORS.textMuted}
-                value={value}
-                onChangeText={onChangeText}
-                keyboardType="decimal-pad"
-            />
-        </View>
-        <Text style={styles.amountCurrency}>{currency}</Text>
-    </View>
-);
-
-export const DescriptionInput = ({ value, onChangeText }) => (
-    <View style={styles.inputCard}>
-        <View style={styles.inputRow}>
-            <View style={styles.inputIcon}>
-                <Ionicons name="create-outline" size={18} color={COLORS.textMuted} />
-            </View>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Nota (opcional)"
-                placeholderTextColor={COLORS.textMuted}
-                value={value}
-                onChangeText={onChangeText}
-                maxLength={120}
-            />
-        </View>
-    </View>
-);
+    );
+};
 
 export const InfoHint = ({ text }) => (
     <View style={styles.hintBox}>

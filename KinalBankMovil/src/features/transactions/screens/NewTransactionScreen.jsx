@@ -11,13 +11,14 @@ import {
     Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { useAuthStore } from "../../../shared/store/useAuthStore";
 import { useTransactionStore } from "../../../shared/store/useTransactionStore";
 import { useFavoriteStore } from "../../../shared/store/useFavoriteStore";
 
-import { styles, COLORS } from "../../../shared/constants/NewTransaction";
+import { styles, COLORS, GRADIENTS } from "../../../shared/constants/NewTransaction";
 import {
     formatCurrency,
     maskAccount,
@@ -162,8 +163,10 @@ const NewTransactionScreen = () => {
             <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
                 <StatusBar barStyle="dark-content" backgroundColor={COLORS.bg} />
                 <View style={styles.successWrap}>
-                    <View style={styles.successIconWrap}>
-                        <Ionicons name="checkmark" size={48} color={COLORS.success} />
+                    <View style={styles.successIconOuterGlow}>
+                        <View style={styles.successIconWrap}>
+                            <Ionicons name="checkmark" size={48} color={COLORS.success} />
+                        </View>
                     </View>
                     <Text style={styles.successTitle}>¡Transferencia exitosa!</Text>
                     <Text style={styles.successSubtitle}>Tu dinero fue enviado correctamente.</Text>
@@ -247,16 +250,23 @@ const NewTransactionScreen = () => {
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
 
-            <View style={styles.hero}>
+            <LinearGradient
+                colors={GRADIENTS.hero}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.hero}
+            >
+                <View style={styles.heroDecorCircleLg} pointerEvents="none" />
+                <View style={styles.heroDecorCircleSm} pointerEvents="none" />
+
                 <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()} activeOpacity={0.7}>
                     <Ionicons name="arrow-back" size={18} color="#fff" />
                 </TouchableOpacity>
-                <Text style={styles.heroLabel}>KinalBank</Text>
+
                 <Text style={styles.heroTitle}>
                     Nueva{"\n"}<Text style={styles.heroTitleAccent}>Transferencia</Text>
                 </Text>
-                <Text style={styles.heroSubtitle}>Envía dinero a otra cuenta KinalBank</Text>
-            </View>
+            </LinearGradient>
 
             <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={[styles.section, { marginTop: 4 }]}>
@@ -307,14 +317,20 @@ const NewTransactionScreen = () => {
 
                 <View style={styles.submitWrap}>
                     <TouchableOpacity
-                        style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
                         onPress={handleSubmit}
                         disabled={isSubmitting || loadingAccounts}
                         activeOpacity={0.85}
                     >
-                        {isSubmitting
-                            ? <ActivityIndicator color="#fff" />
-                            : <><Ionicons name="paper-plane-outline" size={18} color="#fff" /><Text style={styles.submitBtnText}>Transferir</Text></>}
+                        <LinearGradient
+                            colors={GRADIENTS.button}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
+                        >
+                            {isSubmitting
+                                ? <ActivityIndicator color="#fff" />
+                                : <><Ionicons name="paper-plane-outline" size={18} color="#fff" /><Text style={styles.submitBtnText}>Transferir</Text></>}
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
