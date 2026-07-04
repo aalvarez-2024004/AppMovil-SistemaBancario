@@ -1,198 +1,285 @@
-import React from 'react';
+import { useEffect, useMemo, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import useAuthStore from '../../../shared/store/authStore';
-import Button from '../../../shared/components/Button';
-import { COLORS, SPACING, BORDER_RADIUS, SHADOWS } from '../../../shared/constants/theme';
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator,
+    Modal,
+    Pressable,
+    StatusBar,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
+import { useAuthStore } from "../../../shared/store/useAuthStore";
+import { useTransactionStore } from "../../../shared/store/useTransactionStore";
+
+import { styles, COLORS } from "../../../shared/constants/profile";
+import {
+    ProfileHeader,
+    AccountCard,
+    SectionLabel,
+    InfoCard,
+    InfoRow,
+    maskDPI,
+} from "../../../shared/components/ProfileComponents";
 
 const ProfileScreen = () => {
-  const { user, logout } = useAuthStore();
+    const { user, isLoading, updateProfile, logout } = useAuthStore();
+    const { accounts, fetchMyAccounts } = useTransactionStore();
 
-  const handleLogout = () => {
-    Alert.alert('Cerrar sesión', '¿Estás seguro que deseas salir?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Salir', style: 'destructive', onPress: logout },
-    ]);
-  };
+    const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState(null);
+    const [loggingOut, setLoggingOut] = useState(false);
+    const [confirmLogoutVisible, setConfirmLogoutVisible] = useState(false);
 
-  const initials = user
-    ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() || 'U'
-    : 'U';
+    const [form, setForm] = useState({
+        phone: "",
+        address: "",
+        occupation: "",
+        monthlyIncome: "",
+    });
 
-  const menuItems = [
-    { icon: '🔒', label: 'Cambiar contraseña', onPress: () => {} },
-    { icon: '🔔', label: 'Notificaciones', onPress: () => {} },
-    { icon: '🛡️', label: 'Seguridad', onPress: () => {} },
-    { icon: '❓', label: 'Ayuda y soporte', onPress: () => {} },
-    { icon: '📋', label: 'Términos y condiciones', onPress: () => {} },
-  ];
+    useEffect(() => {
+        fetchMyAccounts?.();
+    }, []);
 
-  return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <View style={styles.avatarCircle}>
-          <Text style={styles.avatarText}>{initials}</Text>
-        </View>
-        <Text style={styles.name}>
-          {user?.firstName} {user?.lastName}
-        </Text>
-        <Text style={styles.email}>{user?.email}</Text>
-        {user?.phone && <Text style={styles.phone}>{user.phone}</Text>}
-      </View>
+    // Se usa la primera cuenta activa como cuenta principal a mostrar en la tarjeta azul.
+    const primaryAccount = useMemo(
+        () => (accounts || []).find((a) => a.status === "ACTIVA") || accounts?.[0] || null,
+        [accounts]
+    );
 
-      <View style={styles.infoCard}>
-        <Text style={styles.sectionTitle}>Información de cuenta</Text>
-        {[
-          { label: 'Nombre completo', value: `${user?.firstName || ''} ${user?.lastName || ''}` },
-          { label: 'Correo', value: user?.email },
-          { label: 'Teléfono', value: user?.phone || '—' },
-        ].map((item) => (
-          <View key={item.label} style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{item.label}</Text>
-            <Text style={styles.infoValue}>{item.value}</Text>
-          </View>
-        ))}
-      </View>
+    const startEditing = () => {
+        setSaveError(null);
+        setForm({
+            phone: user?.phone || "",
+            address: user?.address || "",
+            occupation: user?.occupation || "",
+            monthlyIncome: user?.monthlyIncome != null ? String(user.monthlyIncome) : "",
+        });
+        setEditing(true);
+    };
 
-      <View style={styles.menuCard}>
-        {menuItems.map((item, index) => (
-          <TouchableOpacity
-            key={item.label}
-            style={[
-              styles.menuItem,
-              index < menuItems.length - 1 && styles.menuItemBorder,
-            ]}
-            onPress={item.onPress}
-          >
-            <Text style={styles.menuIcon}>{item.icon}</Text>
-            <Text style={styles.menuLabel}>{item.label}</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+    const cancelEditing = () => {
+        setSaveError(null);
+        setEditing(false);
+    };
 
-      <View style={styles.logoutContainer}>
-        <Button
-          title="Cerrar sesión"
-          onPress={handleLogout}
-          variant="danger"
-        />
-      </View>
-    </ScrollView>
-  );
+    const handleSave = async () => {
+        setSaving(true);
+        setSaveError(null);
+
+        const payload = {
+            phone: form.phone.trim(),
+            address: form.address.trim(),
+            occupation: form.occupation.trim(),
+            monthlyIncome: form.monthlyIncome ? Number(form.monthlyIncome) : undefined,
+        };
+
+        const res = await updateProfile(payload);
+        setSaving(false);
+
+        if (res.success) {
+            setEditing(false);
+        } else {
+            setSaveError(res.error || "No se pudo actualizar tu perfil. Intenta de nuevo.");
+        }
+    };
+
+    // Nota: no usamos Alert.alert aquí porque no funciona en react-native-web
+    // (en web no muestra ningún diálogo y el botón parece no responder).
+    // En su lugar mostramos un modal propio controlado por estado.
+    const confirmLogout = async () => {
+        setLoggingOut(true);
+        await logout();
+        setLoggingOut(false);
+        setConfirmLogoutVisible(false);
+        // Si después de esto sigues viendo esta pantalla, el navegador raíz no
+        // está reaccionando a isAuthenticated=false; revisa el componente que
+        // decide entre <AuthStack /> y <AppStack />.
+    };
+
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+            <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />
+
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                <ProfileHeader user={user} isActive={user?.status !== "INACTIVA"} />
+                <AccountCard accountNumber={primaryAccount?.accountNumber} />
+
+                <View style={styles.section}>
+                    <SectionLabel>Información personal</SectionLabel>
+                    <InfoCard>
+                        <InfoRow icon="mail-outline" label="Correo electrónico" value={user?.email} />
+                        <InfoRow
+                            icon="call-outline"
+                            label="Teléfono"
+                            value={editing ? form.phone : user?.phone}
+                            editable
+                            editing={editing}
+                            onChangeText={(v) => setForm((f) => ({ ...f, phone: v }))}
+                            placeholder="Ej. 12345678"
+                            keyboardType="phone-pad"
+                        />
+                        <InfoRow
+                            icon="location-outline"
+                            label="Dirección"
+                            value={editing ? form.address : user?.address}
+                            editable
+                            editing={editing}
+                            onChangeText={(v) => setForm((f) => ({ ...f, address: v }))}
+                            placeholder="Ej. Zona 6"
+                            isLast
+                        />
+                    </InfoCard>
+                </View>
+
+                <View style={styles.section}>
+                    <SectionLabel>Información laboral</SectionLabel>
+                    <InfoCard>
+                        {!!user?.dpi && (
+                            <InfoRow icon="card-outline" label="DPI" value={maskDPI(user.dpi)} />
+                        )}
+                        <InfoRow
+                            icon="briefcase-outline"
+                            label="Ocupación"
+                            value={editing ? form.occupation : user?.occupation}
+                            editable
+                            editing={editing}
+                            onChangeText={(v) => setForm((f) => ({ ...f, occupation: v }))}
+                            placeholder="Ej. Estudiante"
+                        />
+                        <InfoRow
+                            icon="cash-outline"
+                            label="Ingreso mensual"
+                            value={
+                                editing
+                                    ? form.monthlyIncome
+                                    : user?.monthlyIncome != null
+                                        ? `Q ${Number(user.monthlyIncome).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`
+                                        : null
+                            }
+                            editable
+                            editing={editing}
+                            onChangeText={(v) => setForm((f) => ({ ...f, monthlyIncome: v.replace(/[^0-9.]/g, "") }))}
+                            placeholder="Ej. 2500"
+                            keyboardType="decimal-pad"
+                            isLast
+                        />
+                    </InfoCard>
+                </View>
+
+                {saveError && (
+                    <View style={styles.errorBox}>
+                        <Ionicons name="alert-circle-outline" size={18} color={COLORS.danger} />
+                        <Text style={styles.errorBoxText}>{saveError}</Text>
+                    </View>
+                )}
+
+                <View style={styles.actionsWrap}>
+                    {editing ? (
+                        <>
+                            <TouchableOpacity
+                                style={[styles.editBtn, saving && styles.btnDisabled]}
+                                onPress={handleSave}
+                                disabled={saving}
+                                activeOpacity={0.85}
+                            >
+                                {saving ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <>
+                                        <Ionicons name="checkmark" size={18} color="#fff" />
+                                        <Text style={styles.editBtnText}>Guardar cambios</Text>
+                                    </>
+                                )}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.cancelBtn}
+                                onPress={cancelEditing}
+                                disabled={saving}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.cancelBtnText}>Cancelar</Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : (
+                        <TouchableOpacity style={styles.editBtn} onPress={startEditing} activeOpacity={0.85}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <>
+                                    <Ionicons name="pencil" size={16} color="#fff" />
+                                    <Text style={styles.editBtnText}>Editar perfil</Text>
+                                </>
+                            )}
+                        </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                        style={styles.logoutBtn}
+                        onPress={() => setConfirmLogoutVisible(true)}
+                        activeOpacity={0.85}
+                    >
+                        <Ionicons name="log-out-outline" size={18} color={COLORS.danger} />
+                        <Text style={styles.logoutBtnText}>Cerrar sesión</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+
+            <Modal
+                visible={confirmLogoutVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setConfirmLogoutVisible(false)}
+            >
+                <Pressable
+                    style={styles.modalBackdrop}
+                    onPress={() => !loggingOut && setConfirmLogoutVisible(false)}
+                >
+                    {/* Pressable interno para que tocar la tarjeta no cierre el modal */}
+                    <Pressable onPress={() => {}} style={styles.modalCard}>
+                        <View style={styles.modalIconWrap}>
+                            <Ionicons name="log-out-outline" size={24} color={COLORS.danger} />
+                        </View>
+                        <Text style={styles.modalTitle}>Cerrar sesión</Text>
+                        <Text style={styles.modalMessage}>
+                            ¿Estás seguro que deseas salir de tu cuenta?
+                        </Text>
+                        <View style={styles.modalActions}>
+                            <TouchableOpacity
+                                style={styles.modalCancelBtn}
+                                onPress={() => setConfirmLogoutVisible(false)}
+                                disabled={loggingOut}
+                                activeOpacity={0.75}
+                            >
+                                <Text style={styles.modalCancelBtnText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.modalConfirmBtn}
+                                onPress={confirmLogout}
+                                disabled={loggingOut}
+                                activeOpacity={0.85}
+                            >
+                                {loggingOut ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.modalConfirmBtnText}>Salir</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                    </Pressable>
+                </Pressable>
+            </Modal>
+        </KeyboardAvoidingView>
+    );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.gray50,
-  },
-  header: {
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    paddingVertical: SPACING.xl,
-    paddingHorizontal: SPACING.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray100,
-  },
-  avatarCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: COLORS.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.md,
-  },
-  avatarText: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: COLORS.primary,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: COLORS.gray900,
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 14,
-    color: COLORS.gray500,
-    marginBottom: 2,
-  },
-  phone: {
-    fontSize: 14,
-    color: COLORS.gray400,
-  },
-  infoCard: {
-    backgroundColor: COLORS.white,
-    margin: SPACING.lg,
-    borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
-    ...SHADOWS.sm,
-  },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: COLORS.gray400,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: SPACING.sm,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray100,
-  },
-  infoLabel: {
-    fontSize: 14,
-    color: COLORS.gray500,
-  },
-  infoValue: {
-    fontSize: 14,
-    color: COLORS.gray800,
-    fontWeight: '500',
-  },
-  menuCard: {
-    backgroundColor: COLORS.white,
-    marginHorizontal: SPACING.lg,
-    borderRadius: BORDER_RADIUS.lg,
-    ...SHADOWS.sm,
-    overflow: 'hidden',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.md,
-  },
-  menuItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray100,
-  },
-  menuIcon: { fontSize: 20 },
-  menuLabel: {
-    flex: 1,
-    fontSize: 15,
-    color: COLORS.gray700,
-  },
-  menuArrow: {
-    fontSize: 20,
-    color: COLORS.gray300,
-  },
-  logoutContainer: {
-    margin: SPACING.lg,
-    marginBottom: SPACING.xxl,
-  },
-});
 
 export default ProfileScreen;

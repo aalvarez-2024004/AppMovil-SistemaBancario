@@ -1,0 +1,351 @@
+import { StyleSheet, Platform } from "react-native";
+
+export const COLORS = {
+    bg: "#F8F9FB",
+    bgCard: "#FFFFFF",
+    bgCardAlt: "#EAF1FC",
+
+    navy: "#0F1F3D",
+    navyMid: "#13294D",
+    navyLight: "#1E3A66",
+
+    accent: "#3B7DD8",
+    accentLight: "#7DAEF0",
+    accentDeep: "#2E5794",
+
+    success: "#10B981",
+    successLight: "rgba(16,185,129,0.14)",
+    danger: "#EF4444",
+    dangerLight: "rgba(239,68,68,0.08)",
+
+    textPrimary: "#1A2333",
+    textSecondary: "#6B7280",
+    textMuted: "#9CA3AF",
+
+    border: "#EEF1F5",
+};
+
+export const GRADIENTS = {
+    header: [COLORS.navy, COLORS.navyMid, COLORS.navyLight],
+    accountCard: [COLORS.accent, COLORS.accentDeep],
+};
+
+const cardShadow = {
+    shadowColor: "#0F1F3D",
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+};
+
+const accountShadow = {
+    shadowColor: "#3B7DD8",
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 6,
+};
+
+export const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: COLORS.bg },
+    scrollContent: { paddingBottom: 40 },
+
+    header: {
+        alignItems: "center",
+        paddingTop: Platform.OS === "ios" ? 56 : 40,
+        paddingBottom: 56,
+        paddingHorizontal: 20,
+        position: "relative",
+        overflow: "hidden",
+    },
+    headerDecorCircleLg: {
+        position: "absolute",
+        top: -60,
+        right: -50,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        backgroundColor: "rgba(255,255,255,0.05)",
+    },
+    headerDecorCircleSm: {
+        position: "absolute",
+        bottom: -40,
+        left: -50,
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        backgroundColor: "rgba(125,174,240,0.08)",
+    },
+
+    avatarRing: {
+        width: 92,
+        height: 92,
+        borderRadius: 46,
+        borderWidth: 2.5,
+        borderColor: COLORS.accentLight,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 14,
+        backgroundColor: "rgba(255,255,255,0.06)",
+    },
+    avatarText: {
+        fontSize: 32,
+        fontWeight: "800",
+        color: "#FFFFFF",
+    },
+    name: {
+        fontSize: 20,
+        fontWeight: "800",
+        color: "#FFFFFF",
+        marginBottom: 4,
+    },
+    username: {
+        fontSize: 13,
+        color: COLORS.accentLight,
+        fontWeight: "600",
+        marginBottom: 12,
+    },
+    statusBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        backgroundColor: "rgba(16,185,129,0.16)",
+        borderWidth: 1,
+        borderColor: "rgba(16,185,129,0.3)",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+    },
+    statusDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: COLORS.success,
+    },
+    statusText: {
+        fontSize: 11,
+        fontWeight: "700",
+        color: "#5FE3B3",
+    },
+
+    accountCardWrap: {
+        marginTop: -34,
+        paddingHorizontal: 20,
+        marginBottom: 26,
+    },
+    accountCard: {
+        borderRadius: 20,
+        padding: 18,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        ...accountShadow,
+    },
+    accountCardLabel: {
+        fontSize: 11,
+        fontWeight: "700",
+        color: "rgba(255,255,255,0.75)",
+        letterSpacing: 0.6,
+        marginBottom: 6,
+    },
+    accountCardNumber: {
+        fontSize: 19,
+        fontWeight: "800",
+        color: "#FFFFFF",
+        letterSpacing: 1,
+    },
+    accountCardIconWrap: {
+        width: 46,
+        height: 46,
+        borderRadius: 23,
+        backgroundColor: "rgba(255,255,255,0.20)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    section: { paddingHorizontal: 20, marginBottom: 20 },
+    sectionLabel: {
+        fontSize: 11,
+        fontWeight: "800",
+        letterSpacing: 1.2,
+        color: COLORS.textSecondary,
+        textTransform: "uppercase",
+        marginBottom: 10,
+    },
+
+    infoCard: {
+        backgroundColor: COLORS.bgCard,
+        borderRadius: 18,
+        overflow: "hidden",
+        ...cardShadow,
+    },
+    infoRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: COLORS.border,
+    },
+    infoRowLast: { borderBottomWidth: 0 },
+    infoIconChip: {
+        width: 36,
+        height: 36,
+        borderRadius: 12,
+        backgroundColor: COLORS.bgCardAlt,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    infoTextWrap: { flex: 1 },
+    infoLabel: {
+        fontSize: 11,
+        color: COLORS.textMuted,
+        fontWeight: "600",
+        marginBottom: 2,
+    },
+    infoValue: {
+        fontSize: 14.5,
+        color: COLORS.textPrimary,
+        fontWeight: "700",
+    },
+    infoValueMuted: {
+        color: COLORS.textMuted,
+        fontWeight: "500",
+    },
+    infoInput: {
+        fontSize: 14.5,
+        color: COLORS.textPrimary,
+        fontWeight: "700",
+        padding: 0,
+        borderBottomWidth: 1.5,
+        borderBottomColor: COLORS.accent,
+        paddingBottom: 2,
+    },
+
+    actionsWrap: { paddingHorizontal: 20, marginTop: 4, gap: 12 },
+    editBtn: {
+        height: 54,
+        borderRadius: 16,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        gap: 8,
+        backgroundColor: COLORS.navy,
+    },
+    editBtnText: {
+        color: "#FFFFFF",
+        fontSize: 15,
+        fontWeight: "700",
+    },
+    cancelBtn: {
+        height: 54,
+        borderRadius: 16,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.bgCardAlt,
+    },
+    cancelBtnText: {
+        color: COLORS.accent,
+        fontSize: 15,
+        fontWeight: "700",
+    },
+    logoutBtn: {
+        height: 54,
+        borderRadius: 16,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        gap: 8,
+        backgroundColor: COLORS.dangerLight,
+        borderWidth: 1,
+        borderColor: "rgba(239,68,68,0.2)",
+    },
+    logoutBtnText: {
+        color: COLORS.danger,
+        fontSize: 15,
+        fontWeight: "700",
+    },
+    btnDisabled: { opacity: 0.6 },
+
+    errorBox: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        backgroundColor: "rgba(239,68,68,0.10)",
+        borderRadius: 14,
+        padding: 14,
+        marginHorizontal: 20,
+        marginBottom: 16,
+    },
+    errorBoxText: {
+        flex: 1,
+        fontSize: 13,
+        color: COLORS.danger,
+        fontWeight: "600",
+    },
+
+    modalBackdrop: {
+        flex: 1,
+        backgroundColor: "rgba(15,31,61,0.55)",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 28,
+    },
+    modalCard: {
+        width: "100%",
+        maxWidth: 360,
+        backgroundColor: COLORS.bgCard,
+        borderRadius: 20,
+        padding: 22,
+        ...cardShadow,
+    },
+    modalIconWrap: {
+        width: 52,
+        height: 52,
+        borderRadius: 26,
+        backgroundColor: COLORS.dangerLight,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 14,
+    },
+    modalTitle: {
+        fontSize: 17,
+        fontWeight: "800",
+        color: COLORS.textPrimary,
+        marginBottom: 6,
+    },
+    modalMessage: {
+        fontSize: 13.5,
+        color: COLORS.textSecondary,
+        marginBottom: 20,
+        lineHeight: 19,
+    },
+    modalActions: { flexDirection: "row", gap: 10 },
+    modalCancelBtn: {
+        flex: 1,
+        height: 48,
+        borderRadius: 14,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.bgCardAlt,
+    },
+    modalCancelBtnText: {
+        color: COLORS.accent,
+        fontWeight: "700",
+        fontSize: 14,
+    },
+    modalConfirmBtn: {
+        flex: 1,
+        height: 48,
+        borderRadius: 14,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.danger,
+    },
+    modalConfirmBtnText: {
+        color: "#FFFFFF",
+        fontWeight: "700",
+        fontSize: 14,
+    },
+});
