@@ -192,12 +192,22 @@ export const ClientHomePage = () => {
                                 Balance total · Cuentas activas
                             </p>
                             <div className="flex items-baseline gap-2 flex-wrap">
-                                <p className="text-3xl sm:text-4xl font-black text-gray-900 leading-none break-all">
-                                    Q {totalGTQ.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
-                                </p>
+                                {totalGTQ > 0 && (
+                                    <p className="text-3xl sm:text-4xl font-black text-gray-900 leading-none break-all">
+                                        Q {totalGTQ.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                    </p>
+                                )}
                                 {totalUSD > 0 && (
-                                    <p className="text-sm sm:text-base font-bold text-gray-400 whitespace-nowrap">
-                                        + $ {totalUSD.toLocaleString("es-GT", { minimumFractionDigits: 2 })} USD
+                                    <p className={totalGTQ > 0
+                                        ? "text-sm sm:text-base font-bold text-gray-400 whitespace-nowrap"
+                                        : "text-3xl sm:text-4xl font-black text-gray-900 leading-none break-all"
+                                    }>
+                                        {totalGTQ > 0 && "+ "}$ {totalUSD.toLocaleString("es-GT", { minimumFractionDigits: 2 })}{totalGTQ > 0 && " USD"}
+                                    </p>
+                                )}
+                                {totalGTQ === 0 && totalUSD === 0 && (
+                                    <p className="text-3xl sm:text-4xl font-black text-gray-900 leading-none break-all">
+                                        Q 0.00
                                     </p>
                                 )}
                             </div>
