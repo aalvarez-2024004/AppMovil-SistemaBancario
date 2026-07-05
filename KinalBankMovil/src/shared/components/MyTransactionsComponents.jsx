@@ -10,7 +10,6 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { styles, COLORS, TABS, TX_TYPE_MAP, HEADER_GRADIENT, isSmallDevice } from "../constants/MyTransactions";
-import { isSmallDevice } from "../constants/MyTransactions";
 
 const getFromId = (tx) => String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
 
