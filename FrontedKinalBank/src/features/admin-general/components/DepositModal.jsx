@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDepositStore } from "../store/useDepositStore.js";
 import { useAccountsStore } from "../store/useAccountStore.js";
 
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€" };
+
 export const DepositModal = () => {
 
     const { createDeposit, getDeposits } = useDepositStore();
@@ -61,6 +63,8 @@ export const DepositModal = () => {
             alert("Error al realizar depósito");
         }
     };
+
+    const currentSymbol = CURRENCY_SYMBOLS[formData.currency] ?? "Q";
 
     return (
   <>
@@ -143,6 +147,10 @@ export const DepositModal = () => {
                 </label>
 
                 <div className="relative">
+
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold pointer-events-none">
+                    {currentSymbol}
+                  </span>
 
                   <input
                     type="number"
