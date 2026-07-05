@@ -23,11 +23,11 @@ import {
     InfoCard,
     InfoRow,
     maskDPI,
+    formatCurrency,
 } from "../../../shared/components/ProfileComponents";
 
 const ProfileScreen = () => {
     const { user, token, isLoading, updateProfile, logout } = useAuthStore();
-    console.log("USER OBJETO COMPLETO:", JSON.stringify(user, null, 2));
     const { accounts, fetchMyAccounts } = useTransactionStore();
 
     const [editing, setEditing] = useState(false);
@@ -159,7 +159,7 @@ const ProfileScreen = () => {
                                 editing
                                     ? form.monthlyIncome
                                     : user?.monthlyIncome != null
-                                        ? `Q ${Number(user.monthlyIncome).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`
+                                        ? formatCurrency(user.monthlyIncome, primaryAccount?.currency)
                                         : null
                             }
                             editable

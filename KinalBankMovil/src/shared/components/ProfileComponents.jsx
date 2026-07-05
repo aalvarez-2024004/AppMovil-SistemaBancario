@@ -3,11 +3,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { styles, COLORS, GRADIENTS } from "../constants/profile";
 
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
+
+export const formatCurrency = (amount, currency = "GTQ") => {
+    const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
+    return `${symbol} ${Number(amount || 0).toLocaleString("es-GT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`;
+};
+
 export const maskAccountCard = (num = "") => {
     const str = String(num || "").replace(/\D/g, "");
     if (!str) return "—";
     const last4 = str.slice(-4);
-    return `•••• •••• ${last4}`;
+    return `••• ••• ${last4}`;
 };
 
 export const maskDPI = (dpi = "") => {
