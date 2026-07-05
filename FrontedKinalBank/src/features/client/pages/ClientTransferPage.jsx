@@ -15,8 +15,8 @@ export const ClientTransferPage = () => {
     const prefill  = location.state ?? {};
 
     const {
-        accounts, loadingTransfer, transferError, transferSuccess,
-        fetchMyAccounts, transfer, clearTransferState,
+        accounts, transactions, loadingTransfer, transferError, transferSuccess,
+        fetchMyAccounts, fetchMyTransactions, transfer, clearTransferState,
     } = useClientStore();
 
     const [form, setForm] = useState({
@@ -29,6 +29,7 @@ export const ClientTransferPage = () => {
 
     useEffect(() => {
         fetchMyAccounts();
+        fetchMyTransactions(1);
         return () => clearTransferState();
     }, []);
 
@@ -66,6 +67,30 @@ export const ClientTransferPage = () => {
     const willConvert       = selectedAccount && toAccount && selectedAccount.currency !== toAccount.currency;
 
     const barColor = amountPct >= 90 ? "#ef4444" : amountPct >= 60 ? "#f59e0b" : "#10b981";
+
+    // Totales por moneda (balances)
+    const balancesByCurrency = activeAccounts.reduce((acc, a) => {
+        acc[a.currency] = (acc[a.currency] ?? 0) + Number(a.balance);
+        return acc;
+    }, {});
+
+    // Total enviado (histórico) por moneda, solo transferencias salientes de mis cuentas
+    const myAccountIds = accounts.map(a => String(a._id));
+    const salidasByCurrency = transactions
+        .filter(tx => tx.type === "TRANSFERENCIA" && myAccountIds.includes(String(tx.fromAccount?._id ?? tx.fromAccount ?? "")))
+        .reduce((acc, tx) => {
+            const cur = tx.currencyFrom ?? "GTQ";
+            acc[cur] = (acc[cur] ?? 0) + Number(tx.amountSent ?? 0);
+            return acc;
+        }, {});
+
+    const formatByCurrency = (obj) => {
+        const entries = Object.entries(obj);
+        if (entries.length === 0) return "0.00";
+        return entries
+            .map(([cur, val]) => `${getCurrencySymbol(cur)} ${val.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`)
+            .join(" + ");
+    };
 
     return (
         <>
@@ -137,7 +162,7 @@ export const ClientTransferPage = () => {
                                         style={{ color: "rgba(125,211,252,0.65)" }}>
                                         <span className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
                                             style={{ background: "#38bdf8" }}></span>
-                                        Q 2,000 por operación
+                                        {symbol} 2,000 por operación
                                     </p>
                                 </div>
 
@@ -152,9 +177,7 @@ export const ClientTransferPage = () => {
                                     <p className="text-[6px] xs:text-[7px] sm:text-[9px] font-black tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1 truncate"
                                         style={{ color: "#6ee7b7" }}>↓ Entradas</p>
                                     <p className="text-[11px] xs:text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#34d399" }}>
-                                        Q {activeAccounts
-                                            .reduce((s, a) => s + Number(a.balance), 0)
-                                            .toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                        {formatByCurrency(balancesByCurrency)}
                                     </p>
                                     <p className="text-[8px] sm:text-[10px] mt-1 sm:mt-2 hidden sm:block" style={{ color: "rgba(110,231,183,0.55)" }}>
                                         Depósitos y créditos
@@ -172,9 +195,7 @@ export const ClientTransferPage = () => {
                                     <p className="text-[6px] xs:text-[7px] sm:text-[9px] font-black tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.3em] uppercase mb-1 truncate"
                                         style={{ color: "#fca5a5" }}>↑ Salidas</p>
                                     <p className="text-[11px] xs:text-sm sm:text-2xl font-black leading-none truncate" style={{ color: "#f87171" }}>
-                                        Q {amountNum > 0
-                                            ? amountNum.toLocaleString("es-GT", { minimumFractionDigits: 2 })
-                                            : "0.00"}
+                                        {formatByCurrency(salidasByCurrency)}
                                     </p>
                                     <p className="text-[8px] sm:text-[10px] mt-1 sm:mt-2 hidden sm:block" style={{ color: "rgba(252,165,165,0.5)" }}>
                                         Compras y transferencias
@@ -240,7 +261,7 @@ export const ClientTransferPage = () => {
                                 <div className="relative min-w-0">
                                     <p className="text-white font-black text-sm sm:text-base">Nueva transferencia</p>
                                     <p className="text-[10px] sm:text-[11px] mt-0.5 leading-snug" style={{ color: "rgba(125,211,252,0.6)" }}>
-                                        Límite: Q 2,000 por operación · Q 10,000 diarios
+                                        Límite: {symbol} 2,000 por operación · {symbol} 10,000 diarios
                                     </p>
                                 </div>
                             </div>
@@ -501,8 +522,8 @@ export const ClientTransferPage = () => {
                             </div>
                             <div className="px-4 xs:px-5 sm:px-6 py-4 sm:py-5 space-y-4">
                                 {[
-                                    { label: "Por transferencia", value: "Q 2,000", pct: 100, color: "#818cf8" },
-                                    { label: "Diario", value: "Q 10,000", pct: 100, color: "#38bdf8" },
+                                    { label: "Por transferencia", value: `${symbol} 2,000`, pct: 100, color: "#818cf8" },
+                                    { label: "Diario", value: `${symbol} 10,000`, pct: 100, color: "#38bdf8" },
                                 ].map((item, i) => (
                                     <div key={i}>
                                         <div className="flex justify-between mb-1.5 gap-2">

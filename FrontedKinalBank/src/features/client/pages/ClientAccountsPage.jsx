@@ -462,8 +462,15 @@ export const ClientAccountsPage = () => {
 
     const activas      = accounts.filter(a => a.status === "ACTIVA");
     const inactivas    = accounts.filter(a => a.status !== "ACTIVA");
-    const totalBalance = activas.reduce((s, a) => s + Number(a.balance), 0);
-    const totalStr     = totalBalance.toLocaleString("es-GT", { minimumFractionDigits: 2 });
+
+    const balancesByCurrency = activas.reduce((acc, a) => {
+        acc[a.currency] = (acc[a.currency] ?? 0) + Number(a.balance);
+        return acc;
+    }, {});
+
+    const totalDisplay = Object.entries(balancesByCurrency)
+        .map(([cur, val]) => `${CURRENCY_SYMBOLS[cur] ?? cur} ${val.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`)
+        .join("  +  ") || "0.00";
 
     return (
         <>
@@ -491,7 +498,7 @@ export const ClientAccountsPage = () => {
                     {/* Balance en marca de agua */}
                     <span className="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 text-[50px] md:text-[80px] font-black leading-none select-none pointer-events-none tracking-tighter whitespace-nowrap"
                         style={{ color: "rgba(255,255,255,0.03)" }}>
-                        Q {totalStr}
+                        {totalDisplay}
                     </span>
 
                     <div className="relative flex items-end justify-between gap-5 sm:gap-6 flex-wrap">
@@ -522,8 +529,8 @@ export const ClientAccountsPage = () => {
                                     style={{ background: "radial-gradient(circle, rgba(56,189,248,0.3), transparent)" }} />
                                 <p className="text-[9px] font-black tracking-[0.3em] uppercase mb-2 relative"
                                     style={{ color: "#7dd3fc" }}>✦ Balance total</p>
-                                <p className="text-3xl sm:text-4xl font-black text-white tabular-nums tracking-tight relative leading-none truncate">
-                                    Q {totalStr}
+                                <p className="text-2xl sm:text-3xl font-black text-white tabular-nums tracking-tight relative leading-none truncate">
+                                    {totalDisplay}
                                 </p>
                                 <div className="mt-3 flex items-center gap-1.5 relative">
                                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0"

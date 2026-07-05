@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowDownLeft, ArrowUpRight, CreditCard, Wallet, Landmark } from "lucide-react";
+import { useFavoritesStore } from "../store/useFavoritesStore.js";
 import { useClientStore } from "../store/useClientStore.js";
 
-const CURRENCY_SYMBOLS = {
-    GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$",
-};
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
 
 const TYPE_META = {
     DEPOSITO:      { label: "Depósito",      color: "emerald", icon: <ArrowDownLeft size={18} /> },
@@ -97,21 +96,37 @@ export const ClientTransactionsPage = () => {
         ? transactions
         : transactions.filter(tx => tx.type === filter);
 
-    const totalCreditos = transactions
+    const creditosByCurrency = transactions
         .filter(tx => {
             const fromId = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
             return tx.type === "DEPOSITO" || tx.type === "CREDITO" ||
                 (tx.type === "TRANSFERENCIA" && !myAccountIds.includes(fromId));
         })
-        .reduce((s, tx) => s + Number(tx.amountReceived ?? 0), 0);
+        .reduce((acc, tx) => {
+            const cur = tx.currencyTo ?? "GTQ";
+            acc[cur] = (acc[cur] ?? 0) + Number(tx.amountReceived ?? 0);
+            return acc;
+        }, {});
 
-    const totalDebitos = transactions
+    const debitosByCurrency = transactions
         .filter(tx => {
             const fromId = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
             return tx.type === "COMPRA" ||
                 (tx.type === "TRANSFERENCIA" && myAccountIds.includes(fromId));
         })
-        .reduce((s, tx) => s + Number(tx.amountSent ?? 0), 0);
+        .reduce((acc, tx) => {
+            const cur = tx.currencyFrom ?? "GTQ";
+            acc[cur] = (acc[cur] ?? 0) + Number(tx.amountSent ?? 0);
+            return acc;
+        }, {});
+
+    const formatByCurrency = (obj) => {
+        const entries = Object.entries(obj);
+        if (entries.length === 0) return "0.00";
+        return entries
+            .map(([cur, val]) => `${CURRENCY_SYMBOLS[cur] ?? cur}${val.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`)
+            .join(" + ");
+    };
 
     const changePage = (page) => {
         if (page < 1 || page > pagination.totalPages) return;
@@ -179,7 +194,7 @@ export const ClientTransactionsPage = () => {
                             style={{ background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)" }}>
                             <p className="text-[7px] xs:text-[8px] sm:text-[9px] font-black tracking-[0.1em] sm:tracking-[0.3em] uppercase mb-1 truncate" style={{ color: "#6ee7b7" }}>↓ Entradas</p>
                             <p className="text-[11px] xs:text-sm sm:text-xl font-black truncate" style={{ color: "#34d399" }}>
-                                Q {totalCreditos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                {formatByCurrency(creditosByCurrency)}
                             </p>
                             <p className="text-[8px] sm:text-[10px] mt-0.5 hidden sm:block" style={{ color: "rgba(110,231,183,0.5)" }}>Depósitos y créditos</p>
                         </div>
@@ -189,7 +204,7 @@ export const ClientTransactionsPage = () => {
                             style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
                             <p className="text-[7px] xs:text-[8px] sm:text-[9px] font-black tracking-[0.1em] sm:tracking-[0.3em] uppercase mb-1 truncate" style={{ color: "#fca5a5" }}>↑ Salidas</p>
                             <p className="text-[11px] xs:text-sm sm:text-xl font-black truncate" style={{ color: "#f87171" }}>
-                                Q {totalDebitos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                {formatByCurrency(debitosByCurrency)}
                             </p>
                             <p className="text-[8px] sm:text-[10px] mt-0.5 hidden sm:block" style={{ color: "rgba(252,165,165,0.5)" }}>Compras y transferencias</p>
                         </div>
@@ -201,8 +216,8 @@ export const ClientTransactionsPage = () => {
             <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-3 xs:gap-4 sm:gap-5">
                 {[
                     { title: "Movimientos", icon: <Landmark size={20} />, barColor: "linear-gradient(90deg,#38bdf8,#818cf8)", valueColor: "#1e40af", value: transactions.length, sub: `Página ${pagination.currentPage ?? 1} de ${pagination.totalPages ?? 1}` },
-                    { title: "Entradas", icon: <ArrowDownLeft size={20} />, barColor: "linear-gradient(90deg,#34d399,#10b981)", valueColor: "#059669", value: `Q ${totalCreditos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`, sub: "Depósitos, créditos y transferencias recibidas" },
-                    { title: "Salidas", icon: <ArrowUpRight size={20} />, barColor: "linear-gradient(90deg,#fb7185,#e11d48)", valueColor: "#e11d48", value: `Q ${totalDebitos.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`, sub: "Compras y transferencias enviadas" },
+                    { title: "Entradas", icon: <ArrowDownLeft size={20} />, barColor: "linear-gradient(90deg,#34d399,#10b981)", valueColor: "#059669", value: formatByCurrency(creditosByCurrency), sub: "Depósitos, créditos y transferencias recibidas" },
+                    { title: "Salidas", icon: <ArrowUpRight size={20} />, barColor: "linear-gradient(90deg,#fb7185,#e11d48)", valueColor: "#e11d48", value: formatByCurrency(debitosByCurrency), sub: "Compras y transferencias enviadas" },
                 ].map((s, i) => (
                     <div key={i} className="relative overflow-hidden rounded-2xl p-4 xs:p-5 sm:p-6 bg-white transition-all duration-300 hover:-translate-y-1 min-w-0"
                         style={{ border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>

@@ -91,15 +91,18 @@ export const useClientStore = create((set, get) => ({
             const { data } = await makeTransfer(payload);
  
             set({
-                transferSuccess:
-                    data.message ??
-                    "Transferencia realizada exitosamente",
-            });
- 
-            // refresca cuentas después de transferir
-            await get().fetchMyAccounts();
- 
-            return { success: true };
+                    transferSuccess:
+                        data.message ??
+                        "Transferencia realizada exitosamente",
+                });
+    
+                // refresca cuentas y movimientos después de transferir
+                await Promise.all([
+                    get().fetchMyAccounts(),
+                    get().fetchMyTransactions(get().pagination.currentPage),
+                ]);
+    
+                return { success: true };
  
         } catch (err) {
             const msg =

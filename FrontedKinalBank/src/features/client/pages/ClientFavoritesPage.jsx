@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritesStore } from "../store/useFavoritesStore.js";
+import { useClientStore } from "../store/useClientStore.js";
 import { AddFavoriteModal } from "../components/AddFavoriteModal.jsx";
 import { EditFavoriteModal } from "../components/EditFavoriteModal.jsx";
+
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
 
 const Badge = ({ children, color = "indigo" }) => {
   const colors = {
@@ -90,6 +93,7 @@ const FavoriteCard = ({ favorite, onEdit, onDelete, onTransfer, deleting }) => (
 export const ClientFavoritesPage = () => {
   const navigate = useNavigate();
   const { favorites, loading, error, successMessage, fetchFavorites, deleteFavorite, clearMessages } = useFavoritesStore();
+  const { accounts, fetchMyAccounts } = useClientStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
@@ -98,8 +102,14 @@ export const ClientFavoritesPage = () => {
 
   useEffect(() => {
     fetchFavorites();
+    fetchMyAccounts();
     return () => clearMessages();
   }, []);
+
+  const monedasDelUsuario = [...new Set(accounts.map(a => a.currency))];
+  const limiteDiarioDisplay = monedasDelUsuario.length > 0
+    ? monedasDelUsuario.map(cur => `${CURRENCY_SYMBOLS[cur] ?? cur}10,000`).join(" / ")
+    : "Q10,000";
 
   const handleDelete = async (id) => {
     setDeleting(id);
@@ -194,7 +204,7 @@ export const ClientFavoritesPage = () => {
             { label: "Total favoritos", value: favorites.length, sub: `${favorites.length} activo${favorites.length !== 1 ? "s" : ""}`, accent: "#6366f1" },
             { label: "Transferencias", value: "Activas", sub: "En operación", accent: "#10b981", valueColor: "#10b981" },
             { label: "Seguridad", value: "SSL", sub: "End-to-End", accent: "#ef4444", valueColor: "#ef4444" },
-            { label: "Límite diario", value: "Q10,000", sub: "Disponible", accent: "#f59e0b" },
+            { label: "Límite diario", value: limiteDiarioDisplay, sub: "Disponible", accent: "#f59e0b" },
           ].map((s, i) => (
             <div key={i} className="relative overflow-hidden rounded-2xl bg-white p-4 sm:p-5 shadow-sm border border-slate-200">
               <div className="absolute inset-x-0 top-0 h-1" style={{ background: s.accent }} />
@@ -216,7 +226,6 @@ export const ClientFavoritesPage = () => {
           <div className="space-y-5 order-2 lg:order-1">
             {favorites.length > 0 && (
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -258,23 +267,6 @@ export const ClientFavoritesPage = () => {
 
           {/* COLUMNA DERECHA: Widgets laterales */}
           <div className="space-y-6 order-1 lg:order-2">
-            {/* Actividad Reciente */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-[#16213E]">Actividad reciente</h3>
-                <Badge color="indigo">Últimos 7 días</Badge>
-              </div>
-              {recentActivity.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">Sin actividad reciente.</p>
-              ) : (
-                <div className="divide-y divide-slate-50">
-                  {recentActivity.map((a, i) => <ActivityItem key={i} {...a} />)}
-                </div>
-              )}
-              <button className="mt-4 w-full rounded-xl bg-slate-50 py-2.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 transition text-center">
-                Ver todos los movimientos →
-              </button>
-            </div>
 
             {/* Consejos Rápidos */}
             <div className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
