@@ -22,11 +22,15 @@ export const isCreditTx = (tx, myAccountIds = []) => {
   );
 };
 
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
+
 export const formatAmount = (tx, myAccountIds = []) => {
-  const credit = isCreditTx(tx, myAccountIds);
-  const amount = Number(credit ? tx.amountReceived : tx.amountSent) || 0;
-  const formatted = `Q ${Math.abs(amount).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`;
-  return { text: credit ? `+${formatted}` : `-${formatted}`, isCredit: credit, amount };
+  const credit   = isCreditTx(tx, myAccountIds);
+  const amount   = Number(credit ? tx.amountReceived : tx.amountSent) || 0;
+  const currency = credit ? (tx.currencyTo ?? "GTQ") : (tx.currencyFrom ?? "GTQ");
+  const symbol   = CURRENCY_SYMBOLS[currency] ?? currency;
+  const formatted = `${symbol} ${Math.abs(amount).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`;
+  return { text: credit ? `+${formatted}` : `-${formatted}`, isCredit: credit, amount, currency };
 };
 
 export const formatDate = (dateStr) => {
@@ -244,7 +248,7 @@ export const TransactionEmptyState = () => (
 /* ------------------------------------------------------------------ */
 /*  Header con degradado azul (igual estilo que "Mis Cuentas")          */
 /* ------------------------------------------------------------------ */
-export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack }) => (
+export const TransactionHeader = ({ totals, balanceDisplay, totalRecords, onBack }) => (
   <LinearGradient
     colors={HEADER_GRADIENT}
     start={{ x: 0, y: 0 }}
@@ -268,7 +272,7 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
     <View style={styles.balanceRow}>
       <Text style={styles.balanceLabel}>SALDO ACTUAL</Text>
       <Text style={styles.balanceAmount}>
-        Q {Number(currentBalance ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+        {balanceDisplay}
       </Text>
       <Text style={styles.balanceSub}>
         {totalRecords} {totalRecords === 1 ? "transacción" : "transacciones"} en total
@@ -282,9 +286,9 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
         </View>
         <View>
           <Text style={styles.pillLabel}>ENTRADAS</Text>
-          <Text style={styles.pillAmount}>
-            Q {totals.entradas.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
-          </Text>
+          {totals.entradasList.map((line, i) => (
+            <Text key={i} style={styles.pillAmount}>{line}</Text>
+          ))}
         </View>
       </View>
 
@@ -294,9 +298,9 @@ export const TransactionHeader = ({ totals, currentBalance, totalRecords, onBack
         </View>
         <View>
           <Text style={styles.pillLabel}>SALIDAS</Text>
-          <Text style={styles.pillAmount}>
-            Q {totals.salidas.toLocaleString("es-GT", { minimumFractionDigits: 2 })}
-          </Text>
+          {totals.salidasList.map((line, i) => (
+            <Text key={i} style={styles.pillAmount}>{line}</Text>
+          ))}
         </View>
       </View>
     </View>

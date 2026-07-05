@@ -4,9 +4,10 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, styles } from "../constants/MyAccounts";
 
-/* ─── Helpers ─────────────────────────────────────────────── */
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
+
 export const formatCurrency = (amount, currency = "GTQ") =>
-  `${currency === "USD" ? "USD" : "Q"} ${Number(amount || 0).toLocaleString("es-GT", {
+  `${CURRENCY_SYMBOLS[currency] ?? currency} ${Number(amount || 0).toLocaleString("es-GT", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;

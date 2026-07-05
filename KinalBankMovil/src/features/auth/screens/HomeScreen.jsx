@@ -17,8 +17,13 @@ const getGreeting = () => {
   return 'Buenas noches';
 };
 
-const fmt = (amount, currency = 'GTQ') =>
-  new Intl.NumberFormat('es-GT', { style: 'currency', currency }).format(amount ?? 0);
+const CURRENCY_SYMBOLS = { GTQ: 'Q', USD: '$', EUR: '€', GBP: '£', MXN: 'MX$' };
+
+const fmt = (amount, currency = 'GTQ') => {
+  const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
+  const value = new Intl.NumberFormat('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount ?? 0);
+  return `${symbol} ${value}`;
+};
 
 /* ── Icono + color por tipo de transacción ── */
 const TX_META = {
@@ -85,6 +90,23 @@ const HomeScreen = () => {
   const activeCount = accounts.filter(
     a => a.status === 'ACTIVA' || a.isActive === true
   ).length;
+
+  // Balance principal: muestra la moneda que realmente tiene saldo.
+  const mainCurrency = totalGTQ > 0 ? 'GTQ' : totalUSD > 0 ? 'USD' : 'GTQ';
+  const mainSymbol = CURRENCY_SYMBOLS[mainCurrency] ?? mainCurrency;
+
+  const mainBalanceDisplay =
+    totalGTQ > 0 ? fmt(totalGTQ, 'GTQ')
+    : totalUSD > 0 ? fmt(totalUSD, 'USD')
+    : fmt(0, 'GTQ');
+
+  const secondaryBalanceDisplay =
+    totalGTQ > 0 && totalUSD > 0 ? `+ ${fmt(totalUSD, 'USD')}` : null;
+
+  const balanceCurrencyLabel =
+    totalGTQ > 0 && totalUSD > 0 ? 'GTQ y USD'
+    : totalUSD > 0 && totalGTQ === 0 ? 'USD'
+    : 'GTQ';
 
   const isAccountActive = (acc) =>
     acc?.status?.toString()?.trim()?.toUpperCase() === 'ACTIVA' || acc?.isActive === true;
@@ -161,7 +183,7 @@ const HomeScreen = () => {
               <TouchableOpacity onPress={() => setBalanceHidden(!balanceHidden)} activeOpacity={0.7}>
                 <View style={s.balanceValueRow}>
                   <Text style={s.balanceValue}>
-                    {balanceHidden ? 'Q ••••••' : fmt(totalGTQ)}
+                    {balanceHidden ? `${mainSymbol} ••••••` : mainBalanceDisplay}
                   </Text>
                   <Ionicons
                     name={balanceHidden ? 'eye-off-outline' : 'eye-outline'}
@@ -171,8 +193,11 @@ const HomeScreen = () => {
                   />
                 </View>
               </TouchableOpacity>
+              {!balanceHidden && secondaryBalanceDisplay && (
+                <Text style={s.balanceValueSecondary}>{secondaryBalanceDisplay}</Text>
+              )}
               <Text style={s.balanceSubtitle}>
-                {activeCount} {activeCount === 1 ? 'cuenta activa' : 'cuentas activas'} · GTQ
+                {activeCount} {activeCount === 1 ? 'cuenta activa' : 'cuentas activas'} · {balanceCurrencyLabel}
               </Text>
 
               <View style={s.balanceDivider} />
@@ -270,7 +295,8 @@ const HomeScreen = () => {
             transactions.slice(0, 5).map((tx, i) => {
               const meta   = getTxMeta(tx.type);
               const credit = isTxCredit(tx);
-              const amount = tx.amountSent ?? tx.amountReceived ?? 0;
+              const amount = credit ? (tx.amountReceived ?? tx.amount ?? 0) : (tx.amountSent ?? tx.amount ?? 0);
+              const txCurrency = credit ? (tx.currencyTo ?? 'GTQ') : (tx.currencyFrom ?? 'GTQ');
               return (
                 <View key={tx.id ?? tx._id ?? i} style={s.txRow}>
                   <View style={[s.txIconWrap, { backgroundColor: meta.bg }]}>
@@ -289,7 +315,7 @@ const HomeScreen = () => {
                   </View>
 
                   <Text style={[s.txAmount, { color: credit ? '#10B981' : '#EF4444' }]}>
-                    {credit ? '+' : '-'}{fmt(amount)}
+                    {credit ? '+' : '-'}{fmt(amount, txCurrency)}
                   </Text>
                 </View>
               );

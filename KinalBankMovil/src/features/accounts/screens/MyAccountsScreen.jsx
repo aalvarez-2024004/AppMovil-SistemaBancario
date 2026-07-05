@@ -67,9 +67,22 @@ const MyAccountsScreen = () => {
   const closeModal = () => setModalVisible(false);
 
   // ── Derivados ──
-  const totalBalance  = accounts.reduce(
-    (acc, a) => acc + Number(a.balance || a.saldo || 0), 0
-  );
+  const balancesByCurrency = accounts.reduce((acc, a) => {
+    const cur = a.currency ?? "GTQ";
+    acc[cur] = (acc[cur] ?? 0) + Number(a.balance || a.saldo || 0);
+    return acc;
+  }, {});
+
+  const mainCurrency = balancesByCurrency.GTQ > 0 ? "GTQ"
+    : Object.keys(balancesByCurrency)[0] ?? "GTQ";
+
+  const balanceDisplay = formatCurrency(balancesByCurrency[mainCurrency] ?? 0, mainCurrency);
+
+  const secondaryBalances = Object.entries(balancesByCurrency)
+    .filter(([cur]) => cur !== mainCurrency)
+    .map(([cur, val]) => formatCurrency(val, cur))
+    .join("  +  ");
+
   const activeAccounts = accounts.filter(a => a.status === "ACTIVA");
   const inactiveAccounts = accounts.filter(a => a.status === "BLOQUEADA");
 
@@ -121,8 +134,11 @@ const MyAccountsScreen = () => {
           <View style={styles.balanceBox}>
             <Text style={styles.balanceLabel}>Balance total</Text>
             <Text style={styles.balanceAmount}>
-              {formatCurrency(totalBalance)}
+              {balanceDisplay}
             </Text>
+            {secondaryBalances ? (
+              <Text style={styles.balanceSub}>+ {secondaryBalances}</Text>
+            ) : null}
             <Text style={styles.balanceSub}>
               {activeAccounts.length} cuenta
               {activeAccounts.length !== 1 ? "s" : ""} activa

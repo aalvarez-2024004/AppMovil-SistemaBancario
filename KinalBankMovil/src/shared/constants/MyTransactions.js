@@ -28,10 +28,10 @@ export const COLORS = {
 export const HEADER_GRADIENT = ["#112241", "#559ED2"];
 
 export const TABS = [
-  { key: "all",      label: "Todos",          icon: "apps-outline" },
-  { key: "deposit",  label: "Depósitos",      icon: "arrow-down-circle-outline" },
-  { key: "withdraw", label: "Retiros",        icon: "arrow-up-circle-outline" },
-  { key: "transfer", label: "Transferencias", icon: "swap-horizontal-outline" },
+  { key: "all",       label: "Todos",       icon: "apps-outline" },
+  { key: "deposit",   label: "Depósitos",   icon: "arrow-down-circle-outline" },
+  { key: "sent",      label: "Enviadas",    icon: "paper-plane-outline" },
+  { key: "received",  label: "Recibidas",   icon: "download-outline" },
 ];
 
 export const TX_TYPE_MAP = {

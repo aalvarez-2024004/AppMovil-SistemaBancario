@@ -28,9 +28,7 @@ import {
 import { styles, COLORS } from "../../../shared/constants/MyTransactions";
 
 const TAB_TO_TYPE = {
-  deposit:  "DEPOSITO",
-  withdraw: "RETIRO",
-  transfer: "TRANSFERENCIA",
+  deposit: "DEPOSITO",
 };
 
 const MyTransactionsScreen = () => {
@@ -79,7 +77,17 @@ const MyTransactionsScreen = () => {
   const filtered = useMemo(() => {
     let list = transactions;
 
-    if (activeTab !== "all") {
+    if (activeTab === "sent") {
+      list = list.filter((t) => {
+        const fromId = String(t.fromAccount?._id ?? t.fromAccount ?? "");
+        return t.type === "TRANSFERENCIA" && myAccountIds.includes(fromId);
+      });
+    } else if (activeTab === "received") {
+      list = list.filter((t) => {
+        const fromId = String(t.fromAccount?._id ?? t.fromAccount ?? "");
+        return t.type === "TRANSFERENCIA" && !myAccountIds.includes(fromId);
+      });
+    } else if (activeTab !== "all") {
       const backendType = TAB_TO_TYPE[activeTab];
       if (backendType) list = list.filter((t) => t.type === backendType);
     }
@@ -109,33 +117,55 @@ const MyTransactionsScreen = () => {
     return rows;
   }, [filtered]);
 
-  const currentBalance = useMemo(
-    () => (accounts || []).reduce((sum, a) => sum + Number(a.balance ?? 0), 0),
-    [accounts]
-  );
+  const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
+
+  const formatByCurrencyList = (obj) => {
+    const entries = Object.entries(obj);
+    if (entries.length === 0) return ["Q 0.00"];
+    return entries.map(([cur, val]) =>
+      `${CURRENCY_SYMBOLS[cur] ?? cur} ${val.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`
+    );
+  };
+
+
+  const balanceDisplay = useMemo(() => {
+    const byCurrency = (accounts || []).reduce((acc, a) => {
+      const cur = a.currency ?? "GTQ";
+      acc[cur] = (acc[cur] ?? 0) + Number(a.balance ?? 0);
+      return acc;
+    }, {});
+    return formatByCurrencyList(byCurrency).join("  +  ");
+  }, [accounts]);
 
   const totals = useMemo(() => {
-    let entradas = 0;
-    let salidas  = 0;
+    const entradasByCurrency = {};
+    const salidasByCurrency  = {};
 
     transactions.forEach((tx) => {
       const fromId           = String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
       const isOwnTransferOut = tx.type === "TRANSFERENCIA" && myAccountIds.includes(fromId);
 
       if (tx.type === "DEPOSITO" || tx.type === "CREDITO") {
-        entradas += Number(tx.amountReceived ?? 0);
+        const cur = tx.currencyTo ?? "GTQ";
+        entradasByCurrency[cur] = (entradasByCurrency[cur] ?? 0) + Number(tx.amountReceived ?? 0);
       } else if (tx.type === "TRANSFERENCIA") {
         if (isOwnTransferOut) {
-          salidas  += Number(tx.amountSent     ?? 0);
+          const cur = tx.currencyFrom ?? "GTQ";
+          salidasByCurrency[cur] = (salidasByCurrency[cur] ?? 0) + Number(tx.amountSent ?? 0);
         } else {
-          entradas += Number(tx.amountReceived ?? 0);
+          const cur = tx.currencyTo ?? "GTQ";
+          entradasByCurrency[cur] = (entradasByCurrency[cur] ?? 0) + Number(tx.amountReceived ?? 0);
         }
       } else if (tx.type === "COMPRA" || tx.type === "RETIRO") {
-        salidas += Number(tx.amountSent ?? 0);
+        const cur = tx.currencyFrom ?? "GTQ";
+        salidasByCurrency[cur] = (salidasByCurrency[cur] ?? 0) + Number(tx.amountSent ?? 0);
       }
     });
 
-    return { entradas, salidas };
+    return {
+      entradasList: formatByCurrencyList(entradasByCurrency),
+      salidasList:  formatByCurrencyList(salidasByCurrency),
+    };
   }, [transactions, myAccountIds]);
 
   const renderItem = ({ item }) => {
@@ -172,7 +202,7 @@ const MyTransactionsScreen = () => {
 
       <TransactionHeader
         totals={totals}
-        currentBalance={currentBalance}
+        balanceDisplay={balanceDisplay}
         totalRecords={totalRecords}
         onBack={() => navigation.goBack()}
         activeTab={activeTab}
