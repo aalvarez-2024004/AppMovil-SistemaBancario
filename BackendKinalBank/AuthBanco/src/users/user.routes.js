@@ -27,6 +27,6 @@ router.put('/approve', validateJWT, validateAdmin, approveUser);
 
 router.delete('/deny/:id', validateJWT, validateAdmin, denyUser);
 
-router.post('/by-ids', validateJWT, validateAdmin, getUsersByIds);
+router.post('/by-ids', validateJWT, getUsersByIds);
 
 export default router;

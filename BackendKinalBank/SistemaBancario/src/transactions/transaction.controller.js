@@ -4,8 +4,9 @@ import Transaction from './transaction.model.js';
 import Account from '../accounts/account.model.js';
 import { convertirMoneda } from "../services/divisas-service.js";
 import { accumulatePoints } from '../points/point.controller.js';
-import { Op } from 'sequelize';
-import { User } from '../../../AuthBanco/src/users/user.model.js';
+
+const AUTH_BANCO_URL = process.env.AUTH_BANCO_URL; 
+
 
 const POINTS_PER_QUETZAL = 1 / 100; 
 
@@ -325,6 +326,7 @@ export const deleteTransaction = async (req, res) => {
 export const getMyTransactions = async (req, res) => {
     try {
         const userId = req.user.id;
+        const token  = req.headers.authorization;
 
         const userAccounts = await Account.find({ ownerId: userId }).select('_id');
         const accountIds = userAccounts.map(a => a._id);
@@ -357,16 +359,28 @@ export const getMyTransactions = async (req, res) => {
             if (t.toAccount?.ownerId)   ownerIdsSet.add(t.toAccount.ownerId);
         });
 
-        // Buscar los nombres en la base SQL (User)
-        const users = await User.findAll({
-            where: { Id: { [Op.in]: Array.from(ownerIdsSet) } },
-            attributes: ['Id', 'Name']
-        });
+        // Pedir los nombres a AuthBanco vía HTTP
+        let nameById = {};
+        if (ownerIdsSet.size > 0) {
+            try {
+                const response = await fetch(`${AUTH_BANCO_URL}/users/by-ids`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify({ ids: Array.from(ownerIdsSet) })
+                });
 
-        const nameById = {};
-        users.forEach((u) => { nameById[u.Id] = u.Name; });
+                const result = await response.json();
+                if (result.success) {
+                    result.users.forEach((u) => { nameById[u.Id] = u.Name; });
+                }
+            } catch (err) {
+                console.error('Error consultando AuthBanco:', err.message);
+            }
+        }
 
-        // Inyectar holderName en cada transacción
         const enriched = transactions.map((t) => {
             const obj = t.toObject();
             if (obj.fromAccount?.ownerId) {
