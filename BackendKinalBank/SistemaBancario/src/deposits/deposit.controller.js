@@ -74,6 +74,7 @@ export const createDeposit = async (req, res) => {
             accountId: toAccount._id,
             accountNumber: toAccount.accountNumber,
             amount: finalAmount,
+            currency: toAccount.currency,   
             ownerId: toAccount.ownerId,
             estado: 'COMPLETADO'
         });

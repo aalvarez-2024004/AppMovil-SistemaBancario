@@ -20,6 +20,11 @@ const depositSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        currency: {
+            type: String,
+            enum: ['GTQ', 'USD', 'EUR'],
+            default: 'GTQ'
+        },
         estado: {
             type: String,
             enum: ['COMPLETADO', 'REVERTIDO'],

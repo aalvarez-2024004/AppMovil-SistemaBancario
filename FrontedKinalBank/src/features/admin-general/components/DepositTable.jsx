@@ -1,5 +1,11 @@
 import { useDepositStore } from "../store/useDepositStore.js";
 
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€" };
+
+const formatMonto = (deposit) => {
+    const symbol = CURRENCY_SYMBOLS[deposit.currency] ?? "Q"; 
+    return `${symbol} ${Number(deposit.amount).toLocaleString("es-GT", { minimumFractionDigits: 2 })}`;
+};
 export const DepositTable = ({ deposits }) => {
 
     const {
@@ -123,7 +129,7 @@ export const DepositTable = ({ deposits }) => {
                                         <td className="py-4 px-4">
 
                                             <span className="font-bold text-slate-800">
-                                                Q {deposit.amount}
+                                                {formatMonto(deposit)}
                                             </span>
 
                                         </td>
