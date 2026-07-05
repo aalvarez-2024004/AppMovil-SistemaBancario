@@ -6,6 +6,7 @@ import Transaction from '../transactions/transaction.model.js';
 import Account from '../accounts/account.model.js';
 import Point from '../points/point.model.js';
 import { accumulatePoints, deductPoints } from '../points/point.controller.js';
+import { convertirMoneda } from '../services/divisas-service.js';
 
 export const createProduct = async (req, res) => {
     try {
@@ -158,30 +159,38 @@ export const buyProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: 'La cuenta está bloqueada' });
         }
 
-        if (account.balance < product.price) {
+        let priceInAccountCurrency = product.price;
+        let exchangeRate = 1;
+
+        if (account.currency !== 'GTQ') {
+            const conversion = await convertirMoneda('GTQ', account.currency, product.price);
+            priceInAccountCurrency = conversion?.montoConvertido ?? product.price;
+            exchangeRate = conversion?.tasa ?? 1;
+        }
+
+        if (account.balance < priceInAccountCurrency) {
             return res.status(400).json({
                 success: false,
-                message: `Saldo insuficiente. Necesitas Q${product.price.toFixed(2)} y tienes Q${account.balance.toFixed(2)}`
+                message: `Saldo insuficiente. Necesitas ${priceInAccountCurrency.toFixed(2)} ${account.currency} y tienes ${account.balance.toFixed(2)} ${account.currency}`
             });
         }
 
-        account.balance -= product.price;
+        account.balance -= priceInAccountCurrency;
         await account.save();
 
         const transaction = await Transaction.create({
             type: 'COMPRA',
-            amountSent: product.price,
-            amountReceived: product.price,
+            amountSent: priceInAccountCurrency,   
+            amountReceived: product.price,        
             currencyFrom: account.currency,
-            currencyTo: account.currency,
-            exchangeRate: 1,
+            currencyTo: 'GTQ',
+            exchangeRate,
             fromAccount: account._id,
             toAccount: null,
             ownerId: req.user.id,
             description: `Compra de producto: ${product.name}`,
         });
 
-        // Acumular puntos por la compra
         const pointsEarned = product.pointsPerPurchase;
         if (pointsEarned > 0) {
             await accumulatePoints({
@@ -285,37 +294,45 @@ export const buyWithDiscount = async (req, res) => {
             return res.status(400).json({ success: false, message: 'No tienes puntos disponibles para descuento' });
         }
 
+        // Descuento y precio final se calculan en GTQ (moneda base del producto)
         const discountAmount = (product.price * product.discountPercentage) / 100;
-        const finalPrice     = product.price - discountAmount;
+        const finalPriceGTQ  = product.price - discountAmount;
 
-        if (account.balance < finalPrice) {
+        // Convertimos el precio final a la moneda de la cuenta, si aplica
+        let finalPriceInAccountCurrency = finalPriceGTQ;
+        let exchangeRate = 1;
+
+        if (account.currency !== 'GTQ') {
+            const conversion = await convertirMoneda('GTQ', account.currency, finalPriceGTQ);
+            finalPriceInAccountCurrency = conversion?.montoConvertido ?? finalPriceGTQ;
+            exchangeRate = conversion?.tasa ?? 1;
+        }
+
+        if (account.balance < finalPriceInAccountCurrency) {
             return res.status(400).json({
                 success: false,
-                message: `Saldo insuficiente. Con descuento necesitas Q${finalPrice.toFixed(2)} y tienes Q${account.balance.toFixed(2)}`
+                message: `Saldo insuficiente. Con descuento necesitas ${finalPriceInAccountCurrency.toFixed(2)} ${account.currency} y tienes ${account.balance.toFixed(2)} ${account.currency}`
             });
         }
 
         const pointsToUse = Math.min(pointRecord.totalPoints, Math.ceil(discountAmount));
 
-        // Descontar saldo
-        account.balance -= finalPrice;
+        account.balance -= finalPriceInAccountCurrency;
         await account.save();
 
-        // Crear transacción
         const transaction = await Transaction.create({
             type: 'COMPRA',
-            amountSent: finalPrice,
-            amountReceived: finalPrice,
+            amountSent: finalPriceInAccountCurrency,
+            amountReceived: finalPriceGTQ,
             currencyFrom: account.currency,
-            currencyTo: account.currency,
-            exchangeRate: 1,
+            currencyTo: 'GTQ',
+            exchangeRate,
             fromAccount: account._id,
             toAccount: null,
             ownerId: req.user.id,
             description: `Compra con ${product.discountPercentage}% descuento: ${product.name}`,
         });
 
-        // Descontar puntos usados
         await deductPoints({
             ownerId: req.user.id,
             points: pointsToUse,
@@ -328,7 +345,7 @@ export const buyWithDiscount = async (req, res) => {
             message: `Compra con descuento exitosa. Ahorraste Q${discountAmount.toFixed(2)}`,
             originalPrice: product.price,
             discountPercentage: product.discountPercentage,
-            finalPrice,
+            finalPrice: finalPriceGTQ,
             pointsUsed: pointsToUse,
             transaction,
             newBalance: account.balance

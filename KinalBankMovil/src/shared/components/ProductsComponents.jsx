@@ -11,11 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, styles } from "../constants/Products";
 
-/*
-=================================
-        MARKETPLACE HEADER
-=================================
-*/
 export const MarketplaceHeader = ({ totalRegistros, totalProductos, totalServicios }) => {
     return (
         <View style={styles.marketplaceWrap}>
@@ -87,11 +82,6 @@ const StatColumn = ({ icon, tint, color, value, label }) => (
     </View>
 );
 
-/*
-=================================
-        FILTER TABS
-=================================
-*/
 export const FilterTabs = ({
     activeFilter,
     onPress
@@ -129,53 +119,68 @@ export const FilterTabs = ({
     );
 };
 
-/*
-=================================
-        PRODUCT CARD
-=================================
-*/
 export const ProductCard = ({ product, onPress }) => {
+    const isService  = product.type === "SERVICIO";
+    const isFree     = product.clientCanRedeem;
+    const hasDiscount = product.clientHasDiscount;
+    const price      = Number(product.price ?? 0);
+
     return (
         <TouchableOpacity
             activeOpacity={0.85}
             onPress={() => onPress(product)}
             style={styles.productCard}
         >
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.productTitle}>{product.name}</Text>
-                    <Text style={styles.productDescription}>
-                        {product.description || "Producto disponible en KinalBank"}
-                    </Text>
+            <View style={styles.productCardTop}>
+                <View style={[styles.productIconWrap, { backgroundColor: isService ? "#FEF3E2" : "#E8F1FF" }]}>
+                    <Ionicons
+                        name={isService ? "briefcase-outline" : "cube-outline"}
+                        size={22}
+                        color={isService ? "#B45309" : COLORS.primary}
+                    />
                 </View>
 
-                <Ionicons
-                    name={product.type === "SERVICIO" ? "briefcase-outline" : "cube-outline"}
-                    size={28}
-                    color={COLORS.primary}
-                />
+                <View style={{ flex: 1, marginLeft: 12 }}>
+                    <Text style={styles.productTitle} numberOfLines={1}>{product.name}</Text>
+                    <Text style={styles.productTypeTag}>{isService ? "Servicio" : "Producto"}</Text>
+                </View>
+
+                {isFree && (
+                    <View style={styles.freeBadge}>
+                        <Ionicons name="gift-outline" size={11} color="#166534" />
+                        <Text style={styles.freeBadgeText}>GRATIS</Text>
+                    </View>
+                )}
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 }}>
-                <Text style={styles.productPrice}>
-                    {product.pointsCost ? `${product.pointsCost} pts` : "Disponible"}
-                </Text>
+            <Text style={styles.productDescription} numberOfLines={2}>
+                {product.description || "Producto disponible en KinalBank"}
+            </Text>
 
-                <View style={{ backgroundColor: "#E8F1FF", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}>
-                    <Text style={{ color: COLORS.primary, fontWeight: "700", fontSize: 12 }}>
-                        Ver detalle
+            <View style={styles.productCardDivider} />
+
+            <View style={styles.productCardBottom}>
+                <View>
+                    <Text style={styles.productPriceLabel}>Precio</Text>
+                    <Text style={styles.productPrice}>
+                        {isFree ? "Canjeable" : `Q ${price.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`}
                     </Text>
+                    {hasDiscount ? (
+                        <Text style={styles.productDiscountHint}>
+                            {product.discountPercentage}% con tus puntos
+                        </Text>
+                    ) : null}
+                </View>
+
+                <View style={styles.productActionBtn}>
+                    <Text style={styles.productActionText}>Ver detalle</Text>
+                    <Ionicons name="chevron-forward" size={14} color={COLORS.primary} />
                 </View>
             </View>
         </TouchableOpacity>
     );
 };
 
-/*
-=================================
-        EMPTY STATE
-=================================
-*/
 export const ProductsEmptyState = () => {
     return (
         <View style={styles.emptyState}>
@@ -188,16 +193,10 @@ export const ProductsEmptyState = () => {
     );
 };
 
-/*
-=================================
-        SUCCESS STRIP
-=================================
-*/
+
 export const SuccessStrip = ({ lastSuccess, onDismiss }) => {
     if (!lastSuccess) return null;
 
-    // Tolerante: el backend a veces manda un string, a veces el objeto completo
-    // { type, message, pointsEarned, newBalance }. Siempre extraemos texto plano.
     const message =
         typeof lastSuccess === "string"
             ? lastSuccess
@@ -216,11 +215,6 @@ export const SuccessStrip = ({ lastSuccess, onDismiss }) => {
     );
 };
 
-/*
-=================================
-        PURCHASE MODAL
-=================================
-*/
 export const ProductPurchaseModal = ({
     visible,
     product,
@@ -279,6 +273,15 @@ export const ProductPurchaseModal = ({
                         {product.description || "Realiza tu operación desde KinalBank"}
                     </Text>
 
+                    {!isFree && !!product.price && (
+                        <View style={styles.modalPriceBox}>
+                            <Text style={styles.modalPriceLabel}>Precio total</Text>
+                            <Text style={styles.modalPriceValue}>
+                                Q {Number(product.price).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                            </Text>
+                        </View>
+                    )}
+
                     {!!product.pointsCost && (
                         <View style={styles.modalPointsBadge}>
                             <Ionicons name="sparkles" size={14} color={COLORS.primary} />
@@ -290,41 +293,48 @@ export const ProductPurchaseModal = ({
                         <>
                             <Text style={styles.modalSectionLabel}>Selecciona una cuenta</Text>
 
-                            <ScrollView
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ paddingVertical: 4 }}
-                            >
+                            <View style={{ gap: 10, marginTop: 6 }}>
                                 {accounts.map((account) => {
                                     const accId = account._id || account.id || account.accountId;
                                     const isSelected = selectedAccountId === accId;
+                                    const currency = account.currency ?? "GTQ";
+                                    const symbol = currency === "USD" ? "$" : "Q";
+                                    const lastFour = String(account.accountNumber ?? "----").slice(-4);
+
                                     return (
                                         <TouchableOpacity
                                             key={accId}
                                             onPress={() => setSelectedAccountId(accId)}
                                             activeOpacity={0.8}
-                                            style={[
-                                                styles.accountChip,
-                                                isSelected && styles.accountChipActive,
-                                            ]}
+                                            style={[styles.accountRow, isSelected && styles.accountRowActive]}
                                         >
-                                            <Ionicons
-                                                name={isSelected ? "checkmark-circle" : "card-outline"}
-                                                size={16}
-                                                color={isSelected ? COLORS.primary : COLORS.textMuted}
-                                            />
-                                            <Text
-                                                style={[
-                                                    styles.accountChipText,
-                                                    isSelected && styles.accountChipTextActive,
-                                                ]}
-                                            >
-                                                {account.accountNumber || "Cuenta"}
+                                            <View style={[styles.accountRowIcon, isSelected && styles.accountRowIconActive]}>
+                                                <Ionicons
+                                                    name="card-outline"
+                                                    size={18}
+                                                    color={isSelected ? "#FFFFFF" : COLORS.textMuted}
+                                                />
+                                            </View>
+
+                                            <View style={{ flex: 1 }}>
+                                                <Text style={styles.accountRowNumber}>•••• {lastFour}</Text>
+                                                <Text style={styles.accountRowCurrency}>{currency}</Text>
+                                            </View>
+
+                                            <Text style={[styles.accountRowBalance, isSelected && styles.accountRowBalanceActive]}>
+                                                {symbol} {Number(account.balance ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                             </Text>
+
+                                            <Ionicons
+                                                name={isSelected ? "checkmark-circle" : "ellipse-outline"}
+                                                size={20}
+                                                color={isSelected ? COLORS.primary : COLORS.border}
+                                                style={{ marginLeft: 10 }}
+                                            />
                                         </TouchableOpacity>
                                     );
                                 })}
-                            </ScrollView>
+                            </View>
                         </>
                     )}
 

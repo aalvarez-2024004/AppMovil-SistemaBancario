@@ -248,24 +248,107 @@ export const styles = StyleSheet.create({
     },
   },
 
+  productCardTop: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  productIconWrap: {
+    width: 46,
+    height: 46,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   productTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "800",
     color: COLORS.text,
+  },
+
+  productTypeTag: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: COLORS.textMuted,
+    marginTop: 2,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+
+  freeBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#DCFCE7",
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+
+  freeBadgeText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: "#166534",
+    letterSpacing: 0.3,
   },
 
   productDescription: {
     fontSize: 13,
     color: COLORS.textSecondary,
-    marginTop: 6,
+    marginTop: 12,
     lineHeight: 18,
   },
 
+  productCardDivider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginTop: 14,
+    marginBottom: 14,
+  },
+
+  productCardBottom: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  productPriceLabel: {
+    fontSize: 10.5,
+    fontWeight: "700",
+    color: COLORS.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+
   productPrice: {
-    marginTop: 12,
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "800",
     color: COLORS.primary,
+  },
+
+  productDiscountHint: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#B45309",
+    marginTop: 2,
+  },
+
+  productActionBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#E8F1FF",
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 20,
+  },
+
+  productActionText: {
+    color: COLORS.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
 
   emptyState: {
@@ -440,6 +523,82 @@ export const styles = StyleSheet.create({
     color: COLORS.primary,
   },
 
+  modalPriceBox: {
+    backgroundColor: "#F8FAFC",
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  modalPriceLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: COLORS.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+
+  modalPriceValue: {
+    fontSize: 26,
+    fontWeight: "900",
+    color: COLORS.text,
+    marginTop: 4,
+  },
+
+  accountRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F8FAFC",
+    borderRadius: 16,
+    padding: 12,
+    borderWidth: 1.5,
+    borderColor: "transparent",
+  },
+
+  accountRowActive: {
+    backgroundColor: "#EFF6FF",
+    borderColor: COLORS.primary,
+  },
+
+  accountRowIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: "#E2E8F0",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+
+  accountRowIconActive: {
+    backgroundColor: COLORS.primary,
+  },
+
+  accountRowNumber: {
+    fontSize: 13.5,
+    fontWeight: "700",
+    color: COLORS.text,
+    letterSpacing: 0.5,
+  },
+
+  accountRowCurrency: {
+    fontSize: 11,
+    color: COLORS.textMuted,
+    marginTop: 1,
+  },
+
+  accountRowBalance: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: COLORS.textSecondary,
+  },
+
+  accountRowBalanceActive: {
+    color: COLORS.primary,
+  },
+  
   modalErrorBox: {
     flexDirection: "row",
     alignItems: "center",
