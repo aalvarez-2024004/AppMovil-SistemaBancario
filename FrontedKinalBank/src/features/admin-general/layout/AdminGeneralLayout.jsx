@@ -2,21 +2,16 @@ import { useState } from "react"
 import { NavLink, Outlet } from "react-router-dom"
 import { Navbar } from "../../../shared/components/layouts/Navbar.jsx"
 
-const CloseIcon = ({ className }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-);
-
 export const AdminGeneralLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <div className="h-screen w-screen bg-[#f4f7fb] flex flex-col overflow-hidden">
 
-            {/* El botón de menú vive dentro del propio Navbar (onToggleSidebar),
-                así no hay dos botones peleando por el mismo espacio. */}
+            {/* El botón de menú vive dentro del propio Navbar (onToggleSidebar).
+                Ese mismo botón se anima de "hamburguesa" a "X" cuando el sidebar
+                está abierto, así que no hace falta un botón de cerrar aparte
+                dentro del sidebar. */}
             <Navbar
                 sidebarOpen={sidebarOpen}
                 onToggleSidebar={() => setSidebarOpen((open) => !open)}
@@ -49,21 +44,12 @@ export const AdminGeneralLayout = () => {
                       comprimiendo el contenido principal. */}
                   <div className="relative flex flex-col flex-1 min-h-0">
 
-                    {/* Botón cerrar, solo en móvil */}
-                    <button
-                        onClick={() => setSidebarOpen(false)}
-                        aria-label="Cerrar menú"
-                        className="lg:hidden absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-slate-300"
-                    >
-                        <CloseIcon className="w-5 h-5" />
-                    </button>
-
                     {/* Glows */}
                     <div className="absolute top-[-120px] right-[-120px] w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
                     <div className="absolute bottom-[-100px] left-[-100px] w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none" />
 
-                    <div className="relative z-10 flex flex-col h-full p-6 overflow-y-auto" onClick={() => setSidebarOpen(false)}>
+                    <div className="relative z-10 flex flex-col h-full p-6 pt-20 lg:pt-6 overflow-y-auto" onClick={() => setSidebarOpen(false)}>
 
                         {/* Navigation */}
                         <nav className="flex flex-col gap-7">

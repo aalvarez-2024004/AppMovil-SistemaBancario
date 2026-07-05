@@ -17,7 +17,7 @@ export const Navbar = ({ sidebarOpen, onToggleSidebar }) => {
     const isAdmin = user?.role === "ADMIN";
 
     return (
-        <header className="h-[70px] sm:h-[78px] bg-[#071126]/95 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-3 sm:px-8 sticky top-0 z-50 flex-shrink-0 relative overflow-hidden">
+        <header className="h-[70px] sm:h-[78px] bg-[#071126]/95 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-3 sm:px-8 sticky top-0 z-[100] flex-shrink-0 relative overflow-hidden">
 
             <div className="absolute top-[-80px] left-[20%] w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full" />
             <div className="absolute right-[-120px] top-[-80px] w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
