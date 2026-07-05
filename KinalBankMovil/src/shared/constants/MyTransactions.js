@@ -1,6 +1,17 @@
-import { StyleSheet, Dimensions, Platform } from "react-native";
+import { StyleSheet, Dimensions, Platform, PixelRatio } from "react-native";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+const BASE_WIDTH = 375;
+const BASE_HEIGHT = 812;
+
+export const scale = (size) => (SCREEN_WIDTH / BASE_WIDTH) * size;
+export const verticalScale = (size) => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+export const moderateScale = (size, factor = 0.5) =>
+  size + (scale(size) - size) * factor;
+
+export const isSmallDevice = SCREEN_WIDTH < 360;
+export const isLargeDevice = SCREEN_WIDTH >= 428; 
 
 export const COLORS = {
   navy:          "#0B1B33",
@@ -93,9 +104,24 @@ export const styles = StyleSheet.create({
   searchInput:      { flex: 1, fontSize: 14.5, color: COLORS.textPrimary, paddingVertical: 0 },
 
   tabsRow:          { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, gap: 10, marginBottom: 18 },
-  tabsContainer:    { gap: 8 },
+  tabsContainer: {
+    gap: isSmallDevice ? 6 : scale(8),
+    paddingRight: scale(4), // para que la última pestaña no quede pegada al buscador
+  },
   searchToggleBtn:  { width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.white, justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: COLORS.border, ...softShadow },
-  tab:              { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 15, paddingVertical: 9, borderRadius: 22, backgroundColor: COLORS.white, borderWidth: 1, borderColor: COLORS.border, ...softShadow },
+  tab: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: isSmallDevice ? 4 : scale(6),
+    paddingHorizontal: isSmallDevice ? 10 : scale(15),
+    paddingVertical: verticalScale(9),
+    borderRadius: scale(22),
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    minHeight: scale(36), // mismo alto que el botón de búsqueda, para que todo se vea alineado
+    ...softShadow,
+  },
   tabActive:        { backgroundColor: COLORS.navy, borderColor: COLORS.navy },
   tabText:          { fontSize: 12.5, color: COLORS.textSecondary, fontWeight: "600" },
   tabTextActive:    { color: "#fff" },

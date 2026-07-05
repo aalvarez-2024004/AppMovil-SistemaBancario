@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS, TABS, TX_TYPE_MAP, HEADER_GRADIENT } from "../constants/MyTransactions";
+import { styles, COLORS, TABS, TX_TYPE_MAP, HEADER_GRADIENT, isSmallDevice } from "../constants/MyTransactions";
+import { isSmallDevice } from "../constants/MyTransactions";
 
 const getFromId = (tx) => String(tx.fromAccount?._id ?? tx.fromAccount ?? "");
 
@@ -343,12 +344,15 @@ export const TransactionTabs = ({ activeTab, onTabChange, showSearch, onToggleSe
           >
             <Ionicons
               name={item.icon}
-              size={14}
+              size={isSmallDevice ? 15 : 14}
               color={isActive ? "#fff" : COLORS.textMuted}
             />
-            <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
-              {item.label}
-            </Text>
+            {/* En pantallas muy angostas solo se muestra el ícono, para que quepan las 5 pestañas + buscador sin scroll forzado */}
+            {!isSmallDevice && (
+              <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+                {item.label}
+              </Text>
+            )}
           </TouchableOpacity>
         );
       })}
