@@ -34,8 +34,6 @@ export const COLORS = {
     white12: "rgba(255,255,255,0.12)",
 };
 
-// Reusable gradient tuples so every screen that adopts this hero
-// treatment (Home, Cuentas, Transferencia...) stays visually in sync.
 export const GRADIENTS = {
     hero: [COLORS.navyMid, COLORS.navyLight, "#2E5794"],
     button: [COLORS.navy, COLORS.navyLight],
@@ -69,16 +67,15 @@ const accentShadow = {
 
 export const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "#0F1F3D" },
-    scrollContent: { paddingBottom: 48 },
+    scrollContent: { paddingBottom: 24 },
 
     hero: {
         paddingHorizontal: 20,
         paddingTop: Platform.OS === "ios" ? 56 : 40,
-        paddingBottom: 40,
+        paddingBottom: 28,
         position: "relative",
         overflow: "hidden",
     },
-    // Soft bokeh blobs, same language as the Home / Cuentas headers
     heroDecorCircleLg: {
         position: "absolute",
         top: -70,
@@ -135,10 +132,10 @@ export const styles = StyleSheet.create({
     },
 
     heroTitle: {
-        fontSize: 30,
+        fontSize: 28,
         fontWeight: "800",
         color: "#FFFFFF",
-        lineHeight: 34,
+        lineHeight: 32,
     },
     heroTitleAccent: { color: "#7DAEF0" },
     heroSubtitle: {
@@ -147,12 +144,40 @@ export const styles = StyleSheet.create({
         marginTop: 8,
     },
 
+    // ------------------------------------------------------------
+    //  NUEVO — indicador de progreso del flujo (Origen > Destino > Monto)
+    // ------------------------------------------------------------
+    stepRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 18,
+    },
+    stepDot: {
+        width: 7,
+        height: 7,
+        borderRadius: 4,
+        backgroundColor: "rgba(255,255,255,0.25)",
+    },
+    stepDotActive: {
+        width: 18,
+        backgroundColor: "#7DAEF0",
+    },
+    stepDotDone: {
+        backgroundColor: "rgba(125,174,240,0.55)",
+    },
+    stepConnector: {
+        width: 14,
+        height: 1,
+        backgroundColor: "rgba(255,255,255,0.18)",
+        marginHorizontal: 6,
+    },
+
     content: {
         flex: 1,
         backgroundColor: "#F8F9FB",
         borderTopLeftRadius: 28,
         borderTopRightRadius: 28,
-        marginTop: -20,
+        marginTop: -18,
         paddingTop: 22,
     },
 
@@ -170,82 +195,13 @@ export const styles = StyleSheet.create({
         color: "#6B7280",
         textTransform: "uppercase",
     },
+    sectionLabelHint: {
+        fontSize: 11,
+        fontWeight: "600",
+        color: "#9CA3AF",
+    },
 
     accountsRow: { gap: 12, paddingRight: 4 },
-    accountOption: {
-        width: 210,
-        backgroundColor: "#FFFFFF",
-        borderRadius: 18,
-        padding: 16,
-        borderWidth: 1.5,
-        borderColor: "#EEF1F5",
-        ...cardShadow,
-    },
-    accountOptionSelected: {
-        borderColor: "#3B7DD8",
-        backgroundColor: "rgba(59,125,216,0.06)",
-    },
-    accountOptionTop: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 16,
-    },
-    accountOptionIconChip: {
-        width: 38,
-        height: 38,
-        borderRadius: 12,
-        backgroundColor: "rgba(59,125,216,0.10)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    accountOptionIconChipSelected: {
-        backgroundColor: "#3B7DD8",
-    },
-    accountOptionType: {
-        fontSize: 10,
-        fontWeight: "700",
-        letterSpacing: 1,
-        color: "#9CA3AF",
-        textTransform: "uppercase",
-        marginTop: 8,
-    },
-    accountOptionRadio: {
-        width: 18,
-        height: 18,
-        borderRadius: 9,
-        borderWidth: 2,
-        borderColor: "#E2E8F0",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    accountOptionRadioSelected: { borderColor: "#3B7DD8" },
-    accountOptionRadioDot: {
-        width: 9,
-        height: 9,
-        borderRadius: 5,
-        backgroundColor: "#3B7DD8",
-    },
-    accountOptionNumber: {
-        fontSize: 16,
-        fontWeight: "800",
-        color: "#1A2333",
-        marginBottom: 10,
-        letterSpacing: 1,
-    },
-    accountOptionBalanceLabel: {
-        fontSize: 9,
-        fontWeight: "700",
-        color: "#9CA3AF",
-        textTransform: "uppercase",
-        letterSpacing: 0.6,
-        marginBottom: 2,
-    },
-    accountOptionBalance: {
-        fontSize: 18,
-        fontWeight: "800",
-        color: "#1A2333",
-    },
     accountOptionEmpty: {
         backgroundColor: "#FFFFFF",
         borderRadius: 16,
@@ -260,46 +216,17 @@ export const styles = StyleSheet.create({
     },
 
     favoritesRow: { gap: 10, paddingRight: 4, paddingBottom: 2 },
-    favoriteChip: { alignItems: "center", width: 72 },
-    favoriteAvatar: {
-        width: 52,
-        height: 52,
-        borderRadius: 26,
-        backgroundColor: "#EAF1FC",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 6,
-        borderWidth: 2,
-        borderColor: "transparent",
-    },
-    favoriteAvatarSelected: {
-        borderColor: "#3B7DD8",
-        backgroundColor: "rgba(59,125,216,0.08)",
-    },
-    favoriteAvatarText: {
-        fontSize: 18,
-        fontWeight: "800",
-        color: "#3B7DD8",
-    },
-    favoriteChipLabel: {
-        fontSize: 11,
-        color: "#6B7280",
-        fontWeight: "600",
-        textAlign: "center",
-    },
-    favoriteChipLabelSelected: { color: "#1A2333", fontWeight: "700" },
-    addFavoriteChip: {
-        width: 52,
-        height: 52,
-        borderRadius: 26,
-        borderWidth: 1.5,
-        borderColor: "#E2E8F0",
-        borderStyle: "dashed",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 6,
-    },
 
+    // ------------------------------------------------------------
+    //  Inputs — ahora con label fijo arriba (no solo placeholder)
+    // ------------------------------------------------------------
+    inputLabel: {
+        fontSize: 11,
+        fontWeight: "700",
+        color: "#9CA3AF",
+        marginBottom: 6,
+        marginLeft: 2,
+    },
     inputCard: {
         backgroundColor: "#FFFFFF",
         borderRadius: 16,
@@ -341,10 +268,13 @@ export const styles = StyleSheet.create({
         fontWeight: "600",
     },
 
+    // ------------------------------------------------------------
+    //  Monto — jerarquía más clara, chip de moneda en vez de texto suelto
+    // ------------------------------------------------------------
     amountCard: {
         backgroundColor: "#FFFFFF",
         borderRadius: 18,
-        paddingVertical: 22,
+        paddingVertical: 24,
         alignItems: "center",
         borderWidth: 1.5,
         borderColor: "transparent",
@@ -354,20 +284,27 @@ export const styles = StyleSheet.create({
         borderColor: "#3B7DD8",
     },
     amountRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-    amountPrefix: { fontSize: 28, fontWeight: "800", color: "#9CA3AF" },
+    amountPrefix: { fontSize: 26, fontWeight: "800", color: "#9CA3AF" },
     amountInput: {
-        fontSize: 40,
+        fontSize: 42,
         fontWeight: "800",
         color: "#1A2333",
         minWidth: 60,
         textAlign: "center",
         paddingVertical: 0,
     },
-    amountCurrency: {
-        fontSize: 13,
-        color: "#9CA3AF",
-        marginTop: 6,
-        fontWeight: "600",
+    amountCurrencyChip: {
+        marginTop: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+        backgroundColor: "#EAF1FC",
+    },
+    amountCurrencyChipText: {
+        fontSize: 11,
+        color: "#3B7DD8",
+        fontWeight: "700",
+        letterSpacing: 0.4,
     },
 
     quickAmountsRow: {
@@ -375,7 +312,7 @@ export const styles = StyleSheet.create({
         flexWrap: "wrap",
         justifyContent: "center",
         gap: 8,
-        marginTop: 16,
+        marginTop: 18,
     },
     quickAmountChip: {
         paddingHorizontal: 14,
@@ -405,7 +342,7 @@ export const styles = StyleSheet.create({
         borderRadius: 14,
         padding: 14,
         marginHorizontal: 20,
-        marginBottom: 20,
+        marginBottom: 14,
     },
     hintText: {
         flex: 1,
@@ -421,7 +358,7 @@ export const styles = StyleSheet.create({
         borderRadius: 14,
         padding: 14,
         marginHorizontal: 20,
-        marginBottom: 20,
+        marginBottom: 14,
     },
     errorBoxText: {
         flex: 1,
@@ -430,7 +367,19 @@ export const styles = StyleSheet.create({
         fontWeight: "600",
     },
 
-    submitWrap: { paddingHorizontal: 20, marginTop: 4 },
+    // ------------------------------------------------------------
+    //  NUEVO — CTA fija (sticky) fuera del ScrollView, con separador
+    //  sutil para que no "flote" sobre el contenido al hacer scroll
+    // ------------------------------------------------------------
+    ctaBar: {
+        paddingHorizontal: 20,
+        paddingTop: 14,
+        paddingBottom: Platform.OS === "ios" ? 28 : 18,
+        backgroundColor: "#F8F9FB",
+        borderTopWidth: 1,
+        borderTopColor: "#EEF1F5",
+    },
+    submitWrap: { paddingHorizontal: 0 },
     submitBtn: {
         height: 56,
         borderRadius: 16,
@@ -539,4 +488,158 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
     },
     successSecondaryBtnText: { color: "#6B7280", fontWeight: "700", fontSize: 15 },
+
+    // ================================================================
+    //  Tarjetas de cuenta — badge de moneda reubicado para no chocar
+    //  con el check de selección (antes se superponían en la esquina)
+    // ================================================================
+    accountCardModern: {
+        width: 230,
+        borderRadius: 22,
+        padding: 18,
+        overflow: "hidden",
+        position: "relative",
+        ...accentShadow,
+    },
+    accountCardDecor: {
+        position: "absolute",
+        width: 130,
+        height: 130,
+        borderRadius: 65,
+        backgroundColor: "rgba(255,255,255,0.08)",
+        top: -50,
+        right: -40,
+    },
+    accountCardTop: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 20,
+    },
+    accountCardIconChip: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        backgroundColor: "rgba(255,255,255,0.16)",
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.20)",
+    },
+    // el badge ahora vive pegado al chip del ícono, no flotando cerca del check
+    accountCardIconGroup: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+    },
+    accountCardCurrencyBadge: {
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 8,
+        backgroundColor: "rgba(255,255,255,0.14)",
+    },
+    accountCardCurrencyBadgeText: {
+        fontSize: 9,
+        fontWeight: "800",
+        color: "#FFFFFF",
+        letterSpacing: 0.5,
+    },
+    accountCardCheck: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 1.5,
+        borderColor: "rgba(255,255,255,0.45)",
+    },
+    accountCardCheckSelected: {
+        backgroundColor: "#FFFFFF",
+        borderColor: "#FFFFFF",
+    },
+    accountCardType: {
+        fontSize: 10,
+        fontWeight: "800",
+        letterSpacing: 1.2,
+        color: "rgba(255,255,255,0.60)",
+        textTransform: "uppercase",
+        marginBottom: 6,
+    },
+    accountCardNumber: {
+        fontSize: 18,
+        fontWeight: "800",
+        color: "#FFFFFF",
+        letterSpacing: 1,
+        marginBottom: 18,
+    },
+    accountCardBalanceLabel: {
+        fontSize: 9,
+        fontWeight: "700",
+        color: "rgba(255,255,255,0.55)",
+        textTransform: "uppercase",
+        letterSpacing: 0.6,
+        marginBottom: 3,
+    },
+    accountCardBalance: {
+        fontSize: 21,
+        fontWeight: "800",
+        color: "#FFFFFF",
+        letterSpacing: -0.3,
+    },
+
+    // ================================================================
+    //  Favoritos — mismo concepto, anillo con más contraste al elegir
+    // ================================================================
+    favoriteCardModern: {
+        width: 96,
+        alignItems: "center",
+        backgroundColor: "#FFFFFF",
+        borderRadius: 18,
+        paddingVertical: 14,
+        paddingHorizontal: 8,
+        borderWidth: 1.5,
+        borderColor: "transparent",
+        ...cardShadow,
+    },
+    favoriteCardSelected: {
+        backgroundColor: "rgba(59,125,216,0.06)",
+        borderColor: "rgba(59,125,216,0.35)",
+    },
+    favoriteRing: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    favoriteAvatarInner: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: "#FFFFFF",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    favoriteAvatarInnerText: {
+        fontSize: 17,
+        fontWeight: "800",
+        color: "#3B7DD8",
+    },
+    favoriteCardLabel: {
+        fontSize: 11,
+        fontWeight: "700",
+        color: "#1A2333",
+        textAlign: "center",
+    },
+    addFavoriteCardModern: {
+        width: 96,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 14,
+        borderRadius: 18,
+        borderWidth: 1.5,
+        borderColor: "#E2E8F0",
+        borderStyle: "dashed",
+    },
 });

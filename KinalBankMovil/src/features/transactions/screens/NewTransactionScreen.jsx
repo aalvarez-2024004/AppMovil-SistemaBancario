@@ -22,6 +22,7 @@ import { styles, COLORS, GRADIENTS } from "../../../shared/constants/NewTransact
 import {
     formatCurrency,
     maskAccount,
+    StepProgress,
     SourceAccountSelector,
     FavoritesQuickPicker,
     DestinationInput,
@@ -32,6 +33,7 @@ import {
 } from "../../../shared/components/NewTransactionComponents";
 
 const MAX_PER_TRANSFER = 2000;
+const STEPS = ["origen", "destino", "monto"];
 
 const NewTransactionScreen = () => {
     const navigation = useNavigation();
@@ -99,6 +101,13 @@ const NewTransactionScreen = () => {
         () => favorites.find((f) => f.accountNumber === destination.trim()) || null,
         [favorites, destination]
     );
+
+    // paso actual del flujo, solo para el indicador visual del hero
+    const activeStep = useMemo(() => {
+        if (!destination.trim()) return 1;
+        if (!amount) return 2;
+        return 2;
+    }, [destination, amount]);
 
     const clearErrors = () => {
         if (localError) setLocalError(null);
@@ -170,7 +179,7 @@ const NewTransactionScreen = () => {
                     </View>
                     <Text style={styles.successTitle}>¡Transferencia exitosa!</Text>
                     <Text style={styles.successSubtitle}>Tu dinero fue enviado correctamente.</Text>
-                    <Text style={styles.successAmount}>{formatCurrency(success.amount)}</Text>
+                    <Text style={styles.successAmount}>{formatCurrency(success.amount, success.sourceAccount?.currency)}</Text>
 
                     <View style={styles.successCard}>
                         <View style={styles.successRow}>
@@ -266,6 +275,8 @@ const NewTransactionScreen = () => {
                 <Text style={styles.heroTitle}>
                     Nueva{"\n"}<Text style={styles.heroTitleAccent}>Transferencia</Text>
                 </Text>
+
+                <StepProgress steps={STEPS} activeIndex={activeStep} />
             </LinearGradient>
 
             <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -292,9 +303,6 @@ const NewTransactionScreen = () => {
                 )}
 
                 <View style={styles.section}>
-                    <View style={styles.sectionLabelRow}>
-                        <Text style={styles.sectionLabel}>Destinatario</Text>
-                    </View>
                     <DestinationInput value={destination} onChangeText={(v) => { clearErrors(); setDestination(v); }} matchedFavorite={matchedFavorite} />
                 </View>
 
@@ -306,34 +314,31 @@ const NewTransactionScreen = () => {
                 </View>
 
                 <View style={styles.section}>
-                    <View style={styles.sectionLabelRow}>
-                        <Text style={styles.sectionLabel}>Nota</Text>
-                    </View>
                     <DescriptionInput value={description} onChangeText={setDescription} />
                 </View>
 
-                <InfoHint text={`Máximo ${formatCurrency(MAX_PER_TRANSFER)} por transferencia y Q 10,000.00 por día.`} />
+                <InfoHint text={`Máximo ${formatCurrency(MAX_PER_TRANSFER, selectedAccount?.currency)} por transferencia y ${formatCurrency(10000, selectedAccount?.currency)} por día.`} />
                 <ErrorBanner message={errorMessage} />
-
-                <View style={styles.submitWrap}>
-                    <TouchableOpacity
-                        onPress={handleSubmit}
-                        disabled={isSubmitting || loadingAccounts}
-                        activeOpacity={0.85}
-                    >
-                        <LinearGradient
-                            colors={GRADIENTS.button}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
-                        >
-                            {isSubmitting
-                                ? <ActivityIndicator color="#fff" />
-                                : <><Ionicons name="paper-plane-outline" size={18} color="#fff" /><Text style={styles.submitBtnText}>Transferir</Text></>}
-                        </LinearGradient>
-                    </TouchableOpacity>
-                </View>
             </ScrollView>
+
+            <View style={styles.ctaBar}>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    disabled={isSubmitting || loadingAccounts}
+                    activeOpacity={0.85}
+                >
+                    <LinearGradient
+                        colors={GRADIENTS.button}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
+                    >
+                        {isSubmitting
+                            ? <ActivityIndicator color="#fff" />
+                            : <><Ionicons name="paper-plane-outline" size={18} color="#fff" /><Text style={styles.submitBtnText}>Transferir</Text></>}
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
         </KeyboardAvoidingView>
     );
 };

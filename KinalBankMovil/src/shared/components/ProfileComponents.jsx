@@ -4,15 +4,19 @@ import { Ionicons } from "@expo/vector-icons";
 import { styles, COLORS, GRADIENTS } from "../constants/profile";
 
 export const maskAccountCard = (num = "") => {
-    const str = String(num || "");
-    const last4 = str.slice(-4) || "0000";
+    const str = String(num || "").replace(/\D/g, "");
+    if (!str) return "—";
+    const last4 = str.slice(-4);
     return `•••• •••• ${last4}`;
 };
 
 export const maskDPI = (dpi = "") => {
     const str = String(dpi || "").replace(/\D/g, "");
-    if (str.length <= 8) return str || "—";
-    return `${str.slice(0, 4)} •••• ${str.slice(-4)}`;
+    if (!str) return "—";
+    if (str.length !== 13) {
+        return str.replace(/(.{4})/g, "$1 ").trim();
+    }
+    return `${str.slice(0, 4)} ${str.slice(4, 9)} ${str.slice(9)}`;
 };
 
 export const getInitials = (user) => {

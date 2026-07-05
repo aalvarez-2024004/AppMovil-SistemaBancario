@@ -1,18 +1,49 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS } from "../constants/NewTransaction";
+import { LinearGradient } from "expo-linear-gradient";
+import { styles, COLORS, GRADIENTS } from "../constants/NewTransaction";
 
-export const formatCurrency = (amount) =>
-    `Q ${Number(amount || 0).toLocaleString("es-GT", {
+const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€", GBP: "£", MXN: "MX$" };
+
+const ACCOUNT_TYPE_ICONS = {
+    AHORRO: "wallet-outline",
+    MONETARIA: "card-outline",
+};
+
+export const formatCurrency = (amount, currency = "GTQ") => {
+    const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
+    return `${symbol} ${Number(amount || 0).toLocaleString("es-GT", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
+};
 
 export const maskAccount = (num = "") => {
     const str = String(num);
     return str.length > 4 ? `•••••• ${str.slice(-4)}` : str;
 };
+
+// ------------------------------------------------------------
+//  NUEVO — indicador de pasos del flujo. steps: array de strings,
+//  activeIndex: paso actual (0-based)
+// ------------------------------------------------------------
+export const StepProgress = ({ steps, activeIndex }) => (
+    <View style={styles.stepRow}>
+        {steps.map((_, i) => (
+            <View key={i} style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                    style={[
+                        styles.stepDot,
+                        i < activeIndex && styles.stepDotDone,
+                        i === activeIndex && styles.stepDotActive,
+                    ]}
+                />
+                {i < steps.length - 1 && <View style={styles.stepConnector} />}
+            </View>
+        ))}
+    </View>
+);
 
 export const SourceAccountSelector = ({ accounts, selectedId, onSelect }) => {
     if (!accounts || accounts.length === 0) {
@@ -34,47 +65,60 @@ export const SourceAccountSelector = ({ accounts, selectedId, onSelect }) => {
             {accounts.map((acc) => {
                 const id = acc._id || acc.id;
                 const selected = id === selectedId;
+                const currency = acc.currency || "GTQ";
+                const iconName = ACCOUNT_TYPE_ICONS[acc.accountType] || "card-outline";
+
                 return (
                     <TouchableOpacity
                         key={id}
-                        style={[styles.accountOption, selected && styles.accountOptionSelected]}
-                        activeOpacity={0.8}
+                        activeOpacity={0.85}
                         onPress={() => onSelect(acc)}
+                        style={selected && { transform: [{ scale: 1.02 }] }}
                     >
-                        <View style={styles.accountOptionTop}>
-                            <View
-                                style={[
-                                    styles.accountOptionIconChip,
-                                    selected && styles.accountOptionIconChipSelected,
-                                ]}
-                            >
-                                <Ionicons
-                                    name="card-outline"
-                                    size={18}
-                                    color={selected ? "#FFFFFF" : COLORS.accent}
-                                />
-                            </View>
-                            <View
-                                style={[
-                                    styles.accountOptionRadio,
-                                    selected && styles.accountOptionRadioSelected,
-                                ]}
-                            >
-                                {selected && <View style={styles.accountOptionRadioDot} />}
-                            </View>
-                        </View>
+                        <LinearGradient
+                            colors={GRADIENTS.hero}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={[
+                                styles.accountCardModern,
+                                selected && { borderWidth: 2, borderColor: "#7DAEF0" },
+                            ]}
+                        >
+                            <View style={styles.accountCardDecor} pointerEvents="none" />
 
-                        <Text style={styles.accountOptionType}>
-                            {acc.accountType || "MONETARIA"} · {acc.currency || "GTQ"}
-                        </Text>
-                        <Text style={styles.accountOptionNumber}>
-                            {maskAccount(acc.accountNumber)}
-                        </Text>
+                            <View style={styles.accountCardTop}>
+                                <View style={styles.accountCardIconGroup}>
+                                    <View style={styles.accountCardIconChip}>
+                                        <Ionicons name={iconName} size={19} color="#FFFFFF" />
+                                    </View>
+                                    <View style={styles.accountCardCurrencyBadge}>
+                                        <Text style={styles.accountCardCurrencyBadgeText}>{currency}</Text>
+                                    </View>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.accountCardCheck,
+                                        selected && styles.accountCardCheckSelected,
+                                    ]}
+                                >
+                                    {selected && (
+                                        <Ionicons name="checkmark" size={14} color={COLORS.navy} />
+                                    )}
+                                </View>
+                            </View>
 
-                        <Text style={styles.accountOptionBalanceLabel}>Saldo disponible</Text>
-                        <Text style={styles.accountOptionBalance}>
-                            {formatCurrency(acc.balance)}
-                        </Text>
+                            <Text style={styles.accountCardType}>
+                                {acc.accountType || "MONETARIA"}
+                            </Text>
+                            <Text style={styles.accountCardNumber}>
+                                {maskAccount(acc.accountNumber)}
+                            </Text>
+
+                            <Text style={styles.accountCardBalanceLabel}>Saldo disponible</Text>
+                            <Text style={styles.accountCardBalance}>
+                                {formatCurrency(acc.balance, currency)}
+                            </Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 );
             })}
@@ -94,17 +138,28 @@ export const FavoritesQuickPicker = ({ favorites, selectedAccountNumber, onSelec
             return (
                 <TouchableOpacity
                     key={fav._id}
-                    style={styles.favoriteChip}
-                    activeOpacity={0.75}
+                    style={[styles.favoriteCardModern, selected && styles.favoriteCardSelected]}
+                    activeOpacity={0.8}
                     onPress={() => onSelect(fav)}
                 >
-                    <View style={[styles.favoriteAvatar, selected && styles.favoriteAvatarSelected]}>
-                        <Text style={styles.favoriteAvatarText}>{initial}</Text>
-                    </View>
-                    <Text
-                        style={[styles.favoriteChipLabel, selected && styles.favoriteChipLabelSelected]}
-                        numberOfLines={1}
+                    <LinearGradient
+                        colors={selected ? [COLORS.navyLight, COLORS.accentLight] : ["#EAF1FC", "#EAF1FC"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.favoriteRing}
                     >
+                        <View style={styles.favoriteAvatarInner}>
+                            <Text
+                                style={[
+                                    styles.favoriteAvatarInnerText,
+                                    selected && { color: COLORS.accent },
+                                ]}
+                            >
+                                {initial}
+                            </Text>
+                        </View>
+                    </LinearGradient>
+                    <Text style={styles.favoriteCardLabel} numberOfLines={1}>
                         {fav.alias}
                     </Text>
                 </TouchableOpacity>
@@ -112,11 +167,13 @@ export const FavoritesQuickPicker = ({ favorites, selectedAccountNumber, onSelec
         })}
 
         {onAddNew && (
-            <TouchableOpacity style={styles.favoriteChip} activeOpacity={0.75} onPress={onAddNew}>
-                <View style={styles.addFavoriteChip}>
-                    <Ionicons name="add" size={22} color={COLORS.textMuted} />
-                </View>
-                <Text style={styles.favoriteChipLabel} numberOfLines={1}>
+            <TouchableOpacity
+                style={styles.addFavoriteCardModern}
+                activeOpacity={0.75}
+                onPress={onAddNew}
+            >
+                <Ionicons name="add" size={22} color={COLORS.textMuted} />
+                <Text style={[styles.favoriteCardLabel, { marginTop: 6, color: COLORS.textMuted }]}>
                     Nuevo
                 </Text>
             </TouchableOpacity>
@@ -128,6 +185,7 @@ export const DestinationInput = ({ value, onChangeText, matchedFavorite }) => {
     const [focused, setFocused] = useState(false);
     return (
         <View>
+            <Text style={styles.inputLabel}>Número de cuenta</Text>
             <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
                 <View style={styles.inputRow}>
                     <View style={styles.inputIcon}>
@@ -139,7 +197,7 @@ export const DestinationInput = ({ value, onChangeText, matchedFavorite }) => {
                     </View>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="Número de cuenta destino"
+                        placeholder="Ej. 4905980100"
                         placeholderTextColor={COLORS.textMuted}
                         value={value}
                         onChangeText={onChangeText}
@@ -167,12 +225,13 @@ const QUICK_AMOUNTS = [50, 100, 200, 500];
 export const AmountInput = ({ value, onChangeText, currency = "GTQ", quickAmounts = QUICK_AMOUNTS }) => {
     const [focused, setFocused] = useState(false);
     const active = focused || String(value || "").length > 0;
+    const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
 
     return (
         <View>
             <View style={[styles.amountCard, active && styles.amountCardActive]}>
                 <View style={styles.amountRow}>
-                    <Text style={styles.amountPrefix}>Q</Text>
+                    <Text style={styles.amountPrefix}>{symbol}</Text>
                     <TextInput
                         style={styles.amountInput}
                         placeholder="0.00"
@@ -184,7 +243,9 @@ export const AmountInput = ({ value, onChangeText, currency = "GTQ", quickAmount
                         onBlur={() => setFocused(false)}
                     />
                 </View>
-                <Text style={styles.amountCurrency}>{currency}</Text>
+                <View style={styles.amountCurrencyChip}>
+                    <Text style={styles.amountCurrencyChipText}>{currency}</Text>
+                </View>
 
                 {!!quickAmounts?.length && (
                     <View style={styles.quickAmountsRow}>
@@ -206,7 +267,7 @@ export const AmountInput = ({ value, onChangeText, currency = "GTQ", quickAmount
                                             selected && styles.quickAmountChipTextSelected,
                                         ]}
                                     >
-                                        Q{q}
+                                        {symbol}{q}
                                     </Text>
                                 </TouchableOpacity>
                             );
@@ -221,25 +282,28 @@ export const AmountInput = ({ value, onChangeText, currency = "GTQ", quickAmount
 export const DescriptionInput = ({ value, onChangeText }) => {
     const [focused, setFocused] = useState(false);
     return (
-        <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
-            <View style={styles.inputRow}>
-                <View style={styles.inputIcon}>
-                    <Ionicons
-                        name="create-outline"
-                        size={18}
-                        color={focused ? COLORS.accent : COLORS.textMuted}
+        <View>
+            <Text style={styles.inputLabel}>Nota (opcional)</Text>
+            <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
+                <View style={styles.inputRow}>
+                    <View style={styles.inputIcon}>
+                        <Ionicons
+                            name="create-outline"
+                            size={18}
+                            color={focused ? COLORS.accent : COLORS.textMuted}
+                        />
+                    </View>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Ej. Pago de renta"
+                        placeholderTextColor={COLORS.textMuted}
+                        value={value}
+                        onChangeText={onChangeText}
+                        maxLength={120}
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
                     />
                 </View>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Nota (opcional)"
-                    placeholderTextColor={COLORS.textMuted}
-                    value={value}
-                    onChangeText={onChangeText}
-                    maxLength={120}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                />
             </View>
         </View>
     );
