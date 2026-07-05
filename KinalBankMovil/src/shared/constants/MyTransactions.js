@@ -32,6 +32,7 @@ export const TABS = [
   { key: "deposit",   label: "Depósitos",   icon: "arrow-down-circle-outline" },
   { key: "sent",      label: "Enviadas",    icon: "paper-plane-outline" },
   { key: "received",  label: "Recibidas",   icon: "download-outline" },
+  { key: "purchase",  label: "Compras",     icon: "bag-handle-outline" },
 ];
 
 export const TX_TYPE_MAP = {
@@ -39,6 +40,7 @@ export const TX_TYPE_MAP = {
   withdraw: { label: "Retiro realizado",      iconName: "arrow-up-circle-outline",   bg: COLORS.dangerBg,  color: COLORS.danger  },
   transfer: { label: "Transferencia enviada", iconName: "paper-plane-outline",       bg: COLORS.infoBg,    color: COLORS.info    },
   received: { label: "Transferencia recibida",iconName: "download-outline",          bg: COLORS.infoBg,    color: COLORS.info    },
+  purchase: { label: "Compra realizada",      iconName: "bag-handle-outline",        bg: COLORS.warningBg, color: COLORS.warning },
 };
 
 // Reusable elevation presets (iOS shadow + Android elevation)

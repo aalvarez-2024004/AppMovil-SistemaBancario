@@ -58,16 +58,14 @@ export const groupByDate = (transactions) => {
   return Object.entries(groups).map(([title, data]) => ({ title, data }));
 };
 
-/* ---- mapea el tipo real de la transacción a la meta visual (TX_TYPE_MAP) ---- */
 const getMeta = (item, isCredit) => {
   if (item.type === "DEPOSITO" || item.type === "CREDITO") return TX_TYPE_MAP.deposit;
-  if (item.type === "RETIRO"   || item.type === "COMPRA")  return TX_TYPE_MAP.withdraw;
+  if (item.type === "RETIRO")        return TX_TYPE_MAP.withdraw;
+  if (item.type === "COMPRA")        return TX_TYPE_MAP.purchase;
   if (item.type === "TRANSFERENCIA") return isCredit ? TX_TYPE_MAP.received : TX_TYPE_MAP.transfer;
   return TX_TYPE_MAP.transfer;
 };
 
-// Tipos donde el "destino" es el propio banco (compras, pagos de servicios, etc.)
-// y por lo tanto nunca deberían mostrarse como "desconocido".
 const BANK_DESTINATION_TYPES = ["COMPRA", "PAGO", "PAGO_SERVICIO", "PRODUCTO"];
 
 const getCounterpart = (item, isCredit) => {

@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../../shared/store/useAuthStore";
 import { useProductStore } from "../../../shared/store/useProductStore";
+import { useTransactionStore } from "../../../shared/store/useTransactionStore";
 import { getMyAccountsRequest } from "../../../shared/api/bankClient";
 import { styles, COLORS } from "../../../shared/constants/Products";
 
@@ -44,6 +45,7 @@ const ProductsScreen = () => {
         clearLastSuccess,
     } = useProductStore();
 
+    const { fetchTransactions, fetchMyAccounts: refreshTransactionAccounts } = useTransactionStore();
     const [refreshing, setRefreshing] = useState(false);
     const [activeFilter, setActiveFilter] = useState("TODOS");
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -106,6 +108,11 @@ const ProductsScreen = () => {
         if(result.success){
             setModalVisible(false);
             fetchProducts(token);
+            await Promise.all([
+                fetchTransactions(token, 1),
+                refreshTransactionAccounts(token),
+            ]);
+            load(); 
         }
     };
 
@@ -138,6 +145,11 @@ const ProductsScreen = () => {
         if(result.success){
             setModalVisible(false);
             fetchProducts(token);
+            await Promise.all([
+                fetchTransactions(token, 1),
+                refreshTransactionAccounts(token),
+            ]);
+            load();
         }
     };
 

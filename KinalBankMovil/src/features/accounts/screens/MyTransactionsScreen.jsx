@@ -28,7 +28,8 @@ import {
 import { styles, COLORS } from "../../../shared/constants/MyTransactions";
 
 const TAB_TO_TYPE = {
-  deposit: "DEPOSITO",
+  deposit:  "DEPOSITO",
+  purchase: "COMPRA",
 };
 
 const MyTransactionsScreen = () => {
