@@ -37,22 +37,30 @@ export const createDeposit = async (req, res) => {
         //Conversión de moneda si aplica
         let finalAmount = amountNumber;
 
-        if (currency && currency !== toAccount.currency) {
+         if (currency && currency !== toAccount.currency) {
+            try {
+                const conversion = await convertirMoneda(
+                    currency,
+                    toAccount.currency,
+                    amountNumber
+                );
 
-            const conversion = await convertirMoneda(
-                currency,
-                toAccount.currency,
-                amountNumber
-            );
+                if (!conversion || conversion.montoConvertido === undefined) {
+                    return res.status(503).json({
+                        success: false,
+                        message: 'Error en la conversión de moneda, intenta de nuevo'
+                    });
+                }
 
-            if (!conversion || !conversion.montoConvertido) {
-                return res.status(400).json({
+                finalAmount = conversion.montoConvertido;
+
+            } catch (error) {
+                console.error("ERROR DIVISAS (deposito):", error.message);
+                return res.status(503).json({
                     success: false,
-                    message: 'Error en la conversión de moneda'
+                    message: 'Servicio de conversión de moneda no disponible, intenta de nuevo'
                 });
             }
-
-            finalAmount = conversion.montoConvertido;
         }
 
 
