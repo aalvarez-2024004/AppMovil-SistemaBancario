@@ -284,7 +284,7 @@ export const DepositPage = () => {
                 }
             `}</style>
 
-            <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-5 sm:p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-5 sm:p-6 md:p-8 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
                 {/* Animated gradient orbs */}
                 <div className="absolute top-[-40%] right-[-15%] w-[450px] h-[450px] bg-gradient-to-br from-indigo-600/25 via-indigo-500/15 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
                 <div className="absolute bottom-[-50%] left-[-10%] w-[350px] h-[350px] bg-gradient-to-tr from-cyan-500/20 via-cyan-400/10 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
@@ -302,7 +302,7 @@ export const DepositPage = () => {
                 <div className="absolute bottom-0 left-1/3 w-px h-16 bg-gradient-to-t from-indigo-500/30 to-transparent hidden sm:block" />
                 <div className="absolute bottom-0 right-1/4 w-px h-24 bg-gradient-to-t from-cyan-500/20 to-transparent hidden sm:block" />
 
-                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-[1fr_320px] gap-6 items-center">
                     <div className="max-w-xl">
                         <div className="inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-5 sm:mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default group">
                             <div className="relative flex-shrink-0">
@@ -316,7 +316,7 @@ export const DepositPage = () => {
                             <BanknotesIcon className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform hidden xs:block" />
                         </div>
 
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tight">
                             Gestion de
                             <span className="block bg-gradient-to-r from-indigo-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent animate-gradient mt-1">
                                 depositos
@@ -340,8 +340,8 @@ export const DepositPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4 sm:gap-5">
-                        <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full sm:min-w-[220px] sm:w-auto overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
+                    <div className="flex flex-col items-center sm:items-start lg:items-end gap-4 sm:gap-5">
+                        <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full max-w-xs sm:min-w-[220px] sm:w-auto overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[22px] sm:rounded-[28px]" />
 
                             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -371,7 +371,7 @@ export const DepositPage = () => {
                             </div>
                         </div>
 
-                        <div className="relative group w-full sm:w-auto">
+                        <div className="relative group w-full max-w-xs sm:w-auto">
                             <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
                             <div className="relative">
                                 <DepositModal />

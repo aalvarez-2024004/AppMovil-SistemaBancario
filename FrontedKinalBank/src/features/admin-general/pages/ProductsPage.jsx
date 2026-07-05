@@ -432,8 +432,8 @@ export const ProductsPage = () => {
           </div>
 
 
-          <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4 sm:gap-5">
-            <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full sm:min-w-[220px] sm:w-auto overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
+          <div className="flex flex-col items-center sm:items-start lg:items-end gap-4 sm:gap-5">
+            <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full max-w-xs sm:min-w-[220px] sm:w-auto overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
 
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 rounded-[22px] sm:rounded-[28px]" />
 
@@ -466,7 +466,7 @@ export const ProductsPage = () => {
 
             <button
               onClick={() => setShowCreate(true)}
-              className="group relative w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100 transition-all duration-300 overflow-hidden"
+              className="group relative w-full max-w-xs sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100 transition-all duration-300 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 

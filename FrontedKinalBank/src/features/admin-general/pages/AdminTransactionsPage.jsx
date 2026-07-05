@@ -503,7 +503,7 @@ export const AdminTransactionsPage = () => {
                             <ActivityIcon className="w-3.5 h-3.5 text-cyan-400 hidden xs:block" />
                         </div>
 
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tight">
                             Actividad de
                             <span className="block bg-gradient-to-r from-indigo-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent animate-gradient mt-1">
                                 cuentas
@@ -525,8 +525,8 @@ export const AdminTransactionsPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center lg:items-end gap-4 sm:gap-5">
-                        <div className="relative rounded-[24px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full max-w-[280px] lg:w-auto lg:min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
+                    <div className="flex flex-col items-center lg:items-end gap-3">
+                        <div className="relative rounded-[24px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-4 sm:p-5 w-full max-w-[280px] lg:w-auto lg:min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[24px] sm:rounded-[28px]" />
 
                             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -538,7 +538,7 @@ export const AdminTransactionsPage = () => {
                                     <WalletIcon className="w-4 h-4 text-slate-400" />
                                     <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold">Cuentas</p>
                                 </div>
-                                <h2 className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight">
+                                <h2 className="text-3xl sm:text-4xl font-black text-white tabular-nums tracking-tight">
                                     <AnimatedNumber value={accountsByActivity.length} />
                                 </h2>
                                 <div className="mt-4 flex items-center gap-2.5">
