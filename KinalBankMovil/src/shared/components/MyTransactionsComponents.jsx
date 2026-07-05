@@ -76,7 +76,10 @@ const getCounterpart = (item, isCredit) => {
 };
 
 // Texto de respaldo cuando no hay cuenta/nombre asociado al movimiento.
+// Texto de respaldo cuando no hay cuenta/nombre asociado al movimiento.
 const getFallbackLabel = (item, isCredit) => {
+  if (isCredit && (item.type === "DEPOSITO" || item.type === "CREDITO")) return "KinalBank";
+  if (isCredit && item.type === "TRANSFERENCIA") return "Cuenta bancaria";
   if (!isCredit && BANK_DESTINATION_TYPES.includes(item.type)) return "KinalBank";
   return isCredit ? "Origen desconocido" : "Destino desconocido";
 };

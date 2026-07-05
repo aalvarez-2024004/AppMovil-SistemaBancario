@@ -4,6 +4,8 @@ import Transaction from './transaction.model.js';
 import Account from '../accounts/account.model.js';
 import { convertirMoneda } from "../services/divisas-service.js";
 import { accumulatePoints } from '../points/point.controller.js';
+import { Op } from 'sequelize';
+import { User } from '../../../AuthBanco/src/users/user.model.js';
 
 const POINTS_PER_QUETZAL = 1 / 100; 
 
@@ -322,7 +324,6 @@ export const deleteTransaction = async (req, res) => {
 
 export const getMyTransactions = async (req, res) => {
     try {
-        console.log('👤 req.user:', req.user);
         const userId = req.user.id;
 
         const userAccounts = await Account.find({ ownerId: userId }).select('_id');
@@ -341,17 +342,45 @@ export const getMyTransactions = async (req, res) => {
 
         const [transactions, totalRecords] = await Promise.all([
             Transaction.find(filter)
-                .populate('fromAccount', 'accountNumber currency')
-                .populate('toAccount',   'accountNumber currency')
+                .populate('fromAccount', 'accountNumber currency ownerId')
+                .populate('toAccount',   'accountNumber currency ownerId')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit),
             Transaction.countDocuments(filter)
         ]);
 
+        // Recolectar los ownerId únicos de las cuentas involucradas
+        const ownerIdsSet = new Set();
+        transactions.forEach((t) => {
+            if (t.fromAccount?.ownerId) ownerIdsSet.add(t.fromAccount.ownerId);
+            if (t.toAccount?.ownerId)   ownerIdsSet.add(t.toAccount.ownerId);
+        });
+
+        // Buscar los nombres en la base SQL (User)
+        const users = await User.findAll({
+            where: { Id: { [Op.in]: Array.from(ownerIdsSet) } },
+            attributes: ['Id', 'Name']
+        });
+
+        const nameById = {};
+        users.forEach((u) => { nameById[u.Id] = u.Name; });
+
+        // Inyectar holderName en cada transacción
+        const enriched = transactions.map((t) => {
+            const obj = t.toObject();
+            if (obj.fromAccount?.ownerId) {
+                obj.fromAccount.holderName = nameById[obj.fromAccount.ownerId] || null;
+            }
+            if (obj.toAccount?.ownerId) {
+                obj.toAccount.holderName = nameById[obj.toAccount.ownerId] || null;
+            }
+            return obj;
+        });
+
         return res.status(200).json({
             success: true,
-            data: transactions,
+            data: enriched,
             pagination: {
                 currentPage:  page,
                 totalPages:   Math.ceil(totalRecords / limit) || 1,
