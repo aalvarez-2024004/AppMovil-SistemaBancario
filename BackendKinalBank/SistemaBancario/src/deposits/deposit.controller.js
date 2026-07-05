@@ -1,6 +1,7 @@
 import Deposit from "./deposit.model.js";
 import Account from '../accounts/account.model.js';
 import { convertirMoneda } from "../services/divisas-service.js";
+import Transaction from '../transactions/transaction.model.js';
 
 export const createDeposit = async (req, res) => {
     try {
@@ -79,10 +80,29 @@ export const createDeposit = async (req, res) => {
 
         await deposit.save();
 
+        const transaction = new Transaction({
+            type: 'DEPOSITO',
+            amountSent: finalAmount,
+            amountReceived: finalAmount,
+            currencyFrom: toAccount.currency,
+            currencyTo: toAccount.currency,
+            exchangeRate: 1,
+            fromAccount: null,
+            toAccount: toAccount._id,
+            ownerId: toAccount.ownerId,
+            description: 'Depósito realizado por administrador'
+        });
+
+        await transaction.save();
+
+        deposit.transactionId = transaction._id;
+        await deposit.save();
+
         return res.status(201).json({
             success: true,
             message: 'Depósito realizado',
-            deposit
+            deposit,
+            transaction
         });
 
     } catch (err) {
@@ -151,11 +171,15 @@ export const revertDeposit = async (req, res) => {
         }
 
         // Revertir el deposito
-        toAccount.balance -= deposit.amount;  
+        toAccount.balance -= deposit.amount;
         await toAccount.save();
 
         deposit.estado = 'REVERTIDO';
         await deposit.save();
+
+        if (deposit.transactionId) {
+            await Transaction.findByIdAndDelete(deposit.transactionId);
+        }
 
         return res.json({
             success: true,

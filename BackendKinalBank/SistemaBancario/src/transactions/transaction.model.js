@@ -43,7 +43,7 @@ const transactionSchema = new mongoose.Schema(
     fromAccount: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: true
+        default: null
     },
     toAccount: {
         type: mongoose.Schema.Types.ObjectId,

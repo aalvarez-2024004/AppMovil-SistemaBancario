@@ -28,7 +28,12 @@ const depositSchema = new mongoose.Schema(
         fecha: {
             type: Date,
             default: Date.now
-        }
+        },
+        transactionId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Transaction',
+            default: null
+        },
     },
     {
         timestamps: true,
