@@ -148,7 +148,7 @@ const StatCard = ({ label, value, sub, icon, color, index = 0 }) => {
 
     return (
         <div
-            className="group relative overflow-hidden rounded-[24px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-xl shadow-slate-200/40 px-6 py-5 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300/50 hover:scale-[1.02] hover:-translate-y-1 cursor-default"
+            className="group relative overflow-hidden rounded-[20px] sm:rounded-[24px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-xl shadow-slate-200/40 px-4 sm:px-6 py-4 sm:py-5 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300/50 hover:scale-[1.02] hover:-translate-y-1 cursor-default"
             style={{ animation: `fadeSlideIn 0.5s ease-out ${index * 0.1}s both` }}
         >
             <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${colors.accentLine} opacity-80`} />
@@ -161,27 +161,27 @@ const StatCard = ({ label, value, sub, icon, color, index = 0 }) => {
 
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
 
-            <div className="relative z-10 flex items-center justify-between gap-5">
+            <div className="relative z-10 flex items-center justify-between gap-3 sm:gap-5">
                 <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 mb-2.5 flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full ${colors.glow} opacity-60`} />
-                        {label}
+                    <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-slate-400 mb-2 sm:mb-2.5 flex items-center gap-2">
+                        <span className={`w-1.5 h-1.5 rounded-full ${colors.glow} opacity-60 flex-shrink-0`} />
+                        <span className="truncate">{label}</span>
                     </p>
 
-                    <h3 className="text-[2.5rem] leading-none font-black text-slate-800 whitespace-nowrap tabular-nums group-hover:scale-105 transition-transform duration-300 origin-left">
+                    <h3 className="text-[1.85rem] sm:text-[2.5rem] leading-none font-black text-slate-800 whitespace-nowrap tabular-nums group-hover:scale-105 transition-transform duration-300 origin-left">
                         <AnimatedNumber value={value} />
                     </h3>
 
                     {sub && (
-                        <p className="text-xs text-slate-400 mt-3 truncate font-medium flex items-center gap-1.5">
-                            <TrendingUpIcon className="w-3 h-3 text-slate-300" />
-                            {sub}
+                        <p className="text-[11px] sm:text-xs text-slate-400 mt-2 sm:mt-3 truncate font-medium flex items-center gap-1.5">
+                            <TrendingUpIcon className="w-3 h-3 text-slate-300 flex-shrink-0" />
+                            <span className="truncate">{sub}</span>
                         </p>
                     )}
                 </div>
 
                 <div className={`
-                    relative w-16 h-16 rounded-2xl bg-gradient-to-br ${colors.iconBg} 
+                    relative w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${colors.iconBg} 
                     flex items-center justify-center ${colors.iconText} 
                     shadow-lg ${colors.iconShadow} ring-1 ${colors.iconRing}
                     flex-shrink-0 transition-all duration-400 
@@ -219,7 +219,7 @@ export const DepositPage = () => {
     ).length;
 
     return (
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-0">
             {/* Custom animations */}
             <style>{`
                 @keyframes fadeSlideIn {
@@ -267,9 +267,24 @@ export const DepositPage = () => {
                 .animate-pulse-soft {
                     animation: pulse-soft 2s ease-in-out infinite;
                 }
+                .scrollbar-thin::-webkit-scrollbar {
+                    height: 6px;
+                }
+                .scrollbar-thin::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .scrollbar-thin::-webkit-scrollbar-thumb {
+                    background: #e2e8f0;
+                    border-radius: 3px;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .animate-float, .animate-gradient, .animate-shimmer {
+                        animation: none !important;
+                    }
+                }
             `}</style>
 
-            <div className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-8">
+            <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-5 sm:p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
                 {/* Animated gradient orbs */}
                 <div className="absolute top-[-40%] right-[-15%] w-[450px] h-[450px] bg-gradient-to-br from-indigo-600/25 via-indigo-500/15 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
                 <div className="absolute bottom-[-50%] left-[-10%] w-[350px] h-[350px] bg-gradient-to-tr from-cyan-500/20 via-cyan-400/10 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
@@ -282,26 +297,26 @@ export const DepositPage = () => {
 
                 <FloatingParticles />
 
-                <div className="absolute top-0 left-1/4 w-px h-28 bg-gradient-to-b from-indigo-500/40 to-transparent" />
-                <div className="absolute top-0 right-1/3 w-px h-20 bg-gradient-to-b from-cyan-500/30 to-transparent" />
-                <div className="absolute bottom-0 left-1/3 w-px h-16 bg-gradient-to-t from-indigo-500/30 to-transparent" />
-                <div className="absolute bottom-0 right-1/4 w-px h-24 bg-gradient-to-t from-cyan-500/20 to-transparent" />
+                <div className="absolute top-0 left-1/4 w-px h-28 bg-gradient-to-b from-indigo-500/40 to-transparent hidden sm:block" />
+                <div className="absolute top-0 right-1/3 w-px h-20 bg-gradient-to-b from-cyan-500/30 to-transparent hidden sm:block" />
+                <div className="absolute bottom-0 left-1/3 w-px h-16 bg-gradient-to-t from-indigo-500/30 to-transparent hidden sm:block" />
+                <div className="absolute bottom-0 right-1/4 w-px h-24 bg-gradient-to-t from-cyan-500/20 to-transparent hidden sm:block" />
 
-                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
                     <div className="max-w-xl">
-                        <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default group">
-                            <div className="relative">
+                        <div className="inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-5 sm:mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default group">
+                            <div className="relative flex-shrink-0">
                                 <div className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-40" />
                                 <div className="relative w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-lg shadow-emerald-400/50" />
                             </div>
-                            <span className="text-[11px] uppercase tracking-[0.3em] text-slate-300 font-bold">
+                            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-300 font-bold whitespace-nowrap">
                                 Gestion financiera
                             </span>
-                            <div className="w-px h-4 bg-white/20" />
-                            <BanknotesIcon className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                            <div className="w-px h-4 bg-white/20 hidden xs:block" />
+                            <BanknotesIcon className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform hidden xs:block" />
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
                             Gestion de
                             <span className="block bg-gradient-to-r from-indigo-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent animate-gradient mt-1">
                                 depositos
@@ -309,11 +324,11 @@ export const DepositPage = () => {
                         </h1>
 
                         {/* Description */}
-                        <p className="text-slate-400 mt-5 leading-relaxed text-[15px] max-w-lg">
+                        <p className="text-slate-400 mt-4 sm:mt-5 leading-relaxed text-sm sm:text-[15px] max-w-lg">
                             Administra y supervisa todos los depositos realizados dentro del sistema financiero bancario en tiempo real.
                         </p>
 
-                        <div className="flex items-center gap-4 mt-6 flex-wrap">
+                        <div className="flex items-center gap-3 sm:gap-4 mt-6 flex-wrap">
                             <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/15 transition-colors cursor-default">
                                 <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
                                 <span className="text-emerald-300 text-xs font-semibold">{completados} completados</span>
@@ -325,9 +340,9 @@ export const DepositPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-start lg:items-end gap-5">
-                        <div className="relative rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-6 min-w-[220px] overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
-                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[28px]" />
+                    <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4 sm:gap-5">
+                        <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full sm:min-w-[220px] sm:w-auto overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
+                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[22px] sm:rounded-[28px]" />
 
                             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
@@ -335,15 +350,15 @@ export const DepositPage = () => {
                             <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-cyan-500/15 rounded-full blur-xl" />
 
                             <div className="relative">
-                                <div className="flex items-center gap-2 mb-3">
+                                <div className="flex items-center gap-2 mb-2 sm:mb-3">
                                     <DatabaseIcon className="w-4 h-4 text-slate-400" />
-                                    <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold">Total depositos</p>
+                                    <p className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold">Total depositos</p>
                                 </div>
-                                <h2 className="text-5xl font-black text-white tabular-nums tracking-tight">
+                                <h2 className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight">
                                     <AnimatedNumber value={deposits.length} />
                                 </h2>
-                                <div className="mt-4 flex items-center gap-2.5">
-                                    <div className="relative">
+                                <div className="mt-3 sm:mt-4 flex items-center gap-2.5">
+                                    <div className="relative flex-shrink-0">
                                         <div className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-40" />
                                         <div className="relative w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
                                     </div>
@@ -351,12 +366,12 @@ export const DepositPage = () => {
                                 </div>
                             </div>
 
-                            <div className="absolute inset-0 overflow-hidden rounded-[28px] pointer-events-none">
+                            <div className="absolute inset-0 overflow-hidden rounded-[22px] sm:rounded-[28px] pointer-events-none">
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" style={{ animationDuration: '3s' }} />
                             </div>
                         </div>
 
-                        <div className="relative group">
+                        <div className="relative group w-full sm:w-auto">
                             <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
                             <div className="relative">
                                 <DepositModal />
@@ -368,14 +383,14 @@ export const DepositPage = () => {
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-6 sm:mb-8">
                 <StatCard
                     label="Total depositos"
                     value={deposits.length}
                     sub="Depositos registrados"
                     color="bg-indigo-500"
                     index={0}
-                    icon={<PlusCircleIcon className="w-7 h-7" />}
+                    icon={<PlusCircleIcon className="w-6 h-6 sm:w-7 sm:h-7" />}
                 />
 
                 <StatCard
@@ -384,7 +399,7 @@ export const DepositPage = () => {
                     sub="Depositos exitosos"
                     color="bg-emerald-500"
                     index={1}
-                    icon={<CheckCircleIcon className="w-7 h-7" />}
+                    icon={<CheckCircleIcon className="w-6 h-6 sm:w-7 sm:h-7" />}
                 />
 
                 <StatCard
@@ -393,12 +408,12 @@ export const DepositPage = () => {
                     sub="Operaciones revertidas"
                     color="bg-red-500"
                     index={2}
-                    icon={<XCircleIcon className="w-7 h-7" />}
+                    icon={<XCircleIcon className="w-6 h-6 sm:w-7 sm:h-7" />}
                 />
             </div>
 
             <div
-                className="relative rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden"
+                className="relative rounded-[24px] sm:rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden"
                 style={{ animation: 'fadeSlideIn 0.6s ease-out 0.3s both' }}
             >
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500" />
@@ -408,36 +423,36 @@ export const DepositPage = () => {
                 <div className="absolute -top-20 -right-20 w-40 h-40 bg-indigo-100/30 rounded-full blur-3xl" />
                 <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-cyan-100/20 rounded-full blur-3xl" />
 
-                <div className="relative px-7 py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
+                <div className="relative px-4 sm:px-7 py-5 sm:py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/[0.02] to-transparent" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200/50 to-transparent" />
 
-                    <div className="relative flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="relative group cursor-default">
-                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-white flex items-center justify-center shadow-lg shadow-indigo-100/80 ring-1 ring-indigo-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-indigo-200">
-                                    <ClipboardListIcon className="w-7 h-7 text-indigo-600" />
+                    <div className="relative flex items-center justify-between gap-3 flex-wrap">
+                        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                            <div className="relative group cursor-default flex-shrink-0">
+                                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-white flex items-center justify-center shadow-lg shadow-indigo-100/80 ring-1 ring-indigo-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-indigo-200">
+                                    <ClipboardListIcon className="w-5.5 h-5.5 sm:w-7 sm:h-7 text-indigo-600" />
                                 </div>
                                 <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-300/50">
                                     <span className="text-[9px] text-white font-bold">{deposits.length}</span>
                                 </div>
                             </div>
-                            <div>
-                                <h2 className="text-xl font-black text-slate-800 tracking-tight">Historial de depositos</h2>
-                                <p className="text-sm text-slate-400 mt-0.5 flex items-center gap-2">
-                                    <ActivityIcon className="w-3.5 h-3.5 text-slate-300" />
-                                    Registro general de movimientos bancarios
+                            <div className="min-w-0">
+                                <h2 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">Historial de depositos</h2>
+                                <p className="text-xs sm:text-sm text-slate-400 mt-0.5 flex items-center gap-2 truncate">
+                                    <ActivityIcon className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
+                                    <span className="truncate">Registro general de movimientos bancarios</span>
                                 </p>
                             </div>
                         </div>
 
-                        <div className="hidden md:flex items-center gap-3">
-                            <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-100/80 shadow-sm hover:shadow-md hover:shadow-emerald-100/50 transition-all cursor-default">
-                                <div className="relative">
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-100/80 shadow-sm hover:shadow-md hover:shadow-emerald-100/50 transition-all cursor-default">
+                                <div className="relative flex-shrink-0">
                                     <div className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-50" />
                                     <div className="relative w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-400" />
                                 </div>
-                                <span className="text-sm font-bold text-emerald-700 tabular-nums">
+                                <span className="text-xs sm:text-sm font-bold text-emerald-700 tabular-nums whitespace-nowrap">
                                     {deposits.length} registros
                                 </span>
                             </div>
@@ -446,13 +461,13 @@ export const DepositPage = () => {
                 </div>
 
                 {/* Content */}
-                <div className="relative p-6">
+                <div className="relative p-3 sm:p-6">
                     <div className="absolute inset-0 opacity-[0.02]" style={{
                         backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0)`,
                         backgroundSize: '24px 24px'
                     }} />
 
-                    <div className="relative">
+                    <div className="relative overflow-x-auto scrollbar-thin -mx-3 px-3 sm:mx-0 sm:px-0">
                         <DepositTable deposits={deposits} />
                     </div>
                 </div>

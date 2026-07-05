@@ -1,4 +1,5 @@
 import { useDepositStore } from "../store/useDepositStore.js";
+import { DepositCard } from "./DepositCard.jsx";
 
 const CURRENCY_SYMBOLS = { GTQ: "Q", USD: "$", EUR: "€" };
 
@@ -62,43 +63,64 @@ export const DepositTable = ({ deposits }) => {
         }
     };
 
+    if (!deposits || deposits.length === 0) {
+        return (
+            <div className="text-center py-10 text-slate-500">
+                No hay depósitos registrados
+            </div>
+        );
+    }
+
     return (
-        <div className="overflow-x-auto">
+        <>
+            {/* Vista móvil: tarjetas apiladas */}
+            <div className="md:hidden space-y-3">
+                {deposits.map((deposit) => (
+                    <DepositCard
+                        key={deposit._id}
+                        deposit={deposit}
+                        onRevert={handleRevert}
+                        onDelete={handleDelete}
+                    />
+                ))}
+            </div>
 
-            <table className="w-full border-collapse">
+            {/* Vista desktop: tabla */}
+            <div className="hidden md:block overflow-x-auto scrollbar-thin">
 
-                <thead>
+                <table className="w-full min-w-[720px] border-collapse">
 
-                    <tr className="border-b border-slate-200">
+                    <thead>
 
-                        <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
-                            Cuenta
-                        </th>
+                        <tr className="border-b border-slate-200">
 
-                        <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
-                            Monto
-                        </th>
+                            <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
+                                Cuenta
+                            </th>
 
-                        <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
-                            Estado
-                        </th>
+                            <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
+                                Monto
+                            </th>
 
-                        <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
-                            Fecha
-                        </th>
+                            <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
+                                Estado
+                            </th>
 
-                        <th className="text-center py-4 px-4 text-sm font-semibold text-slate-600">
-                            Acciones
-                        </th>
+                            <th className="text-left py-4 px-4 text-sm font-semibold text-slate-600">
+                                Fecha
+                            </th>
 
-                    </tr>
+                            <th className="text-center py-4 px-4 text-sm font-semibold text-slate-600">
+                                Acciones
+                            </th>
 
-                </thead>
+                        </tr>
 
-                <tbody>
+                    </thead>
 
-                    {
-                        deposits?.length > 0 ? (
+                    <tbody>
+
+                        {
                             deposits.map((deposit) => {
 
                                 const isCompleted =
@@ -149,7 +171,7 @@ export const DepositTable = ({ deposits }) => {
                                         </td>
 
                                         {/* Fecha */}
-                                        <td className="py-4 px-4 text-sm text-slate-600">
+                                        <td className="py-4 px-4 text-sm text-slate-600 whitespace-nowrap">
 
                                             {
                                                 new Date(
@@ -197,24 +219,13 @@ export const DepositTable = ({ deposits }) => {
                                     </tr>
                                 );
                             })
-                        ) : (
-                            <tr>
+                        }
 
-                                <td
-                                    colSpan="5"
-                                    className="text-center py-10 text-slate-500"
-                                >
-                                    No hay depósitos registrados
-                                </td>
+                    </tbody>
 
-                            </tr>
-                        )
-                    }
+                </table>
 
-                </tbody>
-
-            </table>
-
-        </div>
+            </div>
+        </>
     );
 };

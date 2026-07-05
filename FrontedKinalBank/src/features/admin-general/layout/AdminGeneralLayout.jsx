@@ -1,23 +1,73 @@
+import { useState } from "react"
 import { NavLink, Outlet } from "react-router-dom"
 import { Navbar } from "../../../shared/components/layouts/Navbar.jsx"
 
+const MenuIcon = ({ className }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+);
+
+const CloseIcon = ({ className }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+);
+
 export const AdminGeneralLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
     return (
         <div className="h-screen w-screen bg-[#f4f7fb] flex flex-col overflow-hidden">
 
-            <Navbar />
+            <div className="relative">
+                <Navbar />
+                {/* Botón hamburguesa, solo visible en móvil/tablet */}
+                <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="lg:hidden absolute top-1/2 -translate-y-1/2 left-4 w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white z-20"
+                >
+                    <MenuIcon className="w-5 h-5" />
+                </button>
+            </div>
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden relative">
+
+                {/* Overlay oscuro cuando el sidebar está abierto en móvil */}
+                {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
 
                 {/* Sidebar */}
-                <aside className="w-72 bg-[#071126] relative overflow-hidden flex flex-col flex-shrink-0 border-r border-white/5">
+                <aside
+                    className={`
+                        fixed lg:static inset-y-0 left-0 z-40
+                        w-72 bg-[#071126] relative overflow-hidden flex flex-col flex-shrink-0 border-r border-white/5
+                        transform transition-transform duration-300 ease-in-out
+                        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
+                    `}
+                >
+
+                    {/* Botón cerrar, solo en móvil */}
+                    <button
+                        onClick={() => setSidebarOpen(false)}
+                        className="lg:hidden absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-slate-300"
+                    >
+                        <CloseIcon className="w-5 h-5" />
+                    </button>
 
                     {/* Glows */}
                     <div className="absolute top-[-120px] right-[-120px] w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
                     <div className="absolute bottom-[-100px] left-[-100px] w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none" />
 
-                    <div className="relative z-10 flex flex-col h-full p-6">
+                    <div className="relative z-10 flex flex-col h-full p-6 overflow-y-auto" onClick={() => setSidebarOpen(false)}>
 
                         {/* Navigation */}
                         <nav className="flex flex-col gap-7">
@@ -243,7 +293,6 @@ export const AdminGeneralLayout = () => {
                         <div className="mt-auto pt-6">
                             <div className="rounded-3xl border border-white/8 bg-white/[0.04] backdrop-blur-sm p-5">
 
-                                {/* Header con avatar */}
                                 <div className="flex items-center gap-2.5 mb-2">
                                     <div className="w-7 h-7 rounded-[10px] bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0">
                                         SB
@@ -274,7 +323,7 @@ export const AdminGeneralLayout = () => {
                 </aside>
 
                 {/* Contenido */}
-                <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#f8fafc] to-[#eef4ff] p-8 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#f8fafc] to-[#eef4ff] p-4 sm:p-6 lg:p-8 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
                     <Outlet />
                 </main>
 

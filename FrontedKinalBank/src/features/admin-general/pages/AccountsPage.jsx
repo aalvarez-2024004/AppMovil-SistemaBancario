@@ -34,7 +34,6 @@ const HeroBg = () => (
         <line x1="0" y1="100%" x2="35%" y2="0" stroke="rgba(99,102,241,0.07)" strokeWidth="0.6" />
         <line x1="15%" y1="100%" x2="60%" y2="0" stroke="rgba(6,182,212,0.04)" strokeWidth="0.6" />
         <line x1="50%" y1="100%" x2="90%" y2="0" stroke="rgba(139,92,246,0.03)" strokeWidth="0.6" />
-        {/* Top glass line */}
         <line x1="10%" y1="0" x2="90%" y2="0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
     </svg>
 );
@@ -62,7 +61,7 @@ const PulseDot = ({ color = "bg-emerald-400" }) => (
 
 const StatCard = ({ label, value, sub, icon, c1, c2, delay = 0 }) => (
     <div
-        className="group relative overflow-hidden rounded-[28px] bg-white border border-slate-200/60 transition-all duration-500 hover:-translate-y-1.5 cursor-default"
+        className="group relative overflow-hidden rounded-[22px] sm:rounded-[28px] bg-white border border-slate-200/60 transition-all duration-500 hover:-translate-y-1.5 cursor-default"
         style={{
             boxShadow: "0 1px 2px rgba(15,23,42,0.04), 0 4px 20px -4px rgba(15,23,42,0.08)",
             animation: `fadeUp 0.6s ${delay}ms ease both`,
@@ -75,9 +74,9 @@ const StatCard = ({ label, value, sub, icon, c1, c2, delay = 0 }) => (
 
         <Shimmer />
 
-        <div className="relative z-10 p-6">
-            <div className="flex items-start justify-between mb-5">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl"
+        <div className="relative z-10 p-5 sm:p-6">
+            <div className="flex items-start justify-between mb-4 sm:mb-5">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-lg sm:text-xl"
                     style={{
                         background: `linear-gradient(135deg, ${c1}18, ${c2}28)`,
                         border: `1px solid ${c1}28`,
@@ -93,9 +92,9 @@ const StatCard = ({ label, value, sub, icon, c1, c2, delay = 0 }) => (
 
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-1.5">{label}</p>
 
-            <p className="text-[1.9rem] font-black text-slate-900 leading-none tabular-nums tracking-tight">{value}</p>
+            <p className="text-[1.6rem] sm:text-[1.9rem] font-black text-slate-900 leading-none tabular-nums tracking-tight">{value}</p>
 
-            <div className="my-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${c1}30, ${c2}20, transparent)` }} />
+            <div className="my-3 sm:my-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${c1}30, ${c2}20, transparent)` }} />
 
             {sub && (
                 <div className="flex items-center gap-2">
@@ -148,7 +147,7 @@ const Btn = ({ onClick, children, v = "ghost" }) => {
     const s = styles[v];
     return (
         <button onClick={onClick}
-            className="relative overflow-hidden px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-150 active:scale-95 border"
+            className="relative overflow-hidden px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-150 active:scale-95 border whitespace-nowrap"
             style={{ background: s.bg, borderColor: s.border, color: s.color, boxShadow: "0 1px 2px rgba(15,23,42,0.04)" }}
             onMouseEnter={e => e.currentTarget.style.background = s.hover}
             onMouseLeave={e => e.currentTarget.style.background = s.bg}
@@ -210,20 +209,20 @@ export const AccountsPage = () => {
 
             <PageBg />
 
-            <div className="max-w-5xl mx-auto space-y-6" style={{ animation: "scaleIn 0.5s ease both" }}>
+            <div className="max-w-5xl mx-auto space-y-5 sm:space-y-6" style={{ animation: "scaleIn 0.5s ease both" }}>
 
                 {error && (
-                    <div className="flex items-center justify-between rounded-2xl border border-red-200 bg-red-50/90 px-5 py-4" style={{ boxShadow: "0 2px 8px rgba(239,68,68,0.08)" }}>
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center text-red-500 font-black text-sm">!</div>
-                            <p className="text-sm font-bold text-red-700">{error}</p>
+                    <div className="flex items-center justify-between rounded-2xl border border-red-200 bg-red-50/90 px-4 sm:px-5 py-4" style={{ boxShadow: "0 2px 8px rgba(239,68,68,0.08)" }}>
+                        <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center text-red-500 font-black text-sm flex-shrink-0">!</div>
+                            <p className="text-sm font-bold text-red-700 truncate">{error}</p>
                         </div>
-                        <button onClick={clearError} className="w-8 h-8 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-100 hover:text-red-600 transition-all text-sm font-black">✕</button>
+                        <button onClick={clearError} className="w-8 h-8 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-100 hover:text-red-600 transition-all text-sm font-black flex-shrink-0">✕</button>
                     </div>
                 )}
 
                 <div
-                    className="relative overflow-hidden rounded-[40px] p-8 md:p-10"
+                    className="relative overflow-hidden rounded-[28px] sm:rounded-[40px] p-5 sm:p-8 md:p-10"
                     style={{
                         background: "linear-gradient(140deg, #030712 0%, #060f27 30%, #0a1840 60%, #0f2050 100%)",
                         boxShadow: "0 32px 80px -16px rgba(3,7,18,0.6), 0 2px 4px rgba(3,7,18,0.3), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(255,255,255,0.02)",
@@ -231,33 +230,33 @@ export const AccountsPage = () => {
                 >
                     <HeroBg />
 
-                    <div className="absolute top-7 right-36 w-3 h-3 rounded-full bg-indigo-400/70 float-a" />
-                    <div className="absolute top-16 right-24 w-2 h-2 rounded-full bg-cyan-400/50 float-b" />
-                    <div className="absolute bottom-12 right-52 w-2.5 h-2.5 rounded-full bg-violet-400/60 float-c" />
-                    <div className="absolute bottom-8 left-1/3 w-1.5 h-1.5 rounded-full bg-blue-300/50 float-a" style={{ animationDelay: "0.7s" }} />
-                    <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full bg-cyan-300/40 float-b" style={{ animationDelay: "1.5s" }} />
+                    <div className="absolute top-7 right-36 w-3 h-3 rounded-full bg-indigo-400/70 float-a hidden sm:block" />
+                    <div className="absolute top-16 right-24 w-2 h-2 rounded-full bg-cyan-400/50 float-b hidden sm:block" />
+                    <div className="absolute bottom-12 right-52 w-2.5 h-2.5 rounded-full bg-violet-400/60 float-c hidden sm:block" />
+                    <div className="absolute bottom-8 left-1/3 w-1.5 h-1.5 rounded-full bg-blue-300/50 float-a hidden sm:block" style={{ animationDelay: "0.7s" }} />
+                    <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full bg-cyan-300/40 float-b hidden sm:block" style={{ animationDelay: "1.5s" }} />
 
-                    <div className="absolute inset-[1px] rounded-[39px] pointer-events-none" style={{ border: "1px solid rgba(255,255,255,0.04)" }} />
+                    <div className="absolute inset-[1px] rounded-[27px] sm:rounded-[39px] pointer-events-none" style={{ border: "1px solid rgba(255,255,255,0.04)" }} />
 
-                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
 
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
 
-                            <div className="inline-flex items-center gap-0 rounded-full border border-white/10 overflow-hidden mb-7 backdrop-blur-md"
+                            <div className="inline-flex items-center gap-0 rounded-full border border-white/10 overflow-hidden mb-5 sm:mb-7 backdrop-blur-md"
                                 style={{ background: "rgba(255,255,255,0.06)" }}>
-                                <div className="flex items-center gap-2 px-4 py-1.5 border-r border-white/10">
+                                <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 border-r border-white/10">
                                     <PulseDot color="bg-emerald-400" />
-                                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-emerald-300">En línea</span>
+                                    <span className="text-[9px] font-black uppercase tracking-[0.25em] sm:tracking-[0.35em] text-emerald-300 whitespace-nowrap">En línea</span>
                                 </div>
-                                <div className="px-4 py-1.5">
-                                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400">Gestión financiera</span>
+                                <div className="px-3 sm:px-4 py-1.5">
+                                    <span className="text-[9px] font-black uppercase tracking-[0.18em] sm:tracking-[0.25em] text-slate-400 whitespace-nowrap">Gestión financiera</span>
                                 </div>
                             </div>
 
-                            <h1 className="text-5xl md:text-[3.5rem] font-black text-white leading-[1.0] tracking-[-0.025em] mb-1">
+                            <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-black text-white leading-[1.0] tracking-[-0.025em] mb-1">
                                 Cuentas
                             </h1>
-                            <h1 className="text-5xl md:text-[3.5rem] font-black leading-[1.0] tracking-[-0.025em]"
+                            <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-black leading-[1.0] tracking-[-0.025em]"
                                 style={{
                                     background: "linear-gradient(90deg, #a5b4fc 0%, #c4b5fd 25%, #67e8f9 65%, #38bdf8 100%)",
                                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -266,7 +265,7 @@ export const AccountsPage = () => {
                                 bancarias
                             </h1>
 
-                            <div className="flex items-center gap-2 mt-3 mb-5">
+                            <div className="flex items-center gap-2 mt-3 mb-4 sm:mb-5">
                                 <div className="h-[2px] w-10 rounded-full bg-indigo-400" />
                                 <div className="h-[2px] w-5 rounded-full bg-indigo-400/50" />
                                 <div className="h-[2px] w-2 rounded-full bg-cyan-400/40" />
@@ -278,15 +277,15 @@ export const AccountsPage = () => {
                                 controla balances y supervisa movimientos bancarios en tiempo real.
                             </p>
 
-                            <div className="flex flex-wrap items-stretch gap-3 mt-7">
+                            <div className="flex flex-wrap items-stretch gap-3 mt-6 sm:mt-7">
                                 {[
                                     { label: "Registradas", val: pagination?.totalRecords || 0, color: "#818cf8", dot: "bg-indigo-400" },
                                     { label: "Activas", val: activas, color: "#34d399", dot: "bg-emerald-400" },
                                 ].map(({ label, val, color, dot }) => (
                                     <div key={label}
-                                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-white/8 backdrop-blur-sm"
+                                        className="flex items-center gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl border border-white/8 backdrop-blur-sm"
                                         style={{ background: "rgba(255,255,255,0.055)" }}>
-                                        <span className="text-[1.6rem] font-black tabular-nums leading-none" style={{ color }}>
+                                        <span className="text-[1.4rem] sm:text-[1.6rem] font-black tabular-nums leading-none" style={{ color }}>
                                             {val}
                                         </span>
                                         <div className="w-px h-6 bg-white/10" />
@@ -294,7 +293,7 @@ export const AccountsPage = () => {
                                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 leading-none mb-1">{label}</p>
                                             <div className="flex items-center gap-1">
                                                 <PulseDot color={dot} />
-                                                <span className="text-[9px] text-slate-500 font-semibold">en tiempo real</span>
+                                                <span className="text-[9px] text-slate-500 font-semibold whitespace-nowrap">en tiempo real</span>
                                             </div>
                                         </div>
                                     </div>
@@ -302,10 +301,10 @@ export const AccountsPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-start lg:items-end gap-4">
+                        <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4">
 
                             <div
-                                className="relative overflow-hidden rounded-[28px] p-6 min-w-[215px]"
+                                className="relative overflow-hidden rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 sm:min-w-[215px]"
                                 style={{
                                     background: "linear-gradient(135deg, rgba(99,102,241,0.22) 0%, rgba(6,182,212,0.14) 100%)",
                                     border: "1px solid rgba(255,255,255,0.11)",
@@ -320,7 +319,7 @@ export const AccountsPage = () => {
                                         <p className="text-[9px] font-black uppercase tracking-[0.32em] text-slate-400">Total cuentas</p>
                                         <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base border border-white/10" style={{ background: "rgba(255,255,255,0.08)" }}>🏛</div>
                                     </div>
-                                    <p className="text-[3.2rem] font-black text-white leading-none tabular-nums"
+                                    <p className="text-[2.6rem] sm:text-[3.2rem] font-black text-white leading-none tabular-nums"
                                         style={{ textShadow: "0 0 40px rgba(165,180,252,0.45)" }}>
                                         {pagination?.totalRecords || 0}
                                     </p>
@@ -334,7 +333,7 @@ export const AccountsPage = () => {
                             <button
                                 onClick={() => setModal({ type: "create" })}
                                 disabled={loading}
-                                className="group relative overflow-hidden px-7 py-3.5 rounded-2xl text-white font-black text-sm tracking-wide disabled:opacity-60 transition-all duration-300 hover:scale-[1.04] active:scale-[0.97]"
+                                className="group relative overflow-hidden px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl text-white font-black text-sm tracking-wide disabled:opacity-60 transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] w-full sm:w-auto"
                                 style={{
                                     background: "linear-gradient(135deg, #4f46e5 0%, #4338ca 45%, #0891b2 100%)",
                                     boxShadow: "0 8px 28px -4px rgba(79,70,229,0.55), 0 2px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.22)",
@@ -343,7 +342,7 @@ export const AccountsPage = () => {
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                     style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.12), transparent)" }} />
                                 <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
-                                <span className="relative z-10 flex items-center gap-3">
+                                <span className="relative z-10 flex items-center justify-center gap-3">
                                     <span className="w-6 h-6 rounded-full bg-white/20 border border-white/25 flex items-center justify-center font-black text-base leading-none">+</span>
                                     Nueva cuenta
                                 </span>
@@ -352,7 +351,7 @@ export const AccountsPage = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <StatCard label="Total en GTQ"
                         value={`Q ${totalGTQ.toLocaleString("es-GT", { minimumFractionDigits: 2 })}`}
                         sub="Balances activos en quetzales" icon="💰"
@@ -368,7 +367,7 @@ export const AccountsPage = () => {
                 </div>
 
                 <div
-                    className="rounded-[32px] overflow-hidden"
+                    className="rounded-[24px] sm:rounded-[32px] overflow-hidden"
                     style={{
                         background: "rgba(255,255,255,0.96)",
                         backdropFilter: "blur(28px)",
@@ -377,25 +376,25 @@ export const AccountsPage = () => {
                         animation: "fadeUp 0.6s 350ms ease both",
                     }}
                 >
-                    <div className="px-7 py-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                    <div className="px-4 sm:px-7 py-4 sm:py-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-5">
                         <div className="flex items-center gap-3">
                             <div className="relative w-1.5 h-8 rounded-full overflow-hidden flex-shrink-0">
                                 <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #6366f1 0%, #0891b2 100%)" }} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-black text-slate-900 tracking-tight leading-tight">Lista de cuentas</h2>
+                                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-tight">Lista de cuentas</h2>
                                 <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Gestión general de cuentas bancarias</p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3 flex-wrap">
-                            <div className="relative">
+                            <div className="relative flex-1 min-w-[180px] sm:flex-initial">
                                 <input
                                     type="text"
                                     placeholder="Buscar número de cuenta..."
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
-                                    className="w-64 rounded-2xl border border-slate-200 px-4 py-2.5 pl-10 text-sm text-slate-700 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/70 transition-all placeholder:text-slate-400 font-semibold"
+                                    className="w-full sm:w-64 rounded-2xl border border-slate-200 px-4 py-2.5 pl-10 text-sm text-slate-700 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/70 transition-all placeholder:text-slate-400 font-semibold"
                                     style={{
                                         background: "linear-gradient(135deg, #f8fafc, #f1f5f9)",
                                         boxShadow: "inset 0 1px 2px rgba(15,23,42,0.05)",
@@ -418,7 +417,7 @@ export const AccountsPage = () => {
                         </div>
                     </div>
 
-                    <div className="h-px mx-7" style={{ background: "linear-gradient(90deg, transparent, rgba(99,102,241,0.25) 20%, rgba(6,182,212,0.25) 80%, transparent)" }} />
+                    <div className="h-px mx-4 sm:mx-7" style={{ background: "linear-gradient(90deg, transparent, rgba(99,102,241,0.25) 20%, rgba(6,182,212,0.25) 80%, transparent)" }} />
 
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[980px]">
@@ -426,7 +425,7 @@ export const AccountsPage = () => {
                                 <tr style={{ background: "linear-gradient(90deg, rgba(248,250,252,0.95), rgba(241,245,249,0.7))" }}>
                                     {["Cuenta", "Tipo", "Moneda", "Saldo", "Estado", "Propietario", "Acciones"].map((h, i) => (
                                         <th key={h}
-                                            className={`px-5 py-3.5 text-left text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 ${i === 0 ? "pl-7" : ""} ${i === 6 ? "pr-7" : ""}`}>
+                                            className={`px-5 py-3.5 text-left text-[10px] font-black uppercase tracking-[0.28em] text-slate-400 ${i === 0 ? "pl-4 sm:pl-7" : ""} ${i === 6 ? "pr-4 sm:pr-7" : ""}`}>
                                             {h}
                                         </th>
                                     ))}
@@ -470,7 +469,7 @@ export const AccountsPage = () => {
                                                     animation: `rowSlide 0.4s ${idx * 30}ms ease both`,
                                                 }}
                                             >
-                                                <td className="px-5 py-3.5 pl-7">
+                                                <td className="px-5 py-3.5 pl-4 sm:pl-7">
                                                     <div className="flex items-center gap-3.5">
                                                         <div
                                                             className="relative w-10 h-10 rounded-[14px] flex-shrink-0 flex items-center justify-center text-base ring-2 ring-white transition-transform duration-200"
@@ -511,7 +510,7 @@ export const AccountsPage = () => {
                                                     </div>
                                                 </td>
 
-                                                <td className="px-5 py-3.5 pr-7">
+                                                <td className="px-5 py-3.5 pr-4 sm:pr-7">
                                                     <div className="flex items-center gap-2 transition-opacity duration-200"
                                                         style={{ opacity: isHov ? 1 : 0.6 }}>
                                                         <Btn onClick={() => setOwnerModal(acc)} v="ghost">Ver info</Btn>
@@ -529,18 +528,18 @@ export const AccountsPage = () => {
 
                     {pagination?.totalPages > 1 && (
                         <>
-                            <div className="h-px mx-7" style={{ background: "linear-gradient(90deg, transparent, rgba(99,102,241,0.2) 30%, rgba(6,182,212,0.2) 70%, transparent)" }} />
-                            <div className="flex flex-col md:flex-row md:items-center md:justify-between px-7 py-4 gap-4"
+                            <div className="h-px mx-4 sm:mx-7" style={{ background: "linear-gradient(90deg, transparent, rgba(99,102,241,0.2) 30%, rgba(6,182,212,0.2) 70%, transparent)" }} />
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between px-4 sm:px-7 py-4 gap-4"
                                 style={{ background: "linear-gradient(90deg, rgba(248,250,252,0.9), rgba(241,245,249,0.5))" }}>
 
-                                <div className="flex items-center gap-2.5">
+                                <div className="flex items-center gap-2.5 flex-wrap">
                                     <span className="text-xs text-slate-400 font-semibold">Página</span>
                                     <div className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-black text-slate-700 tabular-nums"
                                         style={{ boxShadow: "0 1px 3px rgba(15,23,42,0.06)" }}>
                                         {pagination?.currentPage}
                                     </div>
                                     <span className="text-xs text-slate-400 font-semibold">de {pagination?.totalPages}</span>
-                                    <div className="w-px h-4 bg-slate-200 mx-0.5" />
+                                    <div className="w-px h-4 bg-slate-200 mx-0.5 hidden sm:block" />
                                     <span className="text-[11px] text-slate-400 font-medium">{pagination?.totalRecords} registros</span>
                                 </div>
 
@@ -548,7 +547,7 @@ export const AccountsPage = () => {
                                     <button
                                         onClick={() => changePage(Number(pagination?.currentPage) - 1)}
                                         disabled={pagination?.currentPage <= 1}
-                                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-bold hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                                        className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-bold hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
                                         style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.04)" }}
                                     >
                                         ← Anterior
@@ -556,7 +555,7 @@ export const AccountsPage = () => {
                                     <button
                                         onClick={() => changePage(Number(pagination?.currentPage) + 1)}
                                         disabled={pagination?.currentPage >= pagination?.totalPages}
-                                        className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-white text-xs font-black disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-[1.03] transition-all"
+                                        className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl text-white text-xs font-black disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-[1.03] transition-all"
                                         style={{
                                             background: "linear-gradient(135deg, #4f46e5, #0891b2)",
                                             boxShadow: "0 4px 14px -2px rgba(79,70,229,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",

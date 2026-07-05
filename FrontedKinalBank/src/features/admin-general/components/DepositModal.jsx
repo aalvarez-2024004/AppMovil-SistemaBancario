@@ -71,14 +71,14 @@ export const DepositModal = () => {
     {/* Trigger Button */}
     <button
       onClick={() => setIsOpen(true)}
-      className="bg-gradient-to-r from-slate-900 to-slate-700 hover:from-slate-800 hover:to-slate-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+      className="w-full sm:w-auto bg-gradient-to-r from-slate-900 to-slate-700 hover:from-slate-800 hover:to-slate-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
     >
       + Nuevo Depósito
     </button>
 
     {/* Modal */}
     {isOpen && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:px-4">
         
         {/* Backdrop */}
         <div
@@ -87,18 +87,18 @@ export const DepositModal = () => {
         />
 
         {/* Modal Card */}
-        <div className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95">
+        <div className="relative w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 max-h-[92vh] sm:max-h-[90vh] flex flex-col">
 
           {/* Top Accent Bar */}
-          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-sky-500 to-indigo-500" />
+          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-sky-500 to-indigo-500 flex-shrink-0" />
 
-          <div className="p-7">
+          <div className="p-5 sm:p-7 overflow-y-auto flex-1 min-h-0">
 
             {/* Header */}
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-6 gap-3">
 
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900">
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
                   Nuevo Depósito
                 </h2>
                 <p className="text-slate-500 text-sm mt-1">
@@ -108,7 +108,7 @@ export const DepositModal = () => {
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all flex-shrink-0"
               >
                 ✕
               </button>
@@ -182,7 +182,7 @@ export const DepositModal = () => {
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
 
                 <button
                   type="button"

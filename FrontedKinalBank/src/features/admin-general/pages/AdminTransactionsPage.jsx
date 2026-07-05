@@ -137,7 +137,6 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }) => {
     return <span>{prefix}{displayValue.toLocaleString("es-GT")}{suffix}</span>;
 };
 
-// Skeleton loader
 const SkeletonCard = () => (
     <div className="rounded-2xl border border-slate-100 bg-white p-4 animate-pulse">
         <div className="flex items-center gap-3 mb-3">
@@ -175,7 +174,7 @@ const TxRow = ({ tx, index }) => {
 
     return (
         <div
-            className="group relative flex items-center justify-between py-4 border-b border-slate-100/80 last:border-0 hover:bg-gradient-to-r hover:from-slate-50/90 hover:via-slate-50/50 hover:to-transparent transition-all duration-500 rounded-2xl px-4 -mx-4 cursor-default"
+            className="group relative flex items-center justify-between py-4 border-b border-slate-100/80 last:border-0 hover:bg-gradient-to-r hover:from-slate-50/90 hover:via-slate-50/50 hover:to-transparent transition-all duration-500 rounded-2xl px-3 sm:px-4 -mx-3 sm:-mx-4 cursor-default gap-3"
             style={{
                 animation: `fadeSlideIn 0.4s ease-out ${index * 0.08}s both`
             }}
@@ -184,9 +183,9 @@ const TxRow = ({ tx, index }) => {
 
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/0 via-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative flex items-center gap-4">
+            <div className="relative flex items-center gap-3 sm:gap-4 min-w-0">
                 <div className={`
-                    relative w-12 h-12 rounded-2xl flex items-center justify-center text-sm flex-shrink-0 
+                    relative w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-sm flex-shrink-0 
                     transition-all duration-400 group-hover:scale-110 group-hover:rotate-3 overflow-hidden
                     ${isCredit
                         ? "bg-gradient-to-br from-emerald-100 via-emerald-50 to-teal-50 text-emerald-600 shadow-lg shadow-emerald-100/80 group-hover:shadow-emerald-200"
@@ -195,9 +194,8 @@ const TxRow = ({ tx, index }) => {
                 `}>
                     <div className={`absolute inset-0 rounded-2xl ${isCredit ? "bg-emerald-400/10" : "bg-red-400/10"}`} />
 
-                    {/* Icon */}
                     <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
-                        {isCredit ? <ArrowDownIcon className="w-5 h-5" /> : <ArrowUpIcon className="w-5 h-5" />}
+                        {isCredit ? <ArrowDownIcon className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowUpIcon className="w-4 h-4 sm:w-5 sm:h-5" />}
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
@@ -205,9 +203,9 @@ const TxRow = ({ tx, index }) => {
                     <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isCredit ? "bg-emerald-400" : "bg-red-400"} opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110`} />
                 </div>
 
-                <div>
-                    <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 transition-colors tracking-tight">{tx.description}</p>
-                    <div className="flex items-center gap-2.5 mt-1.5">
+                <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 transition-colors tracking-tight truncate">{tx.description}</p>
+                    <div className="flex items-center gap-2 sm:gap-2.5 mt-1.5 flex-wrap">
                         <span className={`
                             relative inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider overflow-hidden
                             ${isCredit
@@ -219,7 +217,7 @@ const TxRow = ({ tx, index }) => {
                         </span>
                         <div className="flex items-center gap-1.5">
                             <div className="w-1 h-1 rounded-full bg-slate-300" />
-                            <span className="text-xs text-slate-400 font-medium">
+                            <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
                                 {new Date(tx.createdAt).toLocaleDateString("es-GT", {
                                     day: "2-digit", month: "short", year: "numeric"
                                 })}
@@ -229,12 +227,12 @@ const TxRow = ({ tx, index }) => {
                 </div>
             </div>
 
-            <div className="relative text-right">
+            <div className="relative text-right flex-shrink-0">
                 <p className={`
-                    text-base font-black tabular-nums transition-all duration-300 group-hover:scale-105
+                    text-sm sm:text-base font-black tabular-nums transition-all duration-300 group-hover:scale-105 whitespace-nowrap
                     ${isCredit ? "text-emerald-600" : "text-red-500"}
                 `}>
-                    <span className="text-sm font-medium opacity-70">{isCredit ? "+" : "-"}</span>
+                    <span className="text-xs sm:text-sm font-medium opacity-70">{isCredit ? "+" : "-"}</span>
                     {symbol} {Number(amount).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                 </p>
                 <div className={`mt-1 h-0.5 w-0 group-hover:w-full rounded-full transition-all duration-500 ${isCredit ? "bg-gradient-to-r from-emerald-400 to-emerald-200" : "bg-gradient-to-r from-red-400 to-red-200"}`} />
@@ -251,9 +249,9 @@ const AccountActivityCard = ({ item, onSelect, selected, index }) => {
         <div
             onClick={() => onSelect(item)}
             className={`
-                group relative rounded-[20px] border p-5 cursor-pointer transition-all duration-400 overflow-hidden
+                group relative rounded-[20px] border p-4 sm:p-5 cursor-pointer transition-all duration-400 overflow-hidden
                 ${isSelected
-                    ? "border-indigo-300/80 bg-gradient-to-br from-indigo-50/90 via-white to-cyan-50/50 shadow-xl shadow-indigo-200/60 scale-[1.02] ring-2 ring-indigo-400/20"
+                    ? "border-indigo-300/80 bg-gradient-to-br from-indigo-50/90 via-white to-cyan-50/50 shadow-xl shadow-indigo-200/60 scale-[1.01] sm:scale-[1.02] ring-2 ring-indigo-400/20"
                     : "border-slate-200/80 bg-white hover:border-indigo-200 hover:bg-gradient-to-br hover:from-indigo-50/50 hover:to-white hover:shadow-lg hover:shadow-slate-200/60"
                 }
             `}
@@ -294,17 +292,17 @@ const AccountActivityCard = ({ item, onSelect, selected, index }) => {
             </div>
 
             <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3.5">
+                <div className="flex items-center justify-between mb-4 gap-2">
+                    <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                         <div className={`
-                            relative w-13 h-13 rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-500 to-cyan-500 
-                            flex items-center justify-center text-white shadow-xl
+                            relative rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-500 to-cyan-500 
+                            flex items-center justify-center text-white shadow-xl flex-shrink-0
                             transition-all duration-400 group-hover:scale-105 group-hover:rotate-2 overflow-hidden
                             ${isSelected ? "shadow-indigo-400/60 ring-2 ring-white/30" : "shadow-indigo-300/50 group-hover:shadow-indigo-400/60"}
-                        `} style={{ width: '52px', height: '52px' }}>
+                        `} style={{ width: '48px', height: '48px' }}>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
 
-                            <BankIcon className="w-6 h-6 relative z-10" />
+                            <BankIcon className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
 
                             <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -313,29 +311,29 @@ const AccountActivityCard = ({ item, onSelect, selected, index }) => {
                               ${isSelected ? "animate-pulse" : ""}
                             `} />
                         </div>
-                        <div>
-                            <p className="font-black text-slate-800 font-mono text-sm tracking-tight group-hover:text-indigo-900 transition-colors">{acc.accountNumber}</p>
+                        <div className="min-w-0">
+                            <p className="font-black text-slate-800 font-mono text-sm tracking-tight group-hover:text-indigo-900 transition-colors truncate">{acc.accountNumber}</p>
                             <p className="text-xs text-slate-400 mt-0.5 font-medium">{acc.accountType}</p>
                         </div>
                     </div>
                     <Badge value={acc.status} />
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="flex-1 relative rounded-2xl bg-gradient-to-br from-emerald-50 via-emerald-50/80 to-teal-50/50 border border-emerald-100/80 px-4 py-3 overflow-hidden group/balance hover:shadow-md hover:shadow-emerald-100 transition-all duration-300">
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex-1 relative rounded-2xl bg-gradient-to-br from-emerald-50 via-emerald-50/80 to-teal-50/50 border border-emerald-100/80 px-3 sm:px-4 py-2.5 sm:py-3 overflow-hidden group/balance hover:shadow-md hover:shadow-emerald-100 transition-all duration-300 min-w-0">
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/5 to-emerald-400/0 opacity-0 group-hover/balance:opacity-100 transition-opacity" />
                         <p className="text-[10px] text-emerald-600/70 uppercase tracking-wider font-semibold mb-0.5">Saldo</p>
-                        <span className="text-emerald-700 font-black text-base tabular-nums relative z-10">
+                        <span className="text-emerald-700 font-black text-sm sm:text-base tabular-nums relative z-10 truncate block">
                             {acc.currency === "USD" ? "$" : "Q"}{" "}
                             {Number(acc.balance).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                         </span>
                     </div>
 
-                    <div className="relative rounded-2xl bg-gradient-to-br from-indigo-50 via-indigo-50/80 to-violet-50/50 border border-indigo-100/80 px-4 py-3 overflow-hidden group/mov hover:shadow-md hover:shadow-indigo-100 transition-all duration-300">
+                    <div className="relative rounded-2xl bg-gradient-to-br from-indigo-50 via-indigo-50/80 to-violet-50/50 border border-indigo-100/80 px-3 sm:px-4 py-2.5 sm:py-3 overflow-hidden group/mov hover:shadow-md hover:shadow-indigo-100 transition-all duration-300 flex-shrink-0">
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-400/0 via-indigo-400/5 to-indigo-400/0 opacity-0 group-hover/mov:opacity-100 transition-opacity" />
                         <p className="text-[10px] text-indigo-600/70 uppercase tracking-wider font-semibold mb-0.5">Mov.</p>
                         <div className="flex items-baseline gap-1">
-                            <span className="text-indigo-700 font-black text-base tabular-nums relative z-10">{item.totalMovimientos}</span>
+                            <span className="text-indigo-700 font-black text-sm sm:text-base tabular-nums relative z-10">{item.totalMovimientos}</span>
                         </div>
                     </div>
                 </div>
@@ -451,31 +449,31 @@ export const AdminTransactionsPage = () => {
             `}</style>
 
             {error && (
-                <div className="mb-6 rounded-2xl border border-red-200/80 bg-gradient-to-r from-red-50 via-red-50/80 to-orange-50/50 px-5 py-4 flex items-center justify-between shadow-lg shadow-red-100/50 animate-fadeSlideIn overflow-hidden relative">
+                <div className="mb-6 rounded-2xl border border-red-200/80 bg-gradient-to-r from-red-50 via-red-50/80 to-orange-50/50 px-4 sm:px-5 py-4 flex items-center justify-between shadow-lg shadow-red-100/50 animate-fadeSlideIn overflow-hidden relative gap-3">
                     <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-300/50 to-transparent" />
-                    <div className="flex items-center gap-4 relative z-10">
-                        <div className="relative">
+                    <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0">
+                        <div className="relative flex-shrink-0">
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-100 to-red-50 flex items-center justify-center shadow-sm">
                                 <AlertIcon className="w-5 h-5 text-red-500" />
                             </div>
                             <div className="absolute inset-0 rounded-xl bg-red-400/20 animate-ping" />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                             <p className="text-red-700 text-sm font-bold">Error</p>
-                            <p className="text-red-600 text-sm">{error}</p>
+                            <p className="text-red-600 text-sm truncate">{error}</p>
                         </div>
                     </div>
                     <button
                         onClick={clearError}
-                        className="relative z-10 w-9 h-9 rounded-xl bg-red-100/80 hover:bg-red-200 text-red-400 hover:text-red-600 transition-all duration-300 flex items-center justify-center hover:scale-110 hover:rotate-90"
+                        className="relative z-10 w-9 h-9 rounded-xl bg-red-100/80 hover:bg-red-200 text-red-400 hover:text-red-600 transition-all duration-300 flex items-center justify-center hover:scale-110 hover:rotate-90 flex-shrink-0"
                     >
                         <XIcon className="w-4 h-4" />
                     </button>
                 </div>
             )}
 
-            <div className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#0f2847] p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-8">
+            <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#0f2847] p-5 sm:p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
                 <div className="absolute top-[-50%] right-[-20%] w-[500px] h-[500px] bg-gradient-to-br from-indigo-600/30 via-indigo-500/20 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
                 <div className="absolute bottom-[-60%] left-[-15%] w-[400px] h-[400px] bg-gradient-to-tr from-cyan-500/20 via-cyan-400/10 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-indigo-500/10 to-transparent blur-3xl rounded-full" />
@@ -487,36 +485,36 @@ export const AdminTransactionsPage = () => {
 
                 <FloatingParticles />
 
-                <div className="absolute top-0 left-1/4 w-px h-32 bg-gradient-to-b from-indigo-500/40 to-transparent" />
-                <div className="absolute top-0 right-1/3 w-px h-24 bg-gradient-to-b from-cyan-500/30 to-transparent" />
-                <div className="absolute bottom-0 left-1/3 w-px h-20 bg-gradient-to-t from-indigo-500/30 to-transparent" />
+                <div className="absolute top-0 left-1/4 w-px h-32 bg-gradient-to-b from-indigo-500/40 to-transparent hidden sm:block" />
+                <div className="absolute top-0 right-1/3 w-px h-24 bg-gradient-to-b from-cyan-500/30 to-transparent hidden sm:block" />
+                <div className="absolute bottom-0 left-1/3 w-px h-20 bg-gradient-to-t from-indigo-500/30 to-transparent hidden sm:block" />
 
-                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
                     <div className="max-w-xl">
-                        <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default">
-                            <div className="relative">
+                        <div className="inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-5 sm:mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default">
+                            <div className="relative flex-shrink-0">
                                 <div className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-40" />
                                 <div className="relative w-2.5 h-2.5 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-400 shadow-lg shadow-cyan-400/50" />
                             </div>
-                            <span className="text-[11px] uppercase tracking-[0.3em] text-slate-300 font-bold">
+                            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-300 font-bold whitespace-nowrap">
                                 Administracion bancaria
                             </span>
-                            <div className="w-px h-4 bg-white/20" />
-                            <ActivityIcon className="w-3.5 h-3.5 text-cyan-400" />
+                            <div className="w-px h-4 bg-white/20 hidden xs:block" />
+                            <ActivityIcon className="w-3.5 h-3.5 text-cyan-400 hidden xs:block" />
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
                             Actividad de
                             <span className="block bg-gradient-to-r from-indigo-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent animate-gradient mt-1">
                                 cuentas
                             </span>
                         </h1>
 
-                        <p className="text-slate-400 mt-5 leading-relaxed text-[15px] max-w-lg">
+                        <p className="text-slate-400 mt-4 sm:mt-5 leading-relaxed text-sm sm:text-[15px] max-w-lg">
                             Visualiza las cuentas con mas movimientos y revisa el detalle de sus ultimas transacciones en tiempo real.
                         </p>
 
-                        <div className="flex items-center gap-4 mt-6">
+                        <div className="flex items-center gap-3 sm:gap-4 mt-6 flex-wrap">
                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                                 <CheckCircleIcon className="w-3.5 h-3.5 text-emerald-400" />
                                 <span className="text-emerald-300 text-xs font-semibold">Sistema activo</span>
@@ -527,9 +525,9 @@ export const AdminTransactionsPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-start lg:items-end gap-5">
-                        <div className="relative rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-6 min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
-                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[28px]" />
+                    <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4 sm:gap-5">
+                        <div className="relative rounded-[24px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 sm:min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
+                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[24px] sm:rounded-[28px]" />
 
                             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
@@ -540,7 +538,7 @@ export const AdminTransactionsPage = () => {
                                     <WalletIcon className="w-4 h-4 text-slate-400" />
                                     <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold">Cuentas</p>
                                 </div>
-                                <h2 className="text-5xl font-black text-white tabular-nums tracking-tight">
+                                <h2 className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight">
                                     <AnimatedNumber value={accountsByActivity.length} />
                                 </h2>
                                 <div className="mt-4 flex items-center gap-2.5">
@@ -552,14 +550,14 @@ export const AdminTransactionsPage = () => {
                                 </div>
                             </div>
 
-                            <div className="absolute inset-0 overflow-hidden rounded-[28px] pointer-events-none">
+                            <div className="absolute inset-0 overflow-hidden rounded-[24px] sm:rounded-[28px] pointer-events-none">
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" style={{ animationDuration: '3s' }} />
                             </div>
                         </div>
 
                         <button
                             onClick={toggleOrder}
-                            className="group relative px-7 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-bold shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100 transition-all duration-300 overflow-hidden"
+                            className="group relative px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-bold shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100 transition-all duration-300 overflow-hidden w-full sm:w-auto"
                         >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
@@ -567,7 +565,7 @@ export const AdminTransactionsPage = () => {
 
                             <div className="absolute inset-0 rounded-2xl border border-white/20" />
 
-                            <span className="relative flex items-center gap-2.5 text-sm">
+                            <span className="relative flex items-center justify-center gap-2.5 text-sm">
                                 {order === "desc" ? (
                                     <>
                                         <SortDescIcon className="w-5 h-5 group-hover:animate-bounce" style={{ animationDuration: '0.5s' }} />
@@ -587,43 +585,43 @@ export const AdminTransactionsPage = () => {
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-7">
 
-                <div className="relative rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden">
+                <div className="relative rounded-[24px] sm:rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500" />
 
                     <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent pointer-events-none" />
 
-                    <div className="relative px-7 py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
+                    <div className="relative px-4 sm:px-7 py-5 sm:py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/[0.02] to-transparent" />
-                        <div className="relative flex items-center gap-4">
-                            <div className="relative">
-                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-white flex items-center justify-center shadow-lg shadow-indigo-100/80 ring-1 ring-indigo-100">
-                                    <ChartBarIcon className="w-6 h-6 text-indigo-600" />
+                        <div className="relative flex items-center gap-3 sm:gap-4">
+                            <div className="relative flex-shrink-0">
+                                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-white flex items-center justify-center shadow-lg shadow-indigo-100/80 ring-1 ring-indigo-100">
+                                    <ChartBarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
                                 </div>
                                 <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center">
                                     <span className="text-[8px] text-white font-bold">{accountsByActivity.length}</span>
                                 </div>
                             </div>
-                            <div>
-                                <h2 className="text-lg font-black text-slate-800 tracking-tight">Cuentas por actividad</h2>
-                                <p className="text-sm text-slate-400 mt-0.5">Ordenadas por numero de movimientos</p>
+                            <div className="min-w-0">
+                                <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Cuentas por actividad</h2>
+                                <p className="text-xs sm:text-sm text-slate-400 mt-0.5 truncate">Ordenadas por numero de movimientos</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-5 space-y-3.5 max-h-[620px] overflow-y-auto scrollbar-thin">
+                    <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5 max-h-[620px] overflow-y-auto scrollbar-thin">
                         {loading ? (
                             <div className="space-y-3.5">
                                 {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
                             </div>
                         ) : accountsByActivity.length === 0 ? (
-                            <div className="flex flex-col items-center py-20">
+                            <div className="flex flex-col items-center py-16 sm:py-20">
                                 <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center mb-5 shadow-lg shadow-slate-200/50">
                                     <ChartBarIcon className="w-10 h-10 text-slate-300" />
                                 </div>
                                 <p className="text-slate-500 font-bold text-lg">Sin datos de actividad</p>
-                                <p className="text-slate-400 text-sm mt-1">No hay cuentas con movimientos registrados</p>
+                                <p className="text-slate-400 text-sm mt-1 text-center px-4">No hay cuentas con movimientos registrados</p>
                             </div>
                         ) : (
                             accountsByActivity.map((item, index) => (
@@ -641,17 +639,17 @@ export const AdminTransactionsPage = () => {
                     <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                 </div>
 
-                <div className="relative rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden">
+                <div className="relative rounded-[24px] sm:rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-500 via-indigo-500 to-cyan-500" />
 
                     <div className="absolute inset-0 bg-gradient-to-b from-cyan-50/30 via-transparent to-transparent pointer-events-none" />
 
-                    <div className="relative px-7 py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
+                    <div className="relative px-4 sm:px-7 py-5 sm:py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
                         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.02] to-transparent" />
-                        <div className="relative flex items-center gap-4">
-                            <div className="relative">
-                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 via-cyan-50 to-white flex items-center justify-center shadow-lg shadow-cyan-100/80 ring-1 ring-cyan-100">
-                                    <ClipboardListIcon className="w-6 h-6 text-cyan-600" />
+                        <div className="relative flex items-center gap-3 sm:gap-4">
+                            <div className="relative flex-shrink-0">
+                                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-cyan-100 via-cyan-50 to-white flex items-center justify-center shadow-lg shadow-cyan-100/80 ring-1 ring-cyan-100">
+                                    <ClipboardListIcon className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600" />
                                 </div>
                                 {selected && (
                                     <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-cyan-500 flex items-center justify-center animate-bounce" style={{ animationDuration: '1s', animationIterationCount: '3' }}>
@@ -659,9 +657,9 @@ export const AdminTransactionsPage = () => {
                                     </div>
                                 )}
                             </div>
-                            <div>
-                                <h2 className="text-lg font-black text-slate-800 tracking-tight">Ultimos movimientos</h2>
-                                <p className="text-sm text-slate-400 mt-0.5">
+                            <div className="min-w-0">
+                                <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Ultimos movimientos</h2>
+                                <p className="text-xs sm:text-sm text-slate-400 mt-0.5 truncate">
                                     {selected
                                         ? <span className="flex items-center gap-1.5">
                                             Cuenta <span className="font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded text-xs">{selected.account.accountNumber}</span>
@@ -672,15 +670,15 @@ export const AdminTransactionsPage = () => {
                         </div>
                     </div>
 
-                    <div className="px-7 py-5">
+                    <div className="px-4 sm:px-7 py-4 sm:py-5">
                         {!selected ? (
-                            <div className="flex flex-col items-center py-20">
+                            <div className="flex flex-col items-center py-16 sm:py-20">
                                 <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-white flex items-center justify-center mb-5 shadow-lg shadow-indigo-200/50">
                                     <CursorClickIcon className="w-10 h-10 text-indigo-400" />
                                     <div className="absolute inset-0 rounded-3xl border-2 border-indigo-300/50 animate-ping" style={{ animationDuration: '2s' }} />
                                 </div>
                                 <p className="text-slate-600 font-bold text-lg text-center">Selecciona una cuenta</p>
-                                <p className="text-slate-400 text-sm mt-1 text-center max-w-xs">
+                                <p className="text-slate-400 text-sm mt-1 text-center max-w-xs px-4">
                                     Haz clic en una cuenta de la lista para ver sus ultimos 5 movimientos
                                 </p>
                             </div>
@@ -695,40 +693,40 @@ export const AdminTransactionsPage = () => {
                                 {[...Array(4)].map((_, i) => <SkeletonRow key={i} />)}
                             </div>
                         ) : accountTransactions.length === 0 ? (
-                            <div className="flex flex-col items-center py-20">
+                            <div className="flex flex-col items-center py-16 sm:py-20">
                                 <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center mb-5 shadow-lg shadow-slate-200/50">
                                     <ClipboardListIcon className="w-10 h-10 text-slate-300" />
                                 </div>
                                 <p className="text-slate-500 font-bold text-lg">Sin movimientos</p>
-                                <p className="text-slate-400 text-sm mt-1">Esta cuenta no tiene transacciones registradas</p>
+                                <p className="text-slate-400 text-sm mt-1 text-center px-4">Esta cuenta no tiene transacciones registradas</p>
                             </div>
                         ) : (
                             <>
-                                <div className="relative rounded-2xl bg-gradient-to-br from-slate-50 via-slate-50/80 to-white border border-slate-100/80 px-5 py-4 mb-6 overflow-hidden shadow-sm">
+                                <div className="relative rounded-2xl bg-gradient-to-br from-slate-50 via-slate-50/80 to-white border border-slate-100/80 px-4 sm:px-5 py-4 mb-5 sm:mb-6 overflow-hidden shadow-sm">
                                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200/80 to-transparent" />
                                     <div className="absolute -top-8 -right-8 w-20 h-20 bg-emerald-100/50 rounded-full blur-xl" />
                                     <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-indigo-100/50 rounded-full blur-xl" />
 
-                                    <div className="relative flex items-center justify-between">
-                                        <div className="group/stat cursor-default">
+                                    <div className="relative flex items-center justify-between gap-3">
+                                        <div className="group/stat cursor-default min-w-0">
                                             <p className="text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider font-bold flex items-center gap-1.5">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
                                                 Saldo disponible
                                             </p>
-                                            <p className="font-black text-emerald-600 text-xl tabular-nums group-hover/stat:scale-105 transition-transform">
+                                            <p className="font-black text-emerald-600 text-lg sm:text-xl tabular-nums group-hover/stat:scale-105 transition-transform truncate">
                                                 {selected.account.currency === "USD" ? "$" : "Q"}{" "}
                                                 {Number(selected.account.balance).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                             </p>
                                         </div>
 
-                                        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+                                        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-200 to-transparent flex-shrink-0" />
 
-                                        <div className="text-right group/stat cursor-default">
+                                        <div className="text-right group/stat cursor-default flex-shrink-0">
                                             <p className="text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider font-bold flex items-center justify-end gap-1.5">
                                                 Total movimientos
                                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
                                             </p>
-                                            <p className="font-black text-indigo-600 text-xl tabular-nums group-hover/stat:scale-105 transition-transform">
+                                            <p className="font-black text-indigo-600 text-lg sm:text-xl tabular-nums group-hover/stat:scale-105 transition-transform">
                                                 {selected.totalMovimientos}
                                             </p>
                                         </div>

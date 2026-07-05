@@ -162,26 +162,29 @@ export const CreateProductModal = ({ product, onClose }) => {
         .sparkle-icon{animation:sparkle 2s ease-in-out infinite}
         .close-btn{transition:all 0.3s ease}
         .close-btn:hover{transform:rotate(90deg) scale(1.1)}
+        @media (prefers-reduced-motion: reduce) {
+          .modal-overlay, .modal-content, .gradient-bar, .pulse-glow, .sparkle-icon { animation: none !important; }
+        }
       `}</style>
 
-      <div className="modal-overlay fixed inset-0 flex items-center justify-center z-50 p-4 bg-gradient-to-br from-slate-900/70 via-black/60 to-indigo-950/50">
+      <div className="modal-overlay fixed inset-0 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 bg-gradient-to-br from-slate-900/70 via-black/60 to-indigo-950/50">
         <div className="absolute inset-0" onClick={onClose} />
 
         <div
-          className="modal-content relative w-full max-w-xl rounded-[32px] bg-white overflow-hidden"
-          style={{ boxShadow: '0 25px 100px -12px rgba(0,0,0,0.5), 0 0 60px rgba(99,102,241,0.15)', maxHeight: '90vh', overflowY: 'auto' }}
+          className="modal-content relative w-full max-w-xl rounded-t-[28px] sm:rounded-[32px] bg-white overflow-hidden"
+          style={{ boxShadow: '0 25px 100px -12px rgba(0,0,0,0.5), 0 0 60px rgba(99,102,241,0.15)', maxHeight: '92vh', overflowY: 'auto' }}
         >
           <div className="gradient-bar h-1.5" style={{ background: accentGradient }} />
 
           {/* Header */}
-          <div className="relative bg-[#070d1f] px-7 py-6 overflow-hidden">
+          <div className="relative bg-[#070d1f] px-5 sm:px-7 py-5 sm:py-6 overflow-hidden">
             <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-50"
               style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.35) 0%, transparent 70%)', filter: 'blur(40px)' }} />
 
-            <div className="relative flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="pulse-glow w-14 h-14 rounded-2xl flex items-center justify-center"
+            <div className="relative flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div className="relative flex-shrink-0">
+                  <div className="pulse-glow w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center"
                     style={{ background: isEditing ? 'linear-gradient(135deg,#f59e0b,#f97316)' : 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
                     <span className="text-white">{isEditing ? <EditIcon /> : <PackageIcon />}</span>
                   </div>
@@ -189,24 +192,24 @@ export const CreateProductModal = ({ product, onClose }) => {
                     <SparklesIcon />
                   </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-black text-white tracking-tight">
+                <div className="min-w-0">
+                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight truncate">
                     {isEditing ? "Editar producto" : "Crear producto"}
                   </h2>
-                  <p className="text-white/40 text-sm mt-0.5 font-medium">
+                  <p className="text-white/40 text-xs sm:text-sm mt-0.5 font-medium truncate">
                     {isEditing ? "Actualiza la información del producto" : "Completa todos los campos"}
                   </p>
                 </div>
               </div>
 
-              <button onClick={onClose} className="close-btn w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 text-white/50 hover:text-white border border-white/10 flex items-center justify-center">
+              <button onClick={onClose} className="close-btn w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 hover:bg-white/15 text-white/50 hover:text-white border border-white/10 flex items-center justify-center flex-shrink-0">
                 <XIcon />
               </button>
             </div>
           </div>
 
           {/* Formulario */}
-          <div className="px-7 pt-5 pb-3 space-y-4">
+          <div className="px-5 sm:px-7 pt-5 pb-3 space-y-4">
 
             {/* Error */}
             {error && (
@@ -239,7 +242,7 @@ export const CreateProductModal = ({ product, onClose }) => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
               <div>
                 <Label>Tipo</Label>
                 <select name="type" value={form.type} onChange={handleChange}
@@ -272,12 +275,12 @@ export const CreateProductModal = ({ product, onClose }) => {
                 placeholder="0.00" min="0" focused={focusedField} />
             </div>
 
-            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-3">
+            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-3 sm:p-4 space-y-3">
               <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 flex items-center gap-2">
                 <span>⭐</span> Sistema de puntos
               </p>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
                 {/* Puntos para canjear gratis */}
                 <div>
                   <Label>Puntos para canje gratis</Label>
@@ -309,11 +312,11 @@ export const CreateProductModal = ({ product, onClose }) => {
                 <button
                   type="button"
                   onClick={() => setForm((p) => ({ ...p, redeemable: !p.redeemable }))}
-                  className={`relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none ${form.redeemable ? 'bg-indigo-500' : 'bg-slate-300'}`}
+                  className={`relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none flex-shrink-0 ${form.redeemable ? 'bg-indigo-500' : 'bg-slate-300'}`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-300 ${form.redeemable ? 'translate-x-5' : 'translate-x-0'}`} />
                 </button>
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-semibold text-slate-700">
                     {form.redeemable ? "Producto canjeable con puntos" : "No canjeable con puntos"}
                   </p>
@@ -323,23 +326,23 @@ export const CreateProductModal = ({ product, onClose }) => {
             </div>
           </div>
 
-          <div className="px-7 py-5 border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
-                <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${isEditing ? 'bg-amber-400' : 'bg-emerald-400'}`}
+          <div className="px-5 sm:px-7 py-4 sm:py-5 border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-slate-400 font-medium order-2 sm:order-1">
+                <div className={`w-2.5 h-2.5 rounded-full animate-pulse flex-shrink-0 ${isEditing ? 'bg-amber-400' : 'bg-emerald-400'}`}
                   style={{ boxShadow: `0 0 8px ${isEditing ? 'rgba(245,158,11,0.6)' : 'rgba(34,197,94,0.6)'}` }} />
                 {isEditing ? 'Modo edición activo' : 'Listo para crear'}
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-3 order-1 sm:order-2">
                 <button onClick={onClose}
-                  className="px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 transition-all duration-300">
+                  className="flex-1 sm:flex-none px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 transition-all duration-300">
                   Cancelar
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading || !form.name || !form.description}
-                  className="relative px-6 py-3 rounded-xl text-white text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="flex-1 sm:flex-none relative px-6 py-3 rounded-xl text-white text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   style={{
                     background: isEditing
                       ? 'linear-gradient(135deg,#f59e0b,#f97316)'
