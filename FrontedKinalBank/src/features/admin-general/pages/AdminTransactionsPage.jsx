@@ -525,8 +525,8 @@ export const AdminTransactionsPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4 sm:gap-5">
-                        <div className="relative rounded-[24px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 sm:min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
+                    <div className="flex flex-col items-center lg:items-end gap-4 sm:gap-5">
+                        <div className="relative rounded-[24px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 sm:p-6 w-full max-w-[280px] lg:w-auto lg:min-w-[200px] overflow-hidden shadow-2xl shadow-black/20">
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 rounded-[24px] sm:rounded-[28px]" />
 
                             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -557,7 +557,28 @@ export const AdminTransactionsPage = () => {
 
                         <button
                             onClick={toggleOrder}
-                            className="group relative px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-bold shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100 transition-all duration-300 overflow-hidden w-full sm:w-auto"
+                            className="
+                                group
+                                relative
+                                w-[240px]
+                                sm:w-auto
+                                px-7
+                                py-4
+                                rounded-2xl
+                                bg-gradient-to-r
+                                from-indigo-600
+                                via-indigo-500
+                                to-cyan-500
+                                text-white
+                                font-bold
+                                shadow-xl
+                                shadow-indigo-600/30
+                                hover:shadow-indigo-500/50
+                                hover:scale-105
+                                transition-all
+                                duration-300
+                                overflow-hidden
+                            "
                         >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 

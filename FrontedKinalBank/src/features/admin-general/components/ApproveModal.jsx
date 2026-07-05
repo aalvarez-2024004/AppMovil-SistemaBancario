@@ -94,8 +94,15 @@ const drawerStyles = `
     }
 
     @keyframes drawerSlideIn {
-        from { transform: translateX(100%); }
-        to { transform: translateX(0); }
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+
+    @media (min-width: 640px) {
+        @keyframes drawerSlideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
     }
 
     @keyframes drawerShake {
@@ -152,6 +159,15 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
         return () => window.removeEventListener("keydown", handleKey);
     }, [onClose]);
 
+    // Bloquea el scroll del fondo mientras el drawer está abierto (importante en móvil)
+    useEffect(() => {
+        const original = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = original;
+        };
+    }, []);
+
     const fields = [
         { label: "Usuario", value: user.Username, icon: UserIcon, color: "#3b82f6" },
         { label: "DPI", value: user.DPI, icon: IdCardIcon, color: "#6366f1" },
@@ -171,22 +187,27 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                 onClick={onClose}
             />
 
-            {/* Panel lateral */}
+            {/* Panel: hoja inferior en móvil, panel lateral desde sm hacia arriba */}
             <div
                 role="dialog"
                 aria-modal="true"
-                className="approve-drawer-panel fixed inset-0 sm:inset-y-0 sm:left-auto sm:right-0 z-50 w-full sm:w-[440px] md:w-[480px] h-[100dvh] bg-white shadow-2xl flex flex-col"
+                className="approve-drawer-panel fixed inset-x-0 bottom-0 sm:inset-y-0 sm:inset-x-auto sm:right-0 sm:bottom-auto z-50 w-full sm:w-[440px] md:w-[480px] h-[92dvh] sm:h-[100dvh] rounded-t-3xl sm:rounded-none bg-white shadow-2xl flex flex-col"
             >
-                <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 flex-shrink-0" />
+                {/* Handle para arrastrar, solo visible en móvil */}
+                <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0">
+                    <div className="w-10 h-1.5 rounded-full bg-gray-200" />
+                </div>
+
+                <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 flex-shrink-0 hidden sm:block" />
 
                 {/* Header */}
-                <div className="relative flex items-center justify-between px-5 sm:px-6 py-5 border-b border-gray-100/80 bg-gradient-to-r from-slate-50/50 to-blue-50/30 flex-shrink-0">
+                <div className="relative flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100/80 bg-gradient-to-r from-slate-50/50 to-blue-50/30 flex-shrink-0">
                     <div className="flex items-center gap-3 relative z-10 min-w-0">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 flex-shrink-0">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 flex-shrink-0">
                             <ShieldCheckIcon />
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-lg font-semibold text-gray-900 truncate">Revisar solicitud</h2>
+                            <h2 className="text-base sm:text-lg font-semibold text-gray-900 truncate">Revisar solicitud</h2>
                             <div className="flex items-center gap-1.5 text-xs text-gray-400">
                                 <ClockIcon />
                                 <span>Pendiente de revision</span>
@@ -204,10 +225,10 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                 </div>
 
                 {/* Contenido con scroll */}
-                <div className="flex-1 min-h-0 overflow-y-auto px-5 sm:px-6 py-5 space-y-5">
-                    <div className="flex items-center gap-4">
+                <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5">
+                    <div className="flex items-center gap-3 sm:gap-4">
                         <div className="relative flex-shrink-0">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 text-white font-bold text-xl flex items-center justify-center shadow-xl">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 text-white font-bold text-lg sm:text-xl flex items-center justify-center shadow-xl">
                                 {user.Name?.charAt(0).toUpperCase()}
                             </div>
                             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-amber-400 rounded-lg border-2 border-white flex items-center justify-center shadow-md">
@@ -225,11 +246,11 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-2.5 sm:gap-3">
                         {fields.map(({ label, value, icon: Icon, color }) => (
                             <div
                                 key={label}
-                                className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-xl p-3.5 border border-blue-100/50"
+                                className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-xl p-3 sm:p-3.5 border border-blue-100/50"
                             >
                                 <div className="flex items-start gap-3">
                                     <div
@@ -252,7 +273,7 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                     </div>
 
                     {confirming ? (
-                        <div className="approve-drawer-shake relative bg-gradient-to-br from-red-50 to-rose-50 border border-red-200 rounded-xl p-5 text-center space-y-4">
+                        <div className="approve-drawer-shake relative bg-gradient-to-br from-red-50 to-rose-50 border border-red-200 rounded-xl p-4 sm:p-5 text-center space-y-4">
                             <div className="w-12 h-12 mx-auto rounded-full bg-red-100 flex items-center justify-center text-red-500">
                                 <AlertTriangleIcon />
                             </div>
@@ -262,17 +283,17 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                                     El usuario <span className="font-semibold">{user.Name}</span> sera eliminado permanentemente.
                                 </p>
                             </div>
-                            <div className="flex justify-center gap-3 flex-wrap">
+                            <div className="flex flex-col-reverse min-[420px]:flex-row justify-center gap-3">
                                 <button
                                     onClick={() => setConfirming(false)}
-                                    className="px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                                    className="px-4 py-2.5 min-[420px]:py-2 rounded-xl border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-all"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     onClick={() => onDeny(user.Id)}
                                     disabled={loading}
-                                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white text-xs font-semibold disabled:opacity-60 transition-all shadow-lg shadow-red-500/25"
+                                    className="px-4 py-2.5 min-[420px]:py-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white text-xs font-semibold disabled:opacity-60 transition-all shadow-lg shadow-red-500/25"
                                 >
                                     {loading ? "Denegando..." : "Si, denegar"}
                                 </button>
@@ -307,14 +328,14 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                     )}
                 </div>
 
-                {/* Footer fijo */}
+                {/* Footer fijo, respeta el área segura del móvil (notch/home indicator) */}
                 {!confirming && (
-                    <div className="px-5 sm:px-6 py-4 border-t border-gray-100/80 bg-white flex-shrink-0">
+                    <div className="px-4 sm:px-6 pt-4 border-t border-gray-100/80 bg-white flex-shrink-0" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
                         <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3">
                             <button
                                 onClick={() => setConfirming(true)}
                                 disabled={loading}
-                                className="px-5 py-2.5 rounded-xl border-2 border-red-200 bg-red-50 text-sm font-semibold text-red-600 hover:bg-red-100 hover:border-red-300 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
+                                className="px-5 py-3 sm:py-2.5 rounded-xl border-2 border-red-200 bg-red-50 text-sm font-semibold text-red-600 hover:bg-red-100 hover:border-red-300 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
                             >
                                 <XIcon />
                                 <span>Denegar</span>
@@ -323,14 +344,14 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
                             <div className="flex gap-3">
                                 <button
                                     onClick={onClose}
-                                    className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl border-2 border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                    className="flex-1 sm:flex-none px-5 py-3 sm:py-2.5 rounded-xl border-2 border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     onClick={() => onConfirm(user.Id, role)}
                                     disabled={loading}
-                                    className="approve-drawer-shimmer flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-semibold disabled:opacity-60 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
+                                    className="approve-drawer-shimmer flex-1 sm:flex-none px-6 py-3 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-semibold disabled:opacity-60 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
                                 >
                                     {loading ? "Aprobando..." : (
                                         <>

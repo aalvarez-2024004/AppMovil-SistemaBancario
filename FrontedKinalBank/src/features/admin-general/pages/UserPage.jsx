@@ -305,7 +305,7 @@ export const UsersPage = () => {
                 )}
 
 
-                <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-5 sm:p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
+                <div className="relative overflow-hidden rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-[#050d1a] via-[#0a1628] to-[#12243f] p-4 sm:p-8 md:p-10 lg:p-12 shadow-2xl shadow-slate-900/30 mb-6 sm:mb-8">
                     <div className="absolute top-[-40%] right-[-15%] w-[450px] h-[450px] bg-gradient-to-br from-orange-600/20 via-orange-500/10 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
                     <div className="absolute bottom-[-50%] left-[-10%] w-[350px] h-[350px] bg-gradient-to-tr from-indigo-500/20 via-indigo-400/10 to-transparent blur-3xl rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-radial from-cyan-500/8 to-transparent blur-3xl rounded-full" />
@@ -322,46 +322,46 @@ export const UsersPage = () => {
                     <div className="absolute bottom-0 left-1/3 w-px h-16 bg-gradient-to-t from-cyan-500/30 to-transparent hidden sm:block" />
                     <div className="absolute bottom-0 right-1/4 w-px h-24 bg-gradient-to-t from-orange-500/20 to-transparent hidden sm:block" />
 
-                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-10">
                         <div className="max-w-xl">
-                            <div className="inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-5 sm:mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default group">
+                            <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-white/[0.08] border border-white/10 backdrop-blur-md mb-4 sm:mb-6 shadow-lg shadow-black/10 hover:bg-white/[0.12] transition-colors cursor-default group max-w-full">
                                 <div className="relative flex-shrink-0">
                                     <div className="absolute inset-0 rounded-full bg-orange-400 animate-ping opacity-40" />
                                     <div className="relative w-2.5 h-2.5 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 shadow-lg shadow-orange-400/50" />
                                 </div>
-                                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-300 font-bold whitespace-nowrap">
+                                <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.3em] text-slate-300 font-bold truncate">
                                     Administracion bancaria
                                 </span>
-                                <div className="w-px h-4 bg-white/20 hidden xs:block" />
-                                <UsersIcon className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform hidden xs:block" />
+                                <div className="w-px h-4 bg-white/20 hidden sm:block flex-shrink-0" />
+                                <UsersIcon className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform hidden sm:block flex-shrink-0" />
                             </div>
 
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                            <h1 className="text-2xl min-[420px]:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
                                 Solicitudes
                                 <span className="block bg-gradient-to-r from-orange-300 via-amber-300 to-orange-300 bg-clip-text text-transparent animate-gradient mt-1">
                                     pendientes
                                 </span>
                             </h1>
 
-                            <p className="text-slate-400 mt-4 sm:mt-5 leading-relaxed text-sm sm:text-[15px] max-w-lg">
+                            <p className="text-slate-400 mt-3 sm:mt-5 leading-relaxed text-sm sm:text-[15px] max-w-lg">
                                 Gestiona y aprueba nuevas solicitudes de usuarios dentro del sistema bancario administrativo en tiempo real.
                             </p>
 
-                            <div className="flex items-center gap-3 sm:gap-4 mt-6 flex-wrap">
-                                <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/15 transition-colors cursor-default">
+                            <div className="flex items-center gap-2 sm:gap-4 mt-5 sm:mt-6 flex-wrap">
+                                <div className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/15 transition-colors cursor-default">
                                     <ClockIcon className="w-4 h-4 text-orange-400" />
                                     <span className="text-orange-300 text-xs font-semibold">{pendingUsers.length} en espera</span>
                                 </div>
-                                <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/15 transition-colors cursor-default">
+                                <div className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/15 transition-colors cursor-default">
                                     <ShieldCheckIcon className="w-4 h-4 text-emerald-400" />
                                     <span className="text-emerald-300 text-xs font-semibold">Sistema activo</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                            <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-4 sm:p-6 min-w-0 sm:min-w-[180px] overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 rounded-[22px] sm:rounded-[28px]" />
+                        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 sm:gap-4">
+                            <div className="relative rounded-[20px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-4 sm:p-6 min-w-0 sm:min-w-[180px] overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
+                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 rounded-[20px] sm:rounded-[28px]" />
 
                                 <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
@@ -384,13 +384,13 @@ export const UsersPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="absolute inset-0 overflow-hidden rounded-[22px] sm:rounded-[28px] pointer-events-none">
+                                <div className="absolute inset-0 overflow-hidden rounded-[20px] sm:rounded-[28px] pointer-events-none">
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" style={{ animationDuration: '3s' }} />
                                 </div>
                             </div>
 
-                            <div className="relative rounded-[22px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-4 sm:p-6 min-w-0 sm:min-w-[180px] overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-cyan-500/10 rounded-[22px] sm:rounded-[28px]" />
+                            <div className="relative rounded-[20px] sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-4 sm:p-6 min-w-0 sm:min-w-[180px] overflow-hidden shadow-2xl shadow-black/20 group hover:border-white/20 transition-colors">
+                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-cyan-500/10 rounded-[20px] sm:rounded-[28px]" />
 
                                 <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
@@ -417,7 +417,7 @@ export const UsersPage = () => {
                 </div>
 
                 <div
-                    className="relative rounded-[24px] sm:rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden"
+                    className="relative rounded-[20px] sm:rounded-[32px] border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-300/30 overflow-hidden"
                     style={{ animation: 'fadeSlideIn 0.6s ease-out 0.2s both' }}
                 >
                     <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500" />
@@ -427,23 +427,23 @@ export const UsersPage = () => {
                     <div className="absolute -top-20 -right-20 w-40 h-40 bg-orange-100/30 rounded-full blur-3xl" />
                     <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-amber-100/20 rounded-full blur-3xl" />
 
-                    <div className="relative px-4 sm:px-7 py-5 sm:py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
+                    <div className="relative px-4 sm:px-7 py-4 sm:py-6 border-b border-slate-100/80 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/50">
                         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/[0.02] to-transparent" />
                         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200/50 to-transparent" />
 
                         <div className="relative flex items-center justify-between gap-3 flex-wrap">
                             <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                                 <div className="relative group cursor-default flex-shrink-0">
-                                    <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-orange-100 via-orange-50 to-white flex items-center justify-center shadow-lg shadow-orange-100/80 ring-1 ring-orange-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-orange-200">
-                                        <UsersIcon className="w-5.5 h-5.5 sm:w-7 sm:h-7 text-orange-600" />
+                                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-orange-100 via-orange-50 to-white flex items-center justify-center shadow-lg shadow-orange-100/80 ring-1 ring-orange-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-orange-200">
+                                        <UsersIcon className="w-5 h-5 sm:w-7 sm:h-7 text-orange-600" />
                                     </div>
                                     <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-300/50">
                                         <span className="text-[9px] text-white font-bold">{pendingUsers.length}</span>
                                     </div>
                                 </div>
                                 <div className="min-w-0">
-                                    <h2 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">Lista de solicitudes</h2>
-                                    <p className="text-xs sm:text-sm text-slate-400 mt-0.5 flex items-center gap-2 truncate">
+                                    <h2 className="text-base sm:text-xl font-black text-slate-800 tracking-tight">Lista de solicitudes</h2>
+                                    <p className="text-xs sm:text-sm text-slate-400 mt-0.5 flex items-center gap-1.5 sm:gap-2 truncate">
                                         <ClockIcon className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
                                         <span className="truncate">Usuarios esperando aprobacion administrativa</span>
                                     </p>
@@ -451,7 +451,7 @@ export const UsersPage = () => {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50/50 border border-orange-100/80 shadow-sm hover:shadow-md hover:shadow-orange-100/50 transition-all cursor-default">
+                                <div className="flex items-center gap-2 sm:gap-2.5 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50/50 border border-orange-100/80 shadow-sm hover:shadow-md hover:shadow-orange-100/50 transition-all cursor-default">
                                     <div className="relative flex-shrink-0">
                                         <div className="absolute inset-0 rounded-full bg-orange-400 animate-ping opacity-50" />
                                         <div className="relative w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shadow-orange-400" />
@@ -473,7 +473,7 @@ export const UsersPage = () => {
                         {loading && pendingUsers.length === 0 ? (
                             <>
                                 {/* Skeleton - móvil */}
-                                <div className="md:hidden p-4 space-y-3">
+                                <div className="md:hidden p-3 sm:p-4 space-y-3">
                                     {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
                                 </div>
                                 {/* Skeleton - desktop */}
@@ -481,7 +481,7 @@ export const UsersPage = () => {
                                     <table className="w-full min-w-[920px]">
                                         <thead>
                                             <tr className="border-b border-slate-100 bg-gradient-to-r from-slate-50/80 to-slate-50/50">
-                                                {["Cliente", "Usuario", "Correo", "DPI", "Telefono", "Trabajo", "Ingreso", "Estado", "Acciones"].map((item) => (
+                                                {["Cliente", "Usuario", "Correo", "DPI", "Telefono", "Trabajo", "Ingreso", "Estado"].map((item) => (
                                                     <th
                                                         key={item}
                                                         className="px-4 py-4 text-left text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400"
@@ -498,20 +498,20 @@ export const UsersPage = () => {
                                 </div>
                             </>
                         ) : pendingUsers.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-16 sm:py-24 px-6">
-                                <div className="relative mb-6 sm:mb-8">
-                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[28px] sm:rounded-[32px] bg-gradient-to-br from-emerald-100 via-emerald-50 to-cyan-50 flex items-center justify-center shadow-xl shadow-emerald-200/50">
-                                        <CheckCircleIcon className="w-12 h-12 sm:w-14 sm:h-14 text-emerald-500" />
+                            <div className="flex flex-col items-center justify-center py-14 sm:py-24 px-4 sm:px-6">
+                                <div className="relative mb-5 sm:mb-8">
+                                    <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-[24px] sm:rounded-[32px] bg-gradient-to-br from-emerald-100 via-emerald-50 to-cyan-50 flex items-center justify-center shadow-xl shadow-emerald-200/50">
+                                        <CheckCircleIcon className="w-10 h-10 sm:w-14 sm:h-14 text-emerald-500" />
                                     </div>
 
-                                    <div className="absolute -bottom-2 -right-2 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 border-4 border-white flex items-center justify-center text-white shadow-lg shadow-emerald-300/50">
-                                        <SparklesIcon className="w-5 h-5" />
+                                    <div className="absolute -bottom-2 -right-2 w-9 h-9 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 border-4 border-white flex items-center justify-center text-white shadow-lg shadow-emerald-300/50">
+                                        <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </div>
 
-                                    <div className="absolute inset-0 rounded-[28px] sm:rounded-[32px] bg-emerald-400/20 blur-xl -z-10" />
+                                    <div className="absolute inset-0 rounded-[24px] sm:rounded-[32px] bg-emerald-400/20 blur-xl -z-10" />
                                 </div>
 
-                                <h3 className="text-xl sm:text-2xl font-black text-slate-800 mb-2 sm:mb-3 tracking-tight text-center">
+                                <h3 className="text-lg sm:text-2xl font-black text-slate-800 mb-2 sm:mb-3 tracking-tight text-center">
                                     Todo esta al dia
                                 </h3>
 
@@ -519,7 +519,7 @@ export const UsersPage = () => {
                                     Actualmente no existen solicitudes pendientes dentro del sistema. Las nuevas solicitudes apareceran aqui automaticamente.
                                 </p>
 
-                                <div className="mt-6 flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100">
+                                <div className="mt-5 sm:mt-6 flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500" />
                                     <span className="text-emerald-600 text-sm font-semibold">Sistema sincronizado</span>
                                 </div>
@@ -527,16 +527,16 @@ export const UsersPage = () => {
                         ) : (
                             <>
                                 {/* Vista móvil: tarjetas apiladas */}
-                                <div className="md:hidden p-4 space-y-3">
+                                <div className="md:hidden p-3 sm:p-4 space-y-3">
                                     {pendingUsers.map((user, rowIndex) => (
                                         <div
                                             key={user.Id}
-                                            className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm"
+                                            className="rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-sm"
                                             style={{ animation: `fadeSlideIn 0.4s ease-out ${rowIndex * 0.06}s both` }}
                                         >
                                             <div className="flex items-start gap-3">
                                                 <div className="relative flex-shrink-0">
-                                                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-500/30">
+                                                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-500/30">
                                                         {user.Name?.charAt(0).toUpperCase()}
                                                     </div>
                                                     <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500 border-2 border-white" />
@@ -544,7 +544,7 @@ export const UsersPage = () => {
                                                 <div className="min-w-0 flex-1">
                                                     <div className="flex items-center justify-between gap-2">
                                                         <p className="font-bold text-slate-800 truncate">{user.Name}</p>
-                                                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200/80 flex-shrink-0">
+                                                        <div className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200/80 flex-shrink-0">
                                                             <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                                                             <span className="text-[9px] font-bold text-orange-700 uppercase tracking-wider">Pendiente</span>
                                                         </div>
@@ -553,7 +553,7 @@ export const UsersPage = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-x-3 gap-y-2 mt-3 text-xs">
+                                            <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-x-3 gap-y-2 mt-3 text-xs">
                                                 <span className="text-slate-500 flex items-center gap-1.5 min-w-0">
                                                     <MailIcon className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
                                                     <span className="truncate">{user.Email}</span>
@@ -572,16 +572,16 @@ export const UsersPage = () => {
                                                 </span>
                                             </div>
 
-                                            <div className="flex items-center justify-between gap-3 mt-3">
-                                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-100/80">
-                                                    <CreditCardIcon className="w-3.5 h-3.5 text-emerald-500" />
+                                            <div className="flex flex-col min-[420px]:flex-row items-stretch min-[420px]:items-center justify-between gap-2.5 min-[420px]:gap-3 mt-3">
+                                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-100/80 justify-center min-[420px]:justify-start">
+                                                    <CreditCardIcon className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                                                     <span className="text-emerald-700 font-bold text-xs tabular-nums">
                                                         Q {Number(user.MonthlyIncome || 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                                     </span>
                                                 </div>
                                                 <button
                                                     onClick={() => setSelected(user)}
-                                                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 active:scale-95 transition-all flex items-center gap-1.5"
+                                                    className="px-4 py-2.5 min-[420px]:py-2 rounded-xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 active:scale-95 transition-all flex items-center justify-center gap-1.5"
                                                 >
                                                     Revisar
                                                     <ArrowRightIcon className="w-3.5 h-3.5" />

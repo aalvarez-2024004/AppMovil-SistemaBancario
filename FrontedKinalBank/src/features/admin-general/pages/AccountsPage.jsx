@@ -238,7 +238,15 @@ export const AccountsPage = () => {
 
                     <div className="absolute inset-[1px] rounded-[27px] sm:rounded-[39px] pointer-events-none" style={{ border: "1px solid rgba(255,255,255,0.04)" }} />
 
-                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 sm:gap-10">
+                    <div className="
+                        relative z-10
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+                        gap-8
+                    ">
 
                         <div className="flex-1 min-w-0">
 
@@ -272,12 +280,19 @@ export const AccountsPage = () => {
                                 <div className="h-[2px] w-1 rounded-full bg-slate-600" />
                             </div>
 
-                            <p className="text-slate-400 text-sm leading-relaxed max-w-[400px]">
+                            <p className="text-slate-400 text-sm leading-relaxed max-w-full lg:max-w-[400px]">
                                 Administra las cuentas del sistema financiero,
                                 controla balances y supervisa movimientos bancarios en tiempo real.
                             </p>
 
-                            <div className="flex flex-wrap items-stretch gap-3 mt-6 sm:mt-7">
+                            <div className="
+                                grid
+                                grid-cols-2
+                                sm:flex
+                                gap-3
+                                mt-7
+                                "
+                            >
                                 {[
                                     { label: "Registradas", val: pagination?.totalRecords || 0, color: "#818cf8", dot: "bg-indigo-400" },
                                     { label: "Activas", val: activas, color: "#34d399", dot: "bg-emerald-400" },
@@ -301,10 +316,31 @@ export const AccountsPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-stretch sm:items-start lg:items-end gap-4">
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                items-center
+                                lg:items-end
+                                gap-5
+                                w-full
+                                lg:w-auto
+                            "
+                        >
 
                             <div
-                                className="relative overflow-hidden rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 sm:min-w-[215px]"
+                                className="
+                                relative
+                                overflow-hidden
+                                rounded-[24px]
+                                sm:rounded-[28px]
+                                p-5
+                                sm:p-6
+                                w-full
+                                max-w-[320px]
+                                lg:w-auto
+                                lg:min-w-[215px]
+                                "
                                 style={{
                                     background: "linear-gradient(135deg, rgba(99,102,241,0.22) 0%, rgba(6,182,212,0.14) 100%)",
                                     border: "1px solid rgba(255,255,255,0.11)",
@@ -333,7 +369,7 @@ export const AccountsPage = () => {
                             <button
                                 onClick={() => setModal({ type: "create" })}
                                 disabled={loading}
-                                className="group relative overflow-hidden px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl text-white font-black text-sm tracking-wide disabled:opacity-60 transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] w-full sm:w-auto"
+                                className="group relative overflow-hidden px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl text-white font-black text-sm tracking-wide disabled:opacity-60 transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] w-full max-w-[320px] lg:w-auto"
                                 style={{
                                     background: "linear-gradient(135deg, #4f46e5 0%, #4338ca 45%, #0891b2 100%)",
                                     boxShadow: "0 8px 28px -4px rgba(79,70,229,0.55), 0 2px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.22)",

@@ -2,14 +2,6 @@ import { useState } from "react"
 import { NavLink, Outlet } from "react-router-dom"
 import { Navbar } from "../../../shared/components/layouts/Navbar.jsx"
 
-const MenuIcon = ({ className }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-);
-
 const CloseIcon = ({ className }) => (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <line x1="18" y1="6" x2="6" y2="18" />
@@ -23,23 +15,19 @@ export const AdminGeneralLayout = () => {
     return (
         <div className="h-screen w-screen bg-[#f4f7fb] flex flex-col overflow-hidden">
 
-            <div className="relative">
-                <Navbar />
-                {/* Botón hamburguesa, solo visible en móvil/tablet */}
-                <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="lg:hidden absolute top-1/2 -translate-y-1/2 left-4 w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white z-20"
-                >
-                    <MenuIcon className="w-5 h-5" />
-                </button>
-            </div>
+            {/* El botón de menú vive dentro del propio Navbar (onToggleSidebar),
+                así no hay dos botones peleando por el mismo espacio. */}
+            <Navbar
+                sidebarOpen={sidebarOpen}
+                onToggleSidebar={() => setSidebarOpen((open) => !open)}
+            />
 
             <div className="flex flex-1 overflow-hidden relative">
 
                 {/* Overlay oscuro cuando el sidebar está abierto en móvil */}
                 {sidebarOpen && (
                     <div
-                        className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                        className="fixed inset-0 bg-black/50 z-[90] lg:hidden"
                         onClick={() => setSidebarOpen(false)}
                     />
                 )}
@@ -47,16 +35,24 @@ export const AdminGeneralLayout = () => {
                 {/* Sidebar */}
                 <aside
                     className={`
-                        fixed lg:static inset-y-0 left-0 z-40
-                        w-72 bg-[#071126] relative overflow-hidden flex flex-col flex-shrink-0 border-r border-white/5
+                        fixed lg:static inset-y-0 left-0 z-[95]
+                        w-72 bg-[#071126] overflow-hidden flex flex-col flex-shrink-0 border-r border-white/5
                         transform transition-transform duration-300 ease-in-out
                         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
                     `}
                 >
+                  {/* Nota: el "relative" va en este wrapper interno, NO en el <aside>.
+                      Poner "relative" y "fixed" juntos en el mismo elemento hace que
+                      Tailwind aplique "relative" por encima de "fixed" en móvil, y el
+                      sidebar deja de salir del flujo del documento: sigue reservando
+                      sus 288px de ancho aunque esté "cerrado", empujando y
+                      comprimiendo el contenido principal. */}
+                  <div className="relative flex flex-col flex-1 min-h-0">
 
                     {/* Botón cerrar, solo en móvil */}
                     <button
                         onClick={() => setSidebarOpen(false)}
+                        aria-label="Cerrar menú"
                         className="lg:hidden absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-slate-300"
                     >
                         <CloseIcon className="w-5 h-5" />
@@ -320,10 +316,11 @@ export const AdminGeneralLayout = () => {
                         </div>
 
                     </div>
+                  </div>
                 </aside>
 
                 {/* Contenido */}
-                <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#f8fafc] to-[#eef4ff] p-4 sm:p-6 lg:p-8 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <main className="flex-1 w-full min-w-0 overflow-y-auto overflow-x-hidden bg-gradient-to-br from-[#f8fafc] to-[#eef4ff] p-4 sm:p-6 lg:p-8 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
                     <Outlet />
                 </main>
 
