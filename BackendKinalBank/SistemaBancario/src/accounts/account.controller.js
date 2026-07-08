@@ -2,6 +2,9 @@
 import {generateAccountNumber} from '../helpers/account-number.js'
 import Account from './account.model.js';
 import axios from 'axios';
+
+const AUTH_BANCO_URL = process.env.AUTH_BANCO_URL;
+
 // Crear cuenta (ADMIN)
 export const createAccount = async (req, res) => {
     try {
@@ -97,7 +100,7 @@ export const getAccounts = async (req, res) => {
         let userMap = {};
         try {
             const usersRes = await axios.post(
-                'http://localhost:3005/api/v1/users/by-ids',
+                `${AUTH_BANCO_URL}/users/by-ids`,
                 { ids: ownerIds },
                 { headers: { Authorization: token } }
             );
