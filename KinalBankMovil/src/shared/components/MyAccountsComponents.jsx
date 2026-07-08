@@ -33,7 +33,7 @@ export const StatCard = ({ icon, iconBg, iconColor, value, valueStyle, label, su
 export const AccountCard = ({ account, onPress }) => {
   const isActive = account.status === "ACTIVA";
   const currency = account.currency ?? "GTQ";
-  const lastFour = String(account.accountNumber || "----").slice(-4);
+  const fullNumber = account.accountNumber || "----------";
 
   return (
     <TouchableOpacity
@@ -47,7 +47,7 @@ export const AccountCard = ({ account, onPress }) => {
           <Text style={styles.accountTypeLabel}>
             {account.accountType || "MONETARIA"} · {currency}
           </Text>
-          <Text style={styles.accountName}>Cuenta {lastFour}</Text>
+          <Text style={styles.accountName}>Cuenta {fullNumber}</Text>
         </View>
 
         <View style={[
@@ -69,8 +69,7 @@ export const AccountCard = ({ account, onPress }) => {
 
       {/* Número estilo tarjeta */}
       <View style={styles.accountNumberRow}>
-        <Text style={styles.accountNumberDots}>••••• •</Text>
-        <Text style={styles.accountNumberLast}>{lastFour}</Text>
+          <Text style={styles.accountNumberLast}>{fullNumber}</Text>
       </View>
 
       <View style={styles.accountCardDivider} />
@@ -132,7 +131,7 @@ export const AccountDetailModal = ({ visible, account, onClose }) => {
 
   const isActive = account.status === "ACTIVA";
   const currency = account.currency ?? "GTQ";
-  const lastFour = String(account.accountNumber || "----").slice(-4);
+  const fullNumber = account.accountNumber || "----------";
 
   return (
     <Modal
@@ -160,7 +159,7 @@ export const AccountDetailModal = ({ visible, account, onClose }) => {
               />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.modalTitle}>Cuenta {lastFour}</Text>
+              <Text style={styles.modalTitle}>Cuenta {fullNumber}</Text>
               <Text style={styles.modalSubtitle}>
                 {account.accountType || "Monetaria"} · {currency}
               </Text>
@@ -193,10 +192,10 @@ export const AccountDetailModal = ({ visible, account, onClose }) => {
           {/* Filas de detalle */}
           <View style={styles.modalRows}>
             <ModalRow
-              icon="card-outline"
-              label="Número de cuenta"
-              value={`••••• •${lastFour}`}
-              mono
+                icon="card-outline"
+                label="Número de cuenta"
+                value={fullNumber}
+                mono
             />
             <ModalRow
               icon="layers-outline"

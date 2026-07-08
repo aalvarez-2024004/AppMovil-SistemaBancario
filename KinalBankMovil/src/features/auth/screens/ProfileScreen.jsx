@@ -231,7 +231,8 @@ const ProfileScreen = () => {
             </ScrollView>
 
             {confirmLogoutVisible && (
-                <View style={[styles.modalBackdrop, { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }]}>
+                <View style={[styles.modalBackdrop, { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }]}>
+
                     <Pressable
                         style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "center" }}
                         onPress={() => !loggingOut && setConfirmLogoutVisible(false)}

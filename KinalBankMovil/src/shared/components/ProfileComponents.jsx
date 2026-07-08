@@ -16,8 +16,7 @@ export const formatCurrency = (amount, currency = "GTQ") => {
 export const maskAccountCard = (num = "") => {
     const str = String(num || "").replace(/\D/g, "");
     if (!str) return "—";
-    const last4 = str.slice(-4);
-    return `••• ••• ${last4}`;
+    return str;
 };
 
 export const maskDPI = (dpi = "") => {
