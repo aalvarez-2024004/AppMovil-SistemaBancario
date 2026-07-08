@@ -78,7 +78,7 @@ export const DepositModal = () => {
 
     {/* Modal */}
     {isOpen && (
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:px-4">
+      <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:px-4">
         
         {/* Backdrop */}
         <div

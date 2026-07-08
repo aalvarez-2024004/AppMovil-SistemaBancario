@@ -183,7 +183,7 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
 
             {/* Backdrop */}
             <div
-                className="approve-drawer-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+                className="approve-drawer-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-[150]"
                 onClick={onClose}
             />
 
@@ -191,7 +191,7 @@ export const ApproveModal = ({ user, onClose, onConfirm, onDeny, loading }) => {
             <div
                 role="dialog"
                 aria-modal="true"
-                className="approve-drawer-panel fixed inset-x-0 bottom-0 sm:inset-y-0 sm:inset-x-auto sm:right-0 sm:bottom-auto z-50 w-full sm:w-[440px] md:w-[480px] h-[92dvh] sm:h-[100dvh] rounded-t-3xl sm:rounded-none bg-white shadow-2xl flex flex-col"
+                className="approve-drawer-panel fixed inset-x-0 bottom-0 sm:inset-y-0 sm:inset-x-auto sm:right-0 sm:bottom-auto z-[200] w-full sm:w-[440px] md:w-[480px] h-[92dvh] sm:h-[100dvh] rounded-t-3xl sm:rounded-none bg-white shadow-2xl flex flex-col"
             >
                 {/* Handle para arrastrar, solo visible en móvil */}
                 <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0">

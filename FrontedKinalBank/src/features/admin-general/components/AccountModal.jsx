@@ -199,7 +199,7 @@ export const AccountModal = ({ initial, onClose, onSave, loading }) => {
             `}</style>
 
             <div
-                className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-fade"
+                className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4 animate-modal-fade"
                 onClick={onClose}
             >
                 <div

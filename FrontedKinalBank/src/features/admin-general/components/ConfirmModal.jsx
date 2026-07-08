@@ -32,7 +32,7 @@ const LoadingSpinner = () => (
 
 export const ConfirmModal = ({ account, onClose, onConfirm, loading }) => (
     <div
-        className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 flex items-center justify-center z-[200] p-4"
         onClick={onClose}
     >
         <div

@@ -167,7 +167,7 @@ export const CreateProductModal = ({ product, onClose }) => {
         }
       `}</style>
 
-      <div className="modal-overlay fixed inset-0 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 bg-gradient-to-br from-slate-900/70 via-black/60 to-indigo-950/50">
+      <div className="modal-overlay fixed inset-0 flex items-end sm:items-center justify-center z-[200] p-0 sm:p-4 bg-gradient-to-br from-slate-900/70 via-black/60 to-indigo-950/50">
         <div className="absolute inset-0" onClick={onClose} />
 
         <div

@@ -191,14 +191,16 @@ export const AccountOwnerModal = ({ account, onClose }) => {
                 }
             `}</style>
 
-            <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                <div className="modal-content w-full max-w-lg rounded-[28px] overflow-hidden border border-white/10 shadow-2xl shadow-slate-900/50">
+            <div className="modal-backdrop fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                <div className="modal-content w-full max-w-lg rounded-[28px] overflow-hidden border border-white/10 shadow-2xl shadow-slate-900/50 max-h-[90vh] flex flex-col">
+
 
                     {/* Acento superior decorativo */}
                     <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400" />
 
                     {/* Header */}
-                    <div className="relative overflow-hidden bg-gradient-to-br from-[#071126] via-[#0f1d3a] to-[#16284f] px-6 py-6">
+                    <div className="relative overflow-hidden bg-gradient-to-br from-[#071126] via-[#0f1d3a] to-[#16284f] px-6 pt-6 pb-8">
+
                         {/* Decoraciones de fondo */}
                         <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/20 blur-3xl rounded-full" />
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/15 blur-2xl rounded-full" />
@@ -212,8 +214,8 @@ export const AccountOwnerModal = ({ account, onClose }) => {
                                         {ownerInitial}
                                     </div>
                                     {/* Indicador de estado */}
-                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#0f1d3a] flex items-center justify-center">
-                                        <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-400 border-2 border-[#0f1d3a] flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
                                     </div>
                                 </div>
                                 <div>
@@ -237,7 +239,13 @@ export const AccountOwnerModal = ({ account, onClose }) => {
                     </div>
 
                     {/* Body */}
-                    <div className="relative bg-white/95 backdrop-blur-xl px-6 py-6">
+                    <div
+                        className="relative bg-white/95 backdrop-blur-xl px-6 py-6 overflow-y-auto flex-1 min-h-0"
+                        style={{
+                            scrollbarWidth: "thin",
+                            scrollbarColor: "#cbd5e1 transparent"
+                        }}
+                    >
                         {/* Patrón de puntos decorativo */}
                         <div className="dot-pattern absolute inset-0 pointer-events-none" />
 

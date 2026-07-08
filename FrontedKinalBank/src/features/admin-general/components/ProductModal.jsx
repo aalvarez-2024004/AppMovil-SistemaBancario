@@ -13,7 +13,8 @@ export const ProductModal = ({ product, onClose }) => {
   const isServicio = product.type === "SERVICIO";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+
       {/* Overlay */}
       <div className="absolute inset-0" onClick={onClose} />
 
