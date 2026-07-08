@@ -34,7 +34,15 @@ export const getMyTransactions = async (req, res) => {
         const pageNum  = Math.max(1, parseInt(page));
         const limitNum = Math.max(1, parseInt(limit));
 
-        const filter = { ownerId };
+        const userAccounts = await Account.find({ ownerId }).select('_id');
+        const accountIds = userAccounts.map(a => a._id);
+
+        const filter = {
+            $or: [
+                { fromAccount: { $in: accountIds } },
+                { toAccount:   { $in: accountIds } }
+            ]
+        };
 
         const [transactions, total] = await Promise.all([
             Transaction.find(filter)
