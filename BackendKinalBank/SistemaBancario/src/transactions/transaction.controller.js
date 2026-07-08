@@ -52,6 +52,14 @@ export const createTransaction = async (req, res) => {
             });
         }
 
+        // ── No permitir transferencia a la misma cuenta ──
+        if (destinationAccount && sourceAccount._id.equals(destinationAccount._id)) {
+            return res.status(400).json({
+                success: false,
+                message: "No puede transferir a la misma cuenta de origen"
+            });
+        }
+
         // ── Validaciones que solo aplican a TRANSFERENCIA ──
         if (type === "TRANSFERENCIA") {
             if (amountNumber > 2000) {
