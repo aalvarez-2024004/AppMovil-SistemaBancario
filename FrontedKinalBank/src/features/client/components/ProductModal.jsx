@@ -62,7 +62,7 @@ export const ProductModal = ({ product, onClose }) => {
     if (!product) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
             <div className="absolute inset-0" onClick={handleClose} />
 
             <div className="relative w-full max-w-lg rounded-[28px] bg-white shadow-2xl overflow-hidden">

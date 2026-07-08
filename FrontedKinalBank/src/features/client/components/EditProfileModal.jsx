@@ -30,7 +30,7 @@ export const EditProfileModal = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-2xl overflow-hidden border border-gray-100 shadow-2xl bg-white">
 
                 {/* Header */}

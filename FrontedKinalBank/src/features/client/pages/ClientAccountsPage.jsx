@@ -125,13 +125,13 @@ const HistoryPanel = ({ account, transactions, deposits, loading, onClose, onLoa
         <>
             {/* Backdrop */}
             <div
-                className="fixed inset-0 z-40 backdrop-blur-sm"
+                className="fixed inset-0 z-[150] backdrop-blur-sm"
                 style={{ background: "rgba(2,6,23,0.7)" }}
                 onClick={onClose}
             />
 
             {/* Panel */}
-            <div className="fixed top-0 right-0 h-full w-full sm:max-w-[460px] z-50 flex flex-col shadow-2xl"
+            <div className="fixed top-0 right-0 h-full w-full sm:max-w-[460px] z-[200] flex flex-col shadow-2xl"
                 style={{ background: "#fff" }}>
 
                 {/* Header con gradiente vibrante */}
