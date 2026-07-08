@@ -288,7 +288,7 @@ export const AccountOwnerModal = ({ account, onClose }) => {
                                         <span className="text-cyan-500"><MailIcon /></span>
                                         <p className="text-xs text-slate-400 font-medium">Correo electrónico</p>
                                     </div>
-                                    <p className="font-medium text-slate-700 text-sm truncate">{account.owner?.email || "—"}</p>
+                                    <p className="font-medium text-slate-700 text-sm break-all">{account.owner?.email || "—"}</p>
                                 </div>
 
                                 {/* DPI */}
