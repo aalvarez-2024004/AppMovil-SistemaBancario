@@ -183,7 +183,7 @@ export const ProductModal = ({ product, onClose }) => {
                             <div className="rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3 flex items-center justify-between">
                                 <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Se debitará</span>
                                 <span className="text-lg font-black text-slate-800">
-                                    {symbol} {Number(product.price ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                    Q {Number(product.price ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                                 </span>
                             </div>
                         )}
@@ -225,7 +225,7 @@ export const ProductModal = ({ product, onClose }) => {
                         <div className="w-full rounded-2xl bg-emerald-50 border border-emerald-100 px-5 py-3 flex items-center justify-between">
                             <span className="text-xs text-emerald-600 font-bold uppercase tracking-wider">Monto cobrado</span>
                             <span className="text-lg font-black text-emerald-700">
-                                {symbol} {Number(product.price ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
+                                Q {Number(product.price ?? 0).toLocaleString("es-GT", { minimumFractionDigits: 2 })}
                             </span>
                         </div>
                         <button onClick={handleClose} className="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition cursor-pointer mt-1">
