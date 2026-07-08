@@ -52,17 +52,17 @@ export const createTransaction = async (req, res) => {
             });
         }
 
-        if (type === "TRANSFERENCIA" && amountNumber > 2000) {
-            return res.status(400).json({
-                success: false,
-                message: `No puede transferir más de 2,000 ${sourceAccount.currency} por operación`
-            });
-        }
-
+        // ── Validaciones que solo aplican a TRANSFERENCIA ──
         if (type === "TRANSFERENCIA") {
+            if (amountNumber > 2000) {
+                return res.status(400).json({
+                    success: false,
+                    message: `No puede transferir más de 2,000 ${sourceAccount.currency} por operación`
+                });
+            }
+
             const startOfDay = new Date();
             startOfDay.setHours(0, 0, 0, 0);
-
             const endOfDay = new Date();
             endOfDay.setHours(23, 59, 59, 999);
 
@@ -72,9 +72,7 @@ export const createTransaction = async (req, res) => {
                 createdAt: { $gte: startOfDay, $lte: endOfDay }
             });
 
-            const totalHoy = transaccionesHoy.reduce(
-                (sum, t) => sum + t.amountSent, 0
-            );
+            const totalHoy = transaccionesHoy.reduce((sum, t) => sum + t.amountSent, 0);
 
             if (totalHoy + amountNumber > 10000) {
                 const disponible = 10000 - totalHoy;
@@ -83,13 +81,14 @@ export const createTransaction = async (req, res) => {
                     message: `Límite diario de 10,000 ${sourceAccount.currency} alcanzado. Disponible hoy: ${disponible.toFixed(2)} ${sourceAccount.currency}`
                 });
             }
-        }
 
-        if (sourceAccount.balance < amountNumber) {
-            return res.status(400).json({
-                success: false,
-                message: "Saldo insuficiente"
-            });
+            // El chequeo de saldo insuficiente solo aplica cuando SÍ le vas a restar dinero a sourceAccount
+            if (sourceAccount.balance < amountNumber) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Saldo insuficiente"
+                });
+            }
         }
 
         let finalAmount = amountNumber;
@@ -102,12 +101,8 @@ export const createTransaction = async (req, res) => {
                     destinationAccount.currency,
                     amountNumber
                 );
-
-                console.log(" CONVERSIÓN:", conversion);
-
                 finalAmount = conversion?.montoConvertido ?? amountNumber;
                 exchangeRate = conversion?.tasa ?? 1;
-
             } catch (error) {
                 console.error("ERROR DIVISAS:", error.message);
                 finalAmount = amountNumber;
@@ -115,14 +110,35 @@ export const createTransaction = async (req, res) => {
             }
         }
 
-        sourceAccount.balance -= amountNumber;
+        // ── Aquí está el fix real: DEPOSITO suma, no resta ──
+        if (type === "DEPOSITO") {
+            sourceAccount.balance += amountNumber;
+            await sourceAccount.save();
+        } else {
+            sourceAccount.balance -= amountNumber;
 
-        if (destinationAccount) {
-            destinationAccount.balance += finalAmount;
-            await destinationAccount.save();
+            if (destinationAccount) {
+                destinationAccount.balance += finalAmount;
+                await destinationAccount.save();
+            }
+
+            await sourceAccount.save();
         }
 
-        await sourceAccount.save();
+        const transaction = new Transaction({
+            type,
+            amountSent: amountNumber,
+            amountReceived: finalAmount,
+            currencyFrom: sourceAccount.currency,
+            currencyTo: destinationAccount?.currency || sourceAccount.currency,
+            exchangeRate,
+            fromAccount: sourceAccount._id,
+            toAccount: destinationAccount ? destinationAccount._id : null,
+            description,
+            ownerId: req.user.id
+        });
+
+        await transaction.save();
 
         const transaction = new Transaction({
             type,
