@@ -140,21 +140,6 @@ export const createTransaction = async (req, res) => {
 
         await transaction.save();
 
-        const transaction = new Transaction({
-            type,
-            amountSent: amountNumber,
-            amountReceived: finalAmount,
-            currencyFrom: sourceAccount.currency,
-            currencyTo: destinationAccount?.currency || sourceAccount.currency,
-            exchangeRate,
-            fromAccount: sourceAccount._id,
-            toAccount: destinationAccount ? destinationAccount._id : null,
-            description,
-            ownerId: req.user.id
-        });
-
-        await transaction.save();
-
         const puntosGanados = calcularPuntos(amountNumber);
         if (puntosGanados > 0) {
             const tipoDescripcion = type === 'TRANSFERENCIA'
