@@ -25,7 +25,6 @@ const fmt = (amount, currency = 'GTQ') => {
   return `${symbol} ${value}`;
 };
 
-/* ── Icono + color por tipo de transacción ── */
 const TX_META = {
   DEPOSITO:      { icon: 'arrow-down-circle',   color: '#10B981', bg: '#E9FBF1', label: 'Depósito'      },
   CREDITO:       { icon: 'arrow-down-circle',   color: '#10B981', bg: '#E9FBF1', label: 'Crédito'       },
@@ -36,8 +35,16 @@ const TX_META = {
 
 const getTxMeta = (type) => TX_META[type] ?? { icon: 'ellipse-outline', color: '#9CA3AF', bg: '#F3F4F6', label: type ?? '—' };
 
-const isTxCredit = (tx) =>
-  tx.type === 'DEPOSITO' || tx.type === 'CREDITO';
+const isTxCredit = (tx, accountIds) => {
+  if (tx.type === 'DEPOSITO' || tx.type === 'CREDITO') return true;
+
+  if (tx.type === 'TRANSFERENCIA') {
+    const fromId = String(tx.fromAccount?._id ?? tx.fromAccount ?? '');
+    return !accountIds.includes(fromId);
+  }
+
+  return false;
+};
 
 const quickActions = [
   { icon: 'swap-horizontal-outline', label: 'Transferir',  screen: 'Transfer',        color: '#EAF6FC' },
@@ -47,7 +54,6 @@ const quickActions = [
   { icon: 'gift-outline',            label: 'Productos',   screen: 'Productos',       color: '#EAF6FC' },
 ];
 
-/* ════════════════════════════════════════════════════════════ */
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { user, token, logout } = useAuthStore();
@@ -79,6 +85,8 @@ const HomeScreen = () => {
   const onRefresh = () => { setRefreshing(true); fetchData(); };
 
   /* ── Derivados ── */
+  const accountIds = accounts.map(a => String(a.id ?? a._id));
+
   const totalGTQ = accounts
     .filter(a => a.currency === 'GTQ' || !a.currency)
     .reduce((sum, a) => sum + (a.balance ?? 0), 0);
@@ -294,7 +302,7 @@ const HomeScreen = () => {
           ) : (
             transactions.slice(0, 5).map((tx, i) => {
               const meta   = getTxMeta(tx.type);
-              const credit = isTxCredit(tx);
+              const credit = isTxCredit(tx, accountIds);
               const amount = credit ? (tx.amountReceived ?? tx.amount ?? 0) : (tx.amountSent ?? tx.amount ?? 0);
               const txCurrency = credit ? (tx.currencyTo ?? 'GTQ') : (tx.currencyFrom ?? 'GTQ');
               return (
